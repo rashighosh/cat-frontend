@@ -5,6 +5,9 @@ var currentDate;
 var localDateTime;
 var transcript = new Map()
 
+var id = ''
+var condition = ''
+
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
 
@@ -216,9 +219,6 @@ function sendMessage() {
     console.log(transcript)
     userInput.disabled = true;
 
-    var id = sessionStorage.getItem('id');
-    var condition = sessionStorage.getItem('condition');
-
 
     fetch('http://44.209.126.3/api/chatbot', {
         method: 'POST',
@@ -259,19 +259,15 @@ window.onload = function() {
     console.log("IN ON LOAD")
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var condition = urlParams.get('c')
+    condition = urlParams.get('c')
     console.log(condition);
-    var id = urlParams.get('id')
+    id = urlParams.get('id')
     console.log(id);
 
     let userMessage = "Please introduce yourself. Give a broad overview of the kinds of clinical trials topics you can discuss/answer (3 max)."
     
     transcript.set("id", id);
     transcript.set("condition", condition);
-
-    sessionStorage.setItem('id',id);
-    sessionStorage.setItem('condition', condition);
-
 
     currentDate = new Date();
 // Convert the date and time to the user's local time zone
@@ -329,7 +325,6 @@ window.onload = function() {
   function logTranscript() {
     console.log("IN LOG TRANSCRIPT!")
     let transcriptString = JSON.stringify(Object.fromEntries(transcript));
-    console.log(id)
     fetch('/transcript', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
