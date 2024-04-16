@@ -1,7 +1,5 @@
 const video = document.getElementById('myVideo');
 const chatBox = document.getElementById('chat-box');
-var id;
-var condition;
 
 var currentDate;
 var localDateTime;
@@ -218,47 +216,14 @@ function sendMessage() {
     console.log(transcript)
     userInput.disabled = true;
 
-    // Get an iterator over the entries
-    const entriesIterator = transcript.entries();
+    var id = sessionStorage.getItem('id');
+    var condition = sessionStorage.getItem('condition');
 
-    // Convert the iterator to an array
-    const entriesArray = Array.from(entriesIterator);
-
-    // Remove the first two entries from the array
-    const remainingEntries = entriesArray.slice(2);
-
-    // Extract the values from the remaining entries and format them based on the key
-    const formattedValuesArray = [];
-    remainingEntries.forEach(([key, value]) => {
-        if (key.includes("USER")) {
-            formattedValuesArray.push({
-                role: "user",
-                content: value
-            });
-        } else {
-            formattedValuesArray.push({
-                role: "assistant",
-                content: value
-            });
-        }
-    });
-
-    console.log(formattedValuesArray);
-
-    // Check if there are 3 or more items in the array
-    if (formattedValuesArray.length >= 3) {
-        // If yes, extract the last three items
-        const lastThreeItems = formattedValuesArray.slice(-2);
-        console.log("Last three items:", lastThreeItems);
-    } else {
-        // If not, use the entire array
-        console.log("Formatted values array:", formattedValuesArray);
-    }
 
     fetch('http://44.209.126.3/api/chatbot', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message: userMessage, condition: condition, id: id, memoryTurns: formattedValuesArray})
+        body: JSON.stringify({message: userMessage, condition: condition, id: id})
     })
     .then(response => response.json())
     .then(data => {
@@ -294,18 +259,19 @@ window.onload = function() {
     console.log("IN ON LOAD")
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    condition = urlParams.get('c')
+    var condition = urlParams.get('c')
     console.log(condition);
-    // shirt
-
-    id = urlParams.get('id')
+    var id = urlParams.get('id')
     console.log(id);
 
     let userMessage = "Please introduce yourself. Give a broad overview of the kinds of clinical trials topics you can discuss/answer (3 max)."
     
     transcript.set("id", id);
     transcript.set("condition", condition);
-    transcript.set("id", id);
+
+    sessionStorage.setItem('id',id);
+    sessionStorage.setItem('condition', condition);
+
 
     currentDate = new Date();
 // Convert the date and time to the user's local time zone
