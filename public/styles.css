@@ -81,6 +81,10 @@ h4 {
     border-radius: 5px;
     width: 81%;
     padding: 5px;
+    height: 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 button {
@@ -88,7 +92,7 @@ button {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     border: 0px;
-    border-radius: 5px;
+    border-radius: 19px;
     background-color: var(--blue);
     color: white;
     transition: .2s ease-in-out;
@@ -192,7 +196,7 @@ video {
   .start {
     width: 105px !important;
     padding: 15px;
-    border-radius: 15px;
+    border-radius: 19px;
   }
 
 /* CSS for modal */
