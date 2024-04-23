@@ -28,6 +28,12 @@ for (let i = 1; i <= 5; i++) {
 
 
 function checkTopic(topic) {
+    if(topic == 1 || topic == "Safety in Clinical Trials") { topic = 1 }
+    if(topic == 2 || topic == "Understanding and Comfort with the Clinical Trial Process") { topic = 2 }
+    if(topic == 3 || topic == "Logistical, Time, and Financial Barriers to Participation") { topic = 3 }
+    if(topic == 4 || topic == "Risks and Benefits of Clinical Trials") { topic = 4 }
+    if(topic == 5 || topic == "Awareness and Information Accessibility") { topic = 5 }
+    console.log("TOPIC IS: " + topic)
     let topicElem = "topic" + topic
     topicHTML = document.getElementById(topicElem)
     topicHTML.style.color = "green"
