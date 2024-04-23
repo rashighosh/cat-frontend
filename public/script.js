@@ -1,5 +1,6 @@
 const video = document.getElementById('myVideo');
 const chatBox = document.getElementById('chat-box');
+const concludeButton = document.getElementById('conclude-button');
 
 var currentDate;
 var localDateTime;
@@ -13,32 +14,83 @@ const loadingSvg = document.getElementById('loading-svg');
 
 let progress = 0;
 
-function increaseProgress() {
-    console.log("IN INCREASE PROGRESS")
-    if (progress < 5) {
-      progress++;
-      updateProgressBar();
-      updateProgressText();
-    }
-    if (progress >= 5) {
-        // Assuming you have a reference to the button element
-        const finishButton = document.getElementById('finish-button');
+const finishButton = document.getElementById('finish-button');
 
-        // To disable the button
+// To disable the button
+finishButton.disabled = true;
+
+// Initialize the array
+let lastThreeTurns = [];
+let topicsObject = {}
+for (let i = 1; i <= 5; i++) {
+    topicsObject[i] = false;
+}
+
+
+function checkTopic(topic) {
+    let topicElem = "topic" + topic
+    topicHTML = document.getElementById(topicElem)
+    topicHTML.style.color = "green"
+    var textContent = topicHTML.textContent;
+    var newTextContent = textContent.replace('☐', '☑'); // Replace 'oldChar' with the character you want to replace and 'newChar' with the character you want to replace it with
+    topicHTML.textContent = newTextContent;
+    topicsObject[topic] = true
+    let allTrue = Object.values(topicsObject).every(value => value === true);
+    // To disable the button
+    console.log(allTrue)
+    if (allTrue === true) {
         finishButton.disabled = false;
-    }
-  }
+    }   
+}
+
+// Function to add a new item to the array and keep only the most recent three items
+function addToLastThreeTurns(item) {
+  // Add the new item to the beginning of the array
+  lastThreeTurns.unshift(item);
   
-  function updateProgressBar() {
-    const progressBar = document.getElementById('progress');
-    const progressWidth = (progress / 5) * 100;
-    progressBar.style.width = `${progressWidth}%`;
+  // Keep only the most recent three items
+  if (lastThreeTurns.length > 3) {
+    lastThreeTurns.pop(); // Remove the oldest item
   }
+}
+
+function createTurnObject(role, content) {
+    return {
+      "role": role,
+      "content": content
+    };
+  }
+
+const base_url = "http://44.209.126.3"
+// const base_url = "http://127.0.0.1:8000"
+
+// function increaseProgress() {
+//     console.log("IN INCREASE PROGRESS")
+//     if (progress < 5) {
+//       progress++;
+//       updateProgressBar();
+//       updateProgressText();
+//     }
+//     if (progress >= 5 && beginConclude == false) {
+//         // Assuming you have a reference to the button element
+//         concludeButton.style.display = "block"
+//         // Stop pulse animation after 5 seconds
+//         setTimeout(() => {
+//             concludeButton.classList.add('remove-pulse-animation');
+//             }, 3000);
+//         }
+//   }
   
-  function updateProgressText() {
-    const progressText = document.getElementById('progress-text');
-    progressText.textContent = `Progress: ${progress * 20}%`;
-  }
+//   function updateProgressBar() {
+//     const progressBar = document.getElementById('progress');
+//     const progressWidth = (progress / 5) * 100;
+//     progressBar.style.width = `${progressWidth}%`;
+//   }
+  
+//   function updateProgressText() {
+//     const progressText = document.getElementById('progress-text');
+//     progressText.textContent = `Progress: ${progress * 20}%`;
+//   }
 
 function closeModal() {
     document.getElementById("myModal").style.display = "none";
@@ -220,14 +272,18 @@ function sendMessage() {
     userInput.disabled = true;
 
 
-    fetch('http://44.209.126.3/api/chatbot', {
+    fetch(base_url + '/api/chatbot', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message: userMessage, condition: condition, id: id})
+        body: JSON.stringify({message: userMessage, condition: condition, id: id, lastThreeTurns: lastThreeTurns, first: 'false'})
     })
     .then(response => response.json())
     .then(data => {
         appendAlexMessage2(data.message, data.audio);
+        addToLastThreeTurns(createTurnObject("user", userMessage));
+        addToLastThreeTurns(createTurnObject("assistant", data.message));
+        console.log("TOPIC IS", data.topic)
+        checkTopic(data.topic)
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
@@ -241,20 +297,17 @@ function sendMessage() {
     .finally(() => {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
-        ellipse.remove();
-        increaseProgress();
+        ellipse.remove();        
         userInput.disabled = true;
     });
 
     userInput.value = ''; // Clear input field after sending message
+    console.log(lastThreeTurns)
 }
 
 window.onload = function() {
     // Assuming you have a reference to the button element
     const finishButton = document.getElementById('finish-button');
-
-    // To disable the button
-    finishButton.disabled = true;
 
     console.log("IN ON LOAD")
     const queryString = window.location.search;
@@ -264,7 +317,7 @@ window.onload = function() {
     id = urlParams.get('id')
     console.log(id);
 
-    let userMessage = "Please introduce yourself. Give a broad overview of the kinds of clinical trials topics you can discuss/answer (3 max)."
+    let userMessage = "Please introduce yourself as Alex, a virtual healthcare assistant. Give a broad overview of the kinds of clinical trials topics you can discuss/answer (3 max)."
     
     transcript.set("id", id);
     transcript.set("condition", condition);
@@ -297,10 +350,10 @@ window.onload = function() {
     userInput.disabled = true;
 
     console.log("AB TO SEND: " + JSON.stringify({message: userMessage, condition: condition, id: id}))
-    fetch(`http://44.209.126.3/api/chatbot`, {
+    fetch(base_url + `/api/chatbot`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({message: userMessage, condition: condition, id: id, memoryTurns: "none"})
+    body: JSON.stringify({message: userMessage, condition: condition, id: id, lastThreeTurns: lastThreeTurns, first: 'true'})
     })
     .then(response => response.json())
     .then(data => {
@@ -311,7 +364,7 @@ window.onload = function() {
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
         transcript.set("ALEX " + localDateTime, data.message);
-
+        addToLastThreeTurns(createTurnObject("assistant", data.message));
         console.log(transcript)
     })
     .catch(error => console.error('Error:', error))
@@ -338,7 +391,7 @@ window.onload = function() {
     .finally(() => {
         // Remove loading indicator after response received
         console.log("check for transcript file")
-        window.location.href = "https://ufl.qualtrics.com/jfe/form/SV_1TgxItlntE1uUzs?id=" + id;
+        window.location.href = "https://ufl.qualtrics.com/jfe/form/SV_1TgxItlntE1uUzs?id=" + id + "&c=" + condition;
     });
   }
-  
+

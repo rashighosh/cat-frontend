@@ -195,32 +195,35 @@ video {
     border-radius: 15px;
   }
 
-   /* CSS for modal */
-   .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.55);
+/* CSS for modal */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.55);
 }
 
 .modal-content {
-    border-radius: 15px;;
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 0px solid #888;
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 45px;
-    text-align: center;
+  border-radius: 15px;
+  background-color: #fefefe;
+  padding: 45px;
+  border: 0px solid #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 45%; /* Adjust as needed */
 }
+
+
+
 
 .close {
     color: #aaa;
@@ -242,6 +245,12 @@ video {
   right: 35px;
   width: 175px;
   padding: 11px;
+}
+
+#finish-button:disabled {
+  /* Your styles for disabled button */
+  opacity: 0.5; /* Example: Reduce opacity */
+  cursor: not-allowed; /* Example: Change cursor to not-allowed */
 }
 
 svg{
@@ -285,12 +294,6 @@ svg{
   font-size: 13px !important;
 } 
 
-#finish-button:disabled {
-  /* Your styles for disabled button */
-  opacity: 0.5; /* Example: Reduce opacity */
-  cursor: not-allowed; /* Example: Change cursor to not-allowed */
-}
-
 h4 {
   font-weight: 600;
   text-transform: uppercase;
@@ -307,4 +310,34 @@ hr {
   width: 85%;
   background-color: var(--dark); /* Set the color of the horizontal rule */
   margin: 15px 15px; /* Add some margin above and below the horizontal rule */
+}
+
+.conclude-button {
+  width: 250px;
+  padding: 5px;
+  margin: 5px;
+  animation: pulse 1s infinite;
+  display: none;
+}
+
+.remove-pulse-animation {
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.topics-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

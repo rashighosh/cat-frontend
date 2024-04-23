@@ -10,26 +10,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="progress-area">
+    <!-- <div class="progress-area">
       <div id="progress-text">Progress: 0%</div>
       <div id="progress-bar">
         <div id="progress"></div>
       </div>
-    </div>
+    </div> -->
     <!-- Modal box -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <h3>Welcome!</h3>
-            <p>You are about to begin your conversation about clinical trials with Alex.</p>
+            <h3>Instructions</h3>
+            <p>Welcome! You are about to begin your conversation about clinical trials with Alex.</p>
             <hr/>
             <h4>How to Interact with Alex</h4>
-            <p>You will interact with Alex by typing in the chatbox. Alex will respond to you in the chatbox and speak to you, so make sure your audio is on! You will not be able to type while Alex is speaking.</p>
+            <p>You will interact with Alex by <u>typing in the chatbox</u>. Alex will respond to you in the chatbox and speak to you, so make sure your <u>audio is on</u>! You will not be able to type while Alex is speaking.</p>
             <br/>
             <h4>Requirements for conversation</h4>
-            <p>You may talk to Alex as long as you want, and ask as many questions as you'd like! You must ask Alex at least <u>5 questions</u>.</p>
+            <p>You may talk to Alex as long as you want, and ask as many questions as you'd like! You must ask questions relating to the <u>5 topics listed underneath Alex</u> in order to proceed to the post-survey.</p>
             <br/>
             <h4>What to do when you're done</h4>
-            <p>When you are finished talking to Alex, click the "Finish Talking to Alex" button in the bottom right corner to be taken to the post-survey.</p>
+            <p>When you have covered all 5 topics and are finished talking to Alex, click the <u>"Finish Talking to Alex"</u> button in the bottom right corner to be taken to the post-survey.</p>
             <hr/>
             <p><strong>When you're ready to begin, click "Let's start!" button below.</strong></p>
             <br/>
@@ -44,6 +44,7 @@
             </video>
             <h3>Alex</h3>
             <h4>Virtual Healthcare Assistant</h4>
+            <!-- <button class="conclude-button" id="conclude-button" onclick="concludeConversation(); removeButton()">I'm Done Asking Questions</button> -->
             <svg id="loading-svg" width="10px" height="8px" viewBox="0 0 10 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Audio" transform="translate(0.000000, 0.500000)" stroke="currentColor" stroke-width="1" fill-rule="evenodd"
                   stroke-linecap="round">
@@ -79,6 +80,14 @@
                   </line>
                 </g>
               </svg>
+              <div class="topics-container">
+                <h4>Topics to Cover</h4>
+                <p id="topic1">☐ Safety in Clinical Trials</p>
+                <p id="topic2">☐ Clinical Trial Process</p>
+                <p id="topic3">☐ Time and Compensation</p>
+                <p id="topic4">☐ Risks and Benefits</p>
+                <p id="topic5">☐ Importance of Clinical Trials</p>
+              </div>
         </div>
         <div class="chat-container">
             <div class="chat-box" id="chat-box"></div>
