@@ -18,7 +18,7 @@ let progress = 0;
 let accommodateMessage = ''
 let controlMessage = ''
 let highlights = ''
-let audio_from_api = ''
+let audio_from_api = null
 
 let hasLoaded = false;
 
@@ -178,28 +178,28 @@ function appendAlexMessage2(message, highlights, audioDataUrl) {
     chatBox.appendChild(messageElement);
 
     // COMMENT OUT AUDIO FOR TESTING
-    // // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    // Create and append the audio element
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
+    // Play the video and loop when the audio starts playing
+    audioElement.addEventListener('play', function() {
+        video.loop = true; // Ensure video loops
+        video.play();
+        loadingSvg.style.visibility = 'visible';
+    });
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     userInput.disabled = false;
-    //     loadingSvg.style.visibility = 'hidden';
-    // });
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        video.currentTime = video.duration;
+        video.pause();
+        userInput.disabled = false;
+        loadingSvg.style.visibility = 'hidden';
+    });
 
-    // audioElement.play();
+    audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -281,7 +281,7 @@ function sendMessage() {
     transcript.set("USER " + localDateTime, userMessage);
 
     console.log(transcript)
-    // userInput.disabled = true;
+    userInput.disabled = true;
 
 
     fetch(base_url + '/api/chatbot', {
@@ -310,7 +310,7 @@ function sendMessage() {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
         ellipse.remove();        
-        // userInput.disabled = true;
+        userInput.disabled = true;
     });
 
     userInput.value = ''; // Clear input field after sending message
@@ -360,7 +360,7 @@ window.onload = function() {
     // const chatBox = document.getElementById('chat-box');
     chatBox.appendChild(ellipse);
 
-    // userInput.disabled = true;
+    userInput.disabled = true;
 
     console.log("AB TO SEND: " + JSON.stringify({message: userMessage, condition: condition, id: id}))
     fetch(base_url + `/api/chatbot`, {
