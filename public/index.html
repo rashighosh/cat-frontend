@@ -20,24 +20,79 @@
     <!-- Modal box -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <h3>Instructions</h3>
-            <p>Welcome! You are about to begin your conversation about clinical trials with Alex.</p>
-            <hr/>
-            <h4>How to Interact with Alex</h4>
-            <p>You will interact with Alex by <u>typing in the chatbox</u>. Alex will respond to you in the chatbox and speak to you, so make sure your <u>audio is on</u>! You will not be able to type while Alex is speaking.</p>
-            <br/>
-            <h4>Requirements for conversation</h4>
-            <p>You may talk to Alex as long as you want, and ask as many questions as you'd like! You must ask questions relating to the <u>5 topics listed underneath Alex</u> in order to proceed to the post-survey.</p>
-            <br/>
-            <h4>What to do when you're done</h4>
-            <p>When you have covered all 5 topics and are finished talking to Alex, click the <u>"Finish Talking to Alex"</u> button in the bottom right corner to be taken to the post-survey.</p>
-            <hr/>
-            <p><strong>When you're ready to begin, click "Let's start!" button below.</strong></p>
-            <br/>
-            <button class="start" onclick="closeModal()">Let's start!</button> <!-- Button to close the modal -->
+            <div id="message-1">
+              <h3>Welcome!</h3>
+              <br/>
+              <p>You are about to begin your interaction with the virtual agent, Alex. Before you begin, we have some instructions for you.</p>
+              <br/>
+              <button class="modalNavBtn" onclick="navigateModalInstructions(`message-1`,`message-2`)">Next ►</button>
+            </div>
+            <div id="message-2">
+              <h4>How to Interact with Alex</h4>
+              <br/>
+              <img src="1.png" alt="How to Interact with Alex" height="700">
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-2`,`message-1`)">◀ Back</button>
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-2`,`message-3`)">Next ►</button>
+              </div>
+            </div>
+            <div id="message-3">
+              <h4>Requirements for Conversation</h4>
+              <br/>
+              <img src="2.png" alt="Requirements for Conversation" height="700">
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-3`,`message-2`)">◀ Back</button>
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-3`,`message-4`)">Next ►</button>
+              </div>
+            </div>
+            <div id="message-4">
+              <h4>What to do when you're done</h4>
+              <br/>
+              <img src="3.png" alt="Requirements for Conversation" height="700">
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-4`,`message-3`)">◀ Back</button>
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-4`,`message-5`)">Next ►</button>
+              </div>
+            </div>
+            <div id="message-5">
+              <h3>Last thing...</h3>
+              <br/>
+              <p id="cat-strategy"></p>
+              <hr/>
+              <p><strong>To begin, please select which version of Alex best fits the description above:</strong></p>
+              <br/>
+              <div class="select-which-alex">
+                <div class="alex-option" id="select-control" onclick="selectAlexVersion(`select-control`, `select-accommodate`)">
+                  <p id="control"></p>
+                </div>
+                <div class="alex-option" id="select-accommodate" onclick="selectAlexVersion(`select-accommodate`, `select-control`)">
+                  <p id="accommodate"></p>
+                </div>
+              </div>
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn" onclick="navigateModalInstructions(`message-5`,`message-4`)">◀ Back</button>
+                <button id="start" onclick="closeModal()">Let's start!</button> <!-- Button to close the modal -->
+              </div>
+            </div>
         </div>
     </div>
+    <div id="help-modal" class="help-modal">
+      <div class="help-modal-content">
+        <h3>How to complete the interaction with Alex</h3>
+        <br/>
+        <img src="4.png" alt="How to Interact with Alex" height="575">
+        <br/>
+        <button class="help-close">Close</button>
+      </div>
+    </div>
     <div class="conversation-container">
+      <div class="help-container">
+        <button id="help-icon">&#63;</button>
+      </div>
         <div class="alex-container">
             <video id="myVideo">
                 <source src="generic.mp4" type="video/mp4">
