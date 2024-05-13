@@ -370,6 +370,13 @@ hr {
   width: 95px;
 }
 
+#start {
+  padding: 15px;
+  border-radius: 19px;
+  width: 105px;
+  font-weight: 700 !important;
+}
+
 
 #message-1, #message-2, #message-3, #message-4 p {
   font-size: 25px !important;

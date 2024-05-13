@@ -283,8 +283,7 @@ function sendMessage() {
     console.log(transcript)
     userInput.disabled = true;
 
-
-    fetch(base_url + `/api/chatbot`, {
+    fetch(base_url + '/api/chatbot', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({message: userMessage, condition: condition, id: id, lastThreeTurns: lastThreeTurns, first: 'false', returnControl: 'true'})

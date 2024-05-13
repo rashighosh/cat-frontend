@@ -1,3 +1,15 @@
+const cors = require('cors');
+
+
+// Allow requests from specific origins
+const allowedOrigins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://talk-to-alex.us-east-1.elasticbeanstalk.com",
+];
+
+
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -5,6 +17,10 @@ var sql = require("mssql");
 var favicon = require('serve-favicon');
 const bodyParser = require('body-parser'); // Require body-parser module
 require('dotenv').config()
+
+app.use(cors({
+  origin: allowedOrigins
+}));
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
