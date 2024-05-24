@@ -17,8 +17,8 @@ var selectedOption = null;
 let progress = 0;
 let accommodateMessage = ''
 let controlMessage = ''
-let highlights = ''
-let audio_from_api = null
+let audio_from_api_control = null
+let audio_from_api_accommodate = null
 
 let hasLoaded = false;
 
@@ -28,17 +28,32 @@ const finishButton = document.getElementById('finish-button');
 finishButton.disabled = true;
 
 // Initialize the array
-let lastThreeTurns = [];
 let topicsObject = {}
 for (let i = 1; i <= 5; i++) {
     topicsObject[i] = false;
 }
 
-const approximationMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to match your language and communication style during your conversation.</b> When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const interpretabilityMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to be clear and understandable during your conversation.</b> When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const discourseManagementMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation.</b> When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const interpersonalControlMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation.</b> When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const emotionalExpressionMessage = "You're about to chat with our virtual agent, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation.</b> When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
+var CAT_IDS = [
+    "control_assistant_id",
+    "approximation_assistant_id",
+    "interpretability_assistant_id",
+    "interpersonal_control_assistant_id",
+    "discourse_management_assistant_id",
+    "emotional_expression_assistant_id"
+]
+
+const approximationMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to match your language and communication style during your conversation.</b>";
+const interpretabilityMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to be clear and understandable during your conversation.</b>";
+const discourseManagementMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation.</b>";
+const interpersonalControlMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation.</b>";
+const emotionalExpressionMessage = "You're about to chat with our virtual agent, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation.</b>";
+
+var Q1 = "My main health conditions/goals: "
+var Q2 = "Who I consult with for health decisions: "
+var Q3 = "Why I'd say yes to a clinical trial: "
+var Q4 = "Why I'd say no to a clinical trial: "
+
+let user_info = ""
 
 function modalInstructions(condition) {
     const catStrategyElement = document.getElementById("cat-strategy");
@@ -92,26 +107,8 @@ function checkTopic(topic) {
     }   
 }
 
-// Function to add a new item to the array and keep only the most recent three items
-function addToLastThreeTurns(item) {
-  // Add the new item to the beginning of the array
-  lastThreeTurns.unshift(item);
-  
-  // Keep only the most recent three items
-  if (lastThreeTurns.length > 3) {
-    lastThreeTurns.pop(); // Remove the oldest item
-  }
-}
-
-function createTurnObject(role, content) {
-    return {
-      "role": role,
-      "content": content
-    };
-  }
-
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
+// const base_url = "http://44.209.126.3"
+const base_url = "http://127.0.0.1:8000"
 
 
 function closeModal() {
@@ -121,11 +118,11 @@ function closeModal() {
             condition = 0;
             transcript.set("selected_condition", 0);
             document.getElementById("myModal").style.display = "none";
-            checkModal(controlMessage, highlights, audio_from_api)
+            checkModal(controlMessage, audio_from_api_control)
         } else {
             transcript.set("selected_condition", condition);
             document.getElementById("myModal").style.display = "none";
-            checkModal(accommodateMessage, highlights, audio_from_api)
+            checkModal(accommodateMessage, audio_from_api_accommodate)
         }
         
         // Here you can perform any other action you need with the selected option
@@ -135,34 +132,21 @@ function closeModal() {
     }
 }
 
-function checkModal(message, highlights, audioDataUrl) {
+function checkModal(message, audioDataUrl) {
     // Check the variable every 1 second (1000 milliseconds)
     var intervalId = setInterval(function() {
     // Check if the variable is true
     if (document.getElementById("myModal").style.display == "none") {
         // Execute your function
-        appendAlexMessage2(message, highlights, audioDataUrl);
+        appendAlexMessage2(message, audioDataUrl);
         clearInterval(intervalId);
     }
 }, 1000); // Interval set to 1000 milliseconds (1 second)
 }
 
 
-function appendAlexMessage2(message, highlights, audioDataUrl) {
+function appendAlexMessage2(message, audioDataUrl) {
     console.log("MESSAGE IS:", message)
-    console.log(highlights)
-    // Iterate over the highlights array
-    // Iterate over the highlights array
-    highlights.forEach(function(highlight) {
-        // Escape special characters in highlight
-        const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        
-        // Check if the highlight exists in the message
-        if (message.includes(highlight)) {
-            // If found, replace the highlight in the message with the same text wrapped in a span with bold
-            message = message.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
-        }
-    });
     
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
@@ -283,16 +267,14 @@ function sendMessage() {
     console.log(transcript)
     userInput.disabled = true;
 
-    fetch(base_url + '/api/chatbot', {
+    fetch(base_url + '/api/assistant', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message: userMessage, condition: condition, id: id, lastThreeTurns: lastThreeTurns, first: 'false', returnControl: 'true'})
+        body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: user_info})
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage2(data.message, data.highlights, data.audio);
-        addToLastThreeTurns(createTurnObject("user", userMessage));
-        addToLastThreeTurns(createTurnObject("assistant", data.message));
+        appendAlexMessage2(data.response, data.audio);
         console.log("TOPIC IS", data.topic)
         checkTopic(data.topic)
         currentDate = new Date();
@@ -313,7 +295,6 @@ function sendMessage() {
     });
 
     userInput.value = ''; // Clear input field after sending message
-    console.log(lastThreeTurns)
 }
 
 window.onload = function() {
@@ -325,20 +306,31 @@ window.onload = function() {
     console.log(condition);
     id = urlParams.get('id')
     console.log(id);
+
+    BG1 = urlParams.get('BG1') + " "
+    BG2 = urlParams.get('BG2') + " "
+    BG3 = urlParams.get('BG3') + " "
+    BG4 = urlParams.get('BG4')
+
+    console.log("BG INFO IS:", BG1, BG2, BG3, BG4)
+
+    user_info = BG1 + BG2 + BG3 + BG4;
+
+    console.log("USER_INFO IS:", user_info)
     
     modalInstructions(condition)
-
-    let userMessage = "Please introduce yourself as Alex, a virtual healthcare assistant. Give a broad overview of the kinds of clinical trials topics you can discuss/answer (3 max)."
     
     transcript.set("id", id);
     transcript.set("condition", condition);
+
+    condition = parseInt(condition)
 
     currentDate = new Date();
 // Convert the date and time to the user's local time zone
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
     console.log("LOCAL DATE TIME IS: " + localDateTime);
-    transcript.set("USER " + localDateTime, userMessage);
+    transcript.set("USER " + localDateTime, "Intro");
 
     console.log(transcript)
 
@@ -361,19 +353,21 @@ window.onload = function() {
 
     userInput.disabled = true;
 
-    console.log("AB TO SEND: " + JSON.stringify({message: userMessage, condition: condition, id: id}))
-    fetch(base_url + `/api/chatbot`, {
+    console.log("AB TO SEND: " + JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition]}))
+    fetch(base_url + `/api/intro`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({message: userMessage, condition: condition, id: id, lastThreeTurns: lastThreeTurns, first: 'true', returnControl: 'true'})
+    body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_info: user_info})
     })
     .then(response => response.json())
     .then(data => {
         // checkModal(data.message, data.highlights, data.audio);
-        audio_from_api = data.audio
-        controlMessage = data.controlMessage
-        accommodateMessage = data.message
-        highlights = data.highlights
+        audio_from_api_control = data.audioControl
+        audio_from_api_accommodate = data.audioAccommodate
+        controlMessage = data.responseControl
+        accommodateMessage = data.responseAccommodate
+        console.log("CONTROL MESSAGE:", controlMessage)
+        console.log("ACCOMMODATE MESSAGE:", accommodateMessage)
         hasLoaded = true;
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
@@ -381,7 +375,6 @@ window.onload = function() {
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
         transcript.set("ALEX " + localDateTime, data.message);
-        addToLastThreeTurns(createTurnObject("assistant", data.message));
         console.log(transcript)
     })
     .catch(error => console.error('Error:', error))
@@ -414,20 +407,6 @@ window.onload = function() {
     });
   }
 
-// document.getElementById('nextBtn1').addEventListener('click', function() {
-//     document.getElementById('message-1').style.display = 'none'
-//     document.getElementById('message-2').style.display = 'block'
-// });
-
-// document.getElementById('nextBtn2').addEventListener('click', function() {
-//     document.getElementById('message-2').style.display = 'none'
-//     document.getElementById('message-3').style.display = 'block'
-// });
-
-// document.getElementById('nextBtn3').addEventListener('click', function() {
-//     document.getElementById('message-3').style.display = 'none'
-//     document.getElementById('message-4').style.display = 'block'
-// });
 
 function navigateModalInstructions(current, show) {
     if (current === 'message-4' && show === 'message-5') {
@@ -456,19 +435,7 @@ function navigateModalInstructions(current, show) {
                 const ellipseRemoval = document.getElementById('lds-ellipsis');
                 ellipseRemoval.remove();
                 document.getElementById('message-5').style.display = 'block';
-                
-                console.log(highlights);
-                // Iterate over the highlights array
-                highlights.forEach(function(highlight) {
-                    // Escape special characters in highlight
-                    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    
-                    // Check if the highlight exists in the accommodateMessage
-                    if (accommodateMessage.includes(highlight)) {
-                        // If found, replace the highlight in the accommodateMessage with the same text wrapped in a span with bold
-                        accommodateMessage = accommodateMessage.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
-                    }
-                });
+            
                 
                 document.getElementById('control').innerText = controlMessage;
                 document.getElementById('accommodate').innerHTML = accommodateMessage;
@@ -523,3 +490,17 @@ function selectAlexVersion(select, unselect) {
     var unselectedBox = document.getElementById(unselect);
     unselectedBox.classList.remove('selected');
 }
+
+document.getElementById('toggleButton').addEventListener('click', function() {
+    console.log("CLICKED")
+    var content = document.getElementById('toggleContent');
+    if (content.style.display === 'none') {
+      content.style.display = 'block';
+      content.innerHTML = "<strong>Information you entered in the pre-survey: </strong>" + user_info
+      document.getElementById('toggleButton').innerText = "▾ Click here to hide what information is being used to tailor Alex."
+    } else {
+      content.style.display = 'none';
+      document.getElementById('toggleButton').innerText = "▸ Click here to see what information is being used to tailor Alex."
+    }
+  });
+  

@@ -466,3 +466,15 @@ hr {
   text-decoration: none;
   cursor: pointer;
 }
+
+#toggleButton {
+  margin: 7px 0;
+  font-size: 11px !important;
+  color:#2971B7;
+  transition: .2s ease-in-out;
+  cursor: pointer;
+}
+
+#toggleButton:hover {
+  color:#df4300;
+}
