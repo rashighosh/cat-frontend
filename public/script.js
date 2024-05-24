@@ -107,8 +107,8 @@ function checkTopic(topic) {
     }   
 }
 
-// const base_url = "http://44.209.126.3"
-const base_url = "http://127.0.0.1:8000"
+const base_url = "http://44.209.126.3"
+// const base_url = "http://127.0.0.1:8000"
 
 
 function closeModal() {
