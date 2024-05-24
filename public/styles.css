@@ -399,7 +399,8 @@ hr {
   border-radius: 35px;
   margin: 15px;
   cursor: pointer; /* Change cursor to pointer on hover */
-  transition: .2s ease-in-out
+  transition: .2s ease-in-out;
+  width: 45%;
 }
 
 .selected {
