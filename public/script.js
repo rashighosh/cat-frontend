@@ -8,7 +8,6 @@ var transcript = new Map()
 
 var id = ''
 var condition = ''
-var bgInfoQualtrics = ''
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
@@ -317,8 +316,6 @@ window.onload = function() {
     user_info = BG1 + BG2 + BG3;
 
     console.log("USER_INFO IS:", user_info)
-
-    bgInfoQualtrics = user_info
     
     modalInstructions(condition)
     
@@ -395,7 +392,7 @@ window.onload = function() {
     fetch('/transcript', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: id, bgInfoQualtrics: bgInfoQualtrics,  transcript: transcriptString})
+        body: JSON.stringify({id: id, bgInfoQualtrics: user_info,  transcript: transcriptString})
     })
     .then(response => response.json())
     .then(data => {
