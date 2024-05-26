@@ -504,3 +504,19 @@ document.getElementById('toggleButton').addEventListener('click', function() {
     }
   });
   
+  function checkCheckboxes(checkboxIds, current, show) {
+    var allChecked = true;
+
+    checkboxIds.forEach(function(id) {
+        var checkbox = document.getElementById(id);
+        if (!checkbox.checked) {
+            allChecked = false;
+        }
+    });
+
+    if (allChecked) {
+        navigateModalInstructions(current, show);
+    } else {
+        alert("Please select all checkboxes to continue.");
+    }
+}

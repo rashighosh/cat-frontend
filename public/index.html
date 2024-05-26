@@ -19,13 +19,66 @@
     </div> -->
     <!-- Modal box -->
     <div id="myModal" class="modal">
-        <div class="modal-content">
+          <div class="modal-content">
+            <div id="message-fc1">
+              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
+              <br/>
+              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
+              <hr/><br/>
+              <h4>What is the purpose of the study?</h4>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox1">
+                <label for="checkbox1">The <strong>purpose</strong> of interacting with the virtual healthcare assistant is to <strong>learn about clinical trials</strong>.</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox2">
+              <label for="checkbox2">The virtual healthcare assistant will use advanced algorithms to <strong>adjust its communication style </strong> based on your <strong>inputs and background information</strong> (from the pre-survey you completed).</label>
+              </div>
+              <br/>
+              <p>I have read and acknowledged the information above (select all checkboxes).</p>
+              <br/>
+              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox1', 'checkbox2'], `message-fc1`,`message-fc2`)">Continue ►</button>
+            </div>
+            <div id="message-fc2">
+              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
+              <br/>
+              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
+              <hr/><br/>
+              <h4>What will the Virtual Healthcare Assistant do?</h4>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox3">
+                <label for="checkbox3">The virtual healthcare assistant will answer specific questions you ask and <strong>adjust the way it communicates</strong> with you based on <strong>your inputs and background information</strong> you entered in the pre-survey.</label>
+              </div>
+              <br/>
+              <p>I have read and acknowledged the information above (select all checkboxes).</p>
+              <br/>
+              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox3'], `message-fc2`,`message-fc3`)">Continue ►</button>
+            </div>
+            <div id="message-fc3">
+              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
+              <br/>
+              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
+              <hr/><br/>
+              <h4>What do I need to do?</h4>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox4">
+                <label for="checkbox4"><strong>REMEMBER:</strong> The virtual healthcare assistant is providing <strong>general information about clinical trials</strong> and will attempt to answer your questions, while <strong>adjusting its communication style</strong> based on your <strong>inputs and background information</strong> from the pre-survey.</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox5">
+                <label for="checkbox5"><strong>SUSPEND DISBELIEF:</strong> Temporarily set aside skepticism about the realism of the virtual interaction to maximize learning.</label>
+              </div>
+              <br/>
+              <p>I have read and acknowledged the information above (select all checkboxes).</p>
+              <br/>
+              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox4', 'checkbox5'], `message-fc3`,`message-1`)">Continue ►</button>
+            </div>
             <div id="message-1">
-              <h3>Welcome!</h3>
+              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
               <br/>
-              <p>You are about to begin your interaction with the virtual agent, Alex. Before you begin, we have some instructions for you.</p>
+              <p>On the next few pages, you will see instructions on how to complete the virtual interaction.</p>
               <br/>
-              <button class="modalNavBtn" onclick="navigateModalInstructions(`message-1`,`message-2`)">Next ►</button>
+              <button class="modalNavBtn" onclick="navigateModalInstructions(`message-1`,`message-2`)">Continue ►</button>
             </div>
             <div id="message-2">
               <h4>How to Interact with Alex</h4>

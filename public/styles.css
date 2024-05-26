@@ -35,7 +35,10 @@ h3 {
 h4 {
     margin: 0 !important;
     color: var(--dark);
-    font-size: 21px !important;
+    font-size: 23px !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
 }
 
 .conversation-container {
@@ -299,12 +302,6 @@ svg{
   font-size: 13px !important;
 } 
 
-h4 {
-  font-weight: 600;
-  text-transform: uppercase;
-  margin: 0;
-}
-
 p {
   margin: 0;
 }
@@ -351,7 +348,7 @@ hr {
   color: green;
 }
 
-#message-2, #message-3, #message-4, #message-5 {
+#message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5 {
   display: none;
 }
 
@@ -367,7 +364,7 @@ hr {
 .modalNavBtn {
   padding: 15px;
   border-radius: 19px;
-  width: 95px;
+  width: 115px;
 }
 
 #start {
@@ -377,6 +374,9 @@ hr {
   font-weight: 700 !important;
 }
 
+#message-fc1, #message-fc2, #message-fc3 {
+  font-size: 19px !important;
+}
 
 #message-1, #message-2, #message-3, #message-4 p {
   font-size: 25px !important;
@@ -478,4 +478,12 @@ hr {
 
 #toggleButton:hover {
   color:#df4300;
+}
+
+.check-item {
+  margin: 7px 0px !important;
+}
+
+hr {
+  width: 100%;
 }
