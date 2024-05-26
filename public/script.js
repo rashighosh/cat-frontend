@@ -8,6 +8,7 @@ var transcript = new Map()
 
 var id = ''
 var condition = ''
+var bgInfoQualtrics = ''
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
@@ -42,11 +43,11 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to match your language and communication style during your conversation.</b>";
-const interpretabilityMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to be clear and understandable during your conversation.</b>";
-const discourseManagementMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation.</b>";
-const interpersonalControlMessage = "You're about to chat with our virtual agent, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation.</b>";
-const emotionalExpressionMessage = "You're about to chat with our virtual agent, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation.</b>";
+const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation</b> based on your background information.";
+const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation</b> based on your background information.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation</b> based on your background information.";
+const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation</b> based on your background information.";
+const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation</b> based on your background information.";
 
 var Q1 = "My main health conditions/goals: "
 var Q2 = "Who I consult with for health decisions: "
@@ -307,16 +308,17 @@ window.onload = function() {
     id = urlParams.get('id')
     console.log(id);
 
-    BG1 = urlParams.get('BG1') + " "
-    BG2 = urlParams.get('BG2') + " "
-    BG3 = urlParams.get('BG3') + " "
-    BG4 = urlParams.get('BG4')
+    var BG1 = urlParams.get('BG1') + " "
+    var BG2 = urlParams.get('BG2') + " "
+    var BG3 = urlParams.get('BG3') + " "
 
-    console.log("BG INFO IS:", BG1, BG2, BG3, BG4)
+    console.log("BG INFO IS:", BG1, BG2, BG3)
 
-    user_info = BG1 + BG2 + BG3 + BG4;
+    user_info = BG1 + BG2 + BG3;
 
     console.log("USER_INFO IS:", user_info)
+
+    bgInfoQualtrics = user_info
     
     modalInstructions(condition)
     
@@ -326,7 +328,7 @@ window.onload = function() {
     condition = parseInt(condition)
 
     currentDate = new Date();
-// Convert the date and time to the user's local time zone
+    // Convert the date and time to the user's local time zone
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
     console.log("LOCAL DATE TIME IS: " + localDateTime);
@@ -393,7 +395,7 @@ window.onload = function() {
     fetch('/transcript', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: id, transcript: transcriptString})
+        body: JSON.stringify({id: id, bgInfoQualtrics: bgInfoQualtrics,  transcript: transcriptString})
     })
     .then(response => response.json())
     .then(data => {
