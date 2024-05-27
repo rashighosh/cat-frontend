@@ -8,6 +8,7 @@ var transcript = new Map()
 
 var id = ''
 var condition = ''
+let highlights = ''
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
@@ -42,11 +43,11 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
-const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation based on your background information.";
-const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
-const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
+const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
+const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation based on your background information. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
+const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
+const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
 
 var Q1 = "My main health conditions/goals: "
 var Q2 = "Who I consult with for health decisions: "
@@ -118,11 +119,11 @@ function closeModal() {
             condition = 0;
             transcript.set("selected_condition", 0);
             document.getElementById("myModal").style.display = "none";
-            checkModal(controlMessage, audio_from_api_control)
+            checkModal(controlMessage, [], audio_from_api_control)
         } else {
             transcript.set("selected_condition", condition);
             document.getElementById("myModal").style.display = "none";
-            checkModal(accommodateMessage, audio_from_api_accommodate)
+            checkModal(accommodateMessage, highlights, audio_from_api_accommodate)
         }
         
         // Here you can perform any other action you need with the selected option
@@ -132,21 +133,34 @@ function closeModal() {
     }
 }
 
-function checkModal(message, audioDataUrl) {
+function checkModal(message, highlights, audioDataUrl) {
     // Check the variable every 1 second (1000 milliseconds)
     var intervalId = setInterval(function() {
     // Check if the variable is true
     if (document.getElementById("myModal").style.display == "none") {
         // Execute your function
-        appendAlexMessage2(message, audioDataUrl);
+        appendAlexMessage2(message, highlights, audioDataUrl);
         clearInterval(intervalId);
     }
 }, 1000); // Interval set to 1000 milliseconds (1 second)
 }
 
 
-function appendAlexMessage2(message, audioDataUrl) {
+function appendAlexMessage2(message, highlights, audioDataUrl) {
     console.log("MESSAGE IS:", message)
+    console.log(highlights)
+    // Iterate over the highlights array
+    // Iterate over the highlights array
+    highlights.forEach(function(highlight) {
+        // Escape special characters in highlight
+        const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        
+        // Check if the highlight exists in the message
+        if (message.includes(highlight)) {
+            // If found, replace the highlight in the message with the same text wrapped in a span with bold
+            message = message.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
+        }
+    });
     
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
@@ -274,7 +288,7 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage2(data.response, data.audio);
+        appendAlexMessage2(data.response, data.highlights, data.audio);
         console.log("TOPIC IS", data.topic)
         checkTopic(data.topic)
         currentDate = new Date();
@@ -365,6 +379,7 @@ window.onload = function() {
         audio_from_api_accommodate = data.audioAccommodate
         controlMessage = data.responseControl
         accommodateMessage = data.responseAccommodate
+        highlights = data.highlights
         console.log("CONTROL MESSAGE:", controlMessage)
         console.log("ACCOMMODATE MESSAGE:", accommodateMessage)
         hasLoaded = true;
@@ -435,6 +450,20 @@ function navigateModalInstructions(current, show) {
                 const ellipseRemoval = document.getElementById('lds-ellipsis');
                 ellipseRemoval.remove();
                 document.getElementById('message-5').style.display = 'block';
+
+                console.log(highlights);
+                console.log(accommodateMessage)
+                // Iterate over the highlights array
+                highlights.forEach(function(highlight) {
+                    // Escape special characters in highlight
+                    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    
+                    // Check if the highlight exists in the accommodateMessage
+                    if (accommodateMessage.includes(highlight)) {
+                        // If found, replace the highlight in the accommodateMessage with the same text wrapped in a span with bold
+                        accommodateMessage = accommodateMessage.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
+                    }
+                });
             
                 
                 document.getElementById('control').innerText = controlMessage;
