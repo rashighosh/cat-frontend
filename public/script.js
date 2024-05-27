@@ -43,10 +43,10 @@ var CAT_IDS = [
 ]
 
 const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
-const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <based>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>We've programmed Alex to manage the flow and organization of your conversation based on your background information.";
-const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
-const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
+const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation based on your background information.";
+const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
+const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
 
 var Q1 = "My main health conditions/goals: "
 var Q2 = "Who I consult with for health decisions: "
@@ -282,7 +282,7 @@ function sendMessage() {
         localDateTime = currentDate.toLocaleString();
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
-        transcript.set("ALEX " + localDateTime, data.message);
+        transcript.set("ALEX " + localDateTime, data.response);
 
         console.log(transcript)
     })
@@ -373,7 +373,8 @@ window.onload = function() {
         localDateTime = currentDate.toLocaleString();
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
-        transcript.set("ALEX " + localDateTime, data.message);
+        transcript.set("ALEX CONTROL " + localDateTime, data.controlMessage);
+        transcript.set("ALEX ACCOMMODATE " + localDateTime, data.accommodateMessage);
         console.log(transcript)
     })
     .catch(error => console.error('Error:', error))

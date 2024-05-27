@@ -42,9 +42,10 @@ app.get('/', (req, res) => {
 
 app.post('/transcript', (req, res) => {
     // Extracting data from the request body
-    const { id, transcript } = req.body;
+    const { id, transcript, bgInfoQualtrics } = req.body;
     console.log("ID IS: ", id);
     console.log("transcript IS: ", transcript);
+    console.log("bgInfoQualtrics IS: ", bgInfoQualtrics);
     
     // BEGIN DATABASE STUFF: SENDING VERSION (R24 OR U01) AND ID TO DATABASE
     sql.connect(config, function (err) {
@@ -57,7 +58,7 @@ app.post('/transcript', (req, res) => {
         var request = new sql.Request();
 
         // Construct SQL query with parameterized values
-        let queryString = `INSERT INTO CAT (ID, transcript) VALUES (@id, @transcript)`;
+        let queryString = `INSERT INTO CAT (ID, bgInfoQualtrics, transcript) VALUES (@id, @bgInfoQualtrics, @transcript)`;
         
         // Bind parameterized values
         request.input('id', sql.NVarChar, id);
