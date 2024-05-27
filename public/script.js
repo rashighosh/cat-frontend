@@ -42,11 +42,11 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation</b> based on your background information.";
-const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation</b> based on your background information.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow and organization of your conversation</b> based on your background information.";
-const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation</b> based on your background information.";
-const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation</b> based on your background information.";
+const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
+const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <based>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>We've programmed Alex to manage the flow and organization of your conversation based on your background information.";
+const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
+const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
 
 var Q1 = "My main health conditions/goals: "
 var Q2 = "Who I consult with for health decisions: "
