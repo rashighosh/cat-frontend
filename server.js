@@ -63,6 +63,7 @@ app.post('/transcript', (req, res) => {
         // Bind parameterized values
         request.input('id', sql.NVarChar, id);
         request.input('transcript', sql.NVarChar, transcript);
+        request.input('bgInfoQualtrics', sql.NVarChar, bgInfoQualtrics);
 
         // Execute query
         request.query(queryString, function (err, recordset) {
