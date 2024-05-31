@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- <div class="progress-area">
+    <div class="progress-area">
       <div id="progress-text">Progress: 0%</div>
       <div id="progress-bar">
         <div id="progress"></div>
       </div>
-    </div> -->
+    </div>
     <!-- Modal box -->
     <div id="myModal" class="modal">
           <div class="modal-content">
@@ -119,20 +119,9 @@
                 <p id="user-background"></p>
               </div>
               <hr/>
-              <p><strong>To begin, please select which version of Alex best fits the description above:</strong></p>
-              <br/>
-              <div class="select-which-alex">
-                <div class="alex-option" id="select-control" onclick="selectAlexVersion(`select-control`, `select-accommodate`)">
-                  <p id="control"></p>
-                </div>
-                <div class="alex-option" id="select-accommodate" onclick="selectAlexVersion(`select-accommodate`, `select-control`)">
-                  <p id="accommodate"></p>
-                </div>
-              </div>
-              <br/>
               <div class="modal-nav-button-area">
                 <button class="modalNavBtn" onclick="navigateModalInstructions(`message-5`,`message-4`)">◀ Back</button>
-                <button id="start" onclick="closeModal()">Let's start!</button> <!-- Button to close the modal -->
+                <button id="start" onclick="closeModal()">Start talking to Alex!</button> <!-- Button to close the modal -->
               </div>
             </div>
         </div>
@@ -140,8 +129,9 @@
     <div id="help-modal" class="help-modal">
       <div class="help-modal-content">
         <h3>How to complete the interaction with Alex</h3>
-        <br/>
         <img src="4.png" alt="How to Interact with Alex" height="575">
+        <br/>
+        <hr/>
         <br/>
         <button class="help-close">Close</button>
       </div>
@@ -156,7 +146,7 @@
                 Your browser does not support the video tag.
             </video>
             <h3>Alex</h3>
-            <h4>Virtual Healthcare Assistant</h4>
+            <h5>Virtual Healthcare Assistant</h5>
             <!-- <button class="conclude-button" id="conclude-button" onclick="concludeConversation(); removeButton()">I'm Done Asking Questions</button> -->
             <svg id="loading-svg" width="10px" height="8px" viewBox="0 0 10 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Audio" transform="translate(0.000000, 0.500000)" stroke="currentColor" stroke-width="1" fill-rule="evenodd"
@@ -193,14 +183,6 @@
                   </line>
                 </g>
               </svg>
-              <div class="topics-container">
-                <h4>Topics to Cover</h4>
-                <p id="topic1">☐ Safety in Clinical Trials</p>
-                <p id="topic2">☐ Clinical Trial Process</p>
-                <p id="topic3">☐ Time and Compensation</p>
-                <p id="topic4">☐ Risks and Benefits</p>
-                <p id="topic5">☐ Information and Resources</p>
-              </div>
         </div>
         <div class="chat-container">
             <div class="chat-box" id="chat-box"></div>

@@ -13,15 +13,34 @@ let highlights = ''
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
 
-var selectedOption = null;
-
 let progress = 0;
-let accommodateMessage = ''
-let controlMessage = ''
-let audio_from_api_control = null
-let audio_from_api_accommodate = null
 
-let hasLoaded = false;
+function increaseProgress() {
+    console.log("IN INCREASE PROGRESS")
+    if (progress < 5) {
+      progress++;
+      updateProgressBar();
+      updateProgressText();
+    }
+    if (progress >= 5) {
+        // Assuming you have a reference to the button element
+        const finishButton = document.getElementById('finish-button');
+
+        // To disable the button
+        finishButton.disabled = false;
+    }
+  }
+
+  function updateProgressBar() {
+    const progressBar = document.getElementById('progress');
+    const progressWidth = (progress / 5) * 100;
+    progressBar.style.width = `${progressWidth}%`;
+  }
+
+  function updateProgressText() {
+    const progressText = document.getElementById('progress-text');
+    progressText.textContent = `Progress: ${progress * 20}%`;
+  }
 
 const finishButton = document.getElementById('finish-button');
 
@@ -43,16 +62,11 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow of your conversation to be engaging based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>. When Alex responds, you'll notice that certain words are <b>bolded</b> to emphasize this behavior.";
-
-var Q1 = "My main health conditions/goals: "
-var Q2 = "Who I consult with for health decisions: "
-var Q3 = "Why I'd say yes to a clinical trial: "
-var Q4 = "Why I'd say no to a clinical trial: "
+const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
+const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow of your conversation to be engaging based on your background information</b>.";
+const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
+const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
 
 let user_info = ""
 
@@ -81,86 +95,32 @@ function modalInstructions(condition) {
             console.log("Condition is not '1', '2', '3', '4', or '5'.");
         break;
     }
-  
-    
     catStrategyElement.innerHTML = messageInstructions;
 }
 
-function checkTopic(topic) {
-    if(topic == 1 || topic == "Safety in Clinical Trials") { topic = 1 }
-    if(topic == 2 || topic == "Understanding and Comfort with the Clinical Trial Process") { topic = 2 }
-    if(topic == 3 || topic == "Logistical, Time, and Financial Barriers to Participation") { topic = 3 }
-    if(topic == 4 || topic == "Risks and Benefits of Clinical Trials") { topic = 4 }
-    if(topic == 5 || topic == "Awareness and Information Accessibility") { topic = 5 }
-    console.log("TOPIC IS: " + topic)
-    let topicElem = "topic" + topic
-    topicHTML = document.getElementById(topicElem)
-    topicHTML.style.color = "green"
-    var textContent = topicHTML.textContent;
-    var newTextContent = textContent.replace('☐', '☑'); // Replace 'oldChar' with the character you want to replace and 'newChar' with the character you want to replace it with
-    topicHTML.textContent = newTextContent;
-    topicsObject[topic] = true
-    let allTrue = Object.values(topicsObject).every(value => value === true);
-    // To disable the button
-    console.log(allTrue)
-    if (allTrue === true) {
-        finishButton.disabled = false;
-    }   
-}
-
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
+// const base_url = "http://44.209.126.3"
+const base_url = "http://127.0.0.1:8000"
 
 
 function closeModal() {
-    if (selectedOption != null) {
-        console.log("Selected option:", selectedOption);
-        if (selectedOption === "select-control") {
-            condition = 0;
-            transcript.set("selected_condition", 0);
-            document.getElementById("myModal").style.display = "none";
-            checkModal(controlMessage, [], audio_from_api_control)
-        } else {
-            transcript.set("selected_condition", condition);
-            document.getElementById("myModal").style.display = "none";
-            checkModal(accommodateMessage, highlights, audio_from_api_accommodate)
-        }
-        
-        // Here you can perform any other action you need with the selected option
-    } else {
-        // No option selected, you can handle this case accordingly
-        alert("Please select an option before starting.");
-    }
+    document.getElementById("myModal").style.display = "none";
 }
 
-function checkModal(message, highlights, audioDataUrl) {
+function checkModal(message, audioDataUrl) {
     // Check the variable every 1 second (1000 milliseconds)
     var intervalId = setInterval(function() {
     // Check if the variable is true
     if (document.getElementById("myModal").style.display == "none") {
         // Execute your function
-        appendAlexMessage2(message, highlights, audioDataUrl);
+        appendAlexMessage2(message, audioDataUrl);
         clearInterval(intervalId);
     }
 }, 1000); // Interval set to 1000 milliseconds (1 second)
 }
 
 
-function appendAlexMessage2(message, highlights, audioDataUrl) {
+function appendAlexMessage2(message, audioDataUrl) {
     console.log("MESSAGE IS:", message)
-    console.log(highlights)
-    // Iterate over the highlights array
-    // Iterate over the highlights array
-    highlights.forEach(function(highlight) {
-        // Escape special characters in highlight
-        const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        
-        // Check if the highlight exists in the message
-        if (message.includes(highlight)) {
-            // If found, replace the highlight in the message with the same text wrapped in a span with bold
-            message = message.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
-        }
-    });
     
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
@@ -176,28 +136,28 @@ function appendAlexMessage2(message, highlights, audioDataUrl) {
     chatBox.appendChild(messageElement);
 
     // COMMENT OUT AUDIO FOR TESTING
-    // Create and append the audio element
-    const audioElement = new Audio(audioDataUrl);
-    audioElement.controls = true;
-    chatBox.appendChild(audioElement);
-    audioElement.style.display = 'none'
+    // // Create and append the audio element
+    // const audioElement = new Audio(audioDataUrl);
+    // audioElement.controls = true;
+    // chatBox.appendChild(audioElement);
+    // audioElement.style.display = 'none'
 
-    // Play the video and loop when the audio starts playing
-    audioElement.addEventListener('play', function() {
-        video.loop = true; // Ensure video loops
-        video.play();
-        loadingSvg.style.visibility = 'visible';
-    });
+    // // Play the video and loop when the audio starts playing
+    // audioElement.addEventListener('play', function() {
+    //     video.loop = true; // Ensure video loops
+    //     video.play();
+    //     loadingSvg.style.visibility = 'visible';
+    // });
 
-    // Pause the video when the audio stops playing
-    audioElement.addEventListener('ended', function() {
-        video.currentTime = video.duration;
-        video.pause();
-        userInput.disabled = false;
-        loadingSvg.style.visibility = 'hidden';
-    });
+    // // Pause the video when the audio stops playing
+    // audioElement.addEventListener('ended', function() {
+    //     video.currentTime = video.duration;
+    //     video.pause();
+    //     userInput.disabled = false;
+    //     loadingSvg.style.visibility = 'hidden';
+    // });
 
-    audioElement.play();
+    // audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -279,7 +239,7 @@ function sendMessage() {
     transcript.set("USER " + localDateTime, userMessage);
 
     console.log(transcript)
-    userInput.disabled = true;
+    // userInput.disabled = true;
 
     fetch(base_url + '/api/assistant', {
         method: 'POST',
@@ -288,9 +248,12 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage2(data.response, data.highlights, data.audio);
+        appendAlexMessage2(data.response, data.audio);
         console.log("TOPIC IS", data.topic)
-        checkTopic(data.topic)
+        if (data.topic !== 0) {
+            increaseProgress();
+        }
+        // checkTopic(data.topic)
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
@@ -305,14 +268,13 @@ function sendMessage() {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
         ellipse.remove();        
-        userInput.disabled = true;
+        // userInput.disabled = true;
     });
 
     userInput.value = ''; // Clear input field after sending message
 }
 
 window.onload = function() {
-
     console.log("IN ON LOAD")
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -320,6 +282,13 @@ window.onload = function() {
     console.log(condition);
     id = urlParams.get('id')
     console.log(id);
+    let userMessage = ''
+    var controlMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA.'
+    var accommodateMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
+
+    if (condition === '0') { userMessage = controlMessage }
+    else { userMessage = accommodateMessage }
+    console.log(userMessage)
 
     var BG1 = urlParams.get('BG1') + " "
     var BG2 = urlParams.get('BG2') + " "
@@ -343,7 +312,7 @@ window.onload = function() {
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
     console.log("LOCAL DATE TIME IS: " + localDateTime);
-    transcript.set("USER " + localDateTime, "Intro");
+    transcript.set("USER " + localDateTime, userMessage);
 
     console.log(transcript)
 
@@ -364,25 +333,17 @@ window.onload = function() {
     // const chatBox = document.getElementById('chat-box');
     chatBox.appendChild(ellipse);
 
-    userInput.disabled = true;
+    // userInput.disabled = true;
 
     console.log("AB TO SEND: " + JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition]}))
-    fetch(base_url + `/api/intro`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_info: user_info})
+    fetch(base_url + `/api/assistant`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: user_info})
     })
     .then(response => response.json())
     .then(data => {
-        // checkModal(data.message, data.highlights, data.audio);
-        audio_from_api_control = data.audioControl
-        audio_from_api_accommodate = data.audioAccommodate
-        controlMessage = data.responseControl
-        accommodateMessage = data.responseAccommodate
-        highlights = data.highlights
-        console.log("CONTROL MESSAGE:", controlMessage)
-        console.log("ACCOMMODATE MESSAGE:", accommodateMessage)
-        hasLoaded = true;
+        checkModal(data.response, data.audio);
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
@@ -424,66 +385,10 @@ window.onload = function() {
 
 
 function navigateModalInstructions(current, show) {
-    if (current === 'message-4' && show === 'message-5') {
-        document.getElementById(current).style.display = 'none'
-        const ellipse = document.createElement('div');
-        ellipse.className = "lds-ellipsis";
-        ellipse.setAttribute('id', "lds-ellipsis")
-
-        const l1 = document.createElement('div');
-        const l2 = document.createElement('div');
-        const l3 = document.createElement('div');
-
-        ellipse.appendChild(l1)
-        ellipse.appendChild(l2)
-        ellipse.appendChild(l3)
-
-        // Select the modal element
-        const modal = document.getElementById("myModal");
-
-        // Append the ellipse to the modal content
-        modal.querySelector('.modal-content').appendChild(ellipse);
-
-        function checkHasLoaded() {
-            if (hasLoaded === true) {
-                console.log("IS TRUE")
-                const ellipseRemoval = document.getElementById('lds-ellipsis');
-                ellipseRemoval.remove();
-                document.getElementById('message-5').style.display = 'block';
-
-                console.log(highlights);
-                console.log(accommodateMessage)
-                // Iterate over the highlights array
-                highlights.forEach(function(highlight) {
-                    // Escape special characters in highlight
-                    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    
-                    // Check if the highlight exists in the accommodateMessage
-                    if (accommodateMessage.includes(highlight)) {
-                        // If found, replace the highlight in the accommodateMessage with the same text wrapped in a span with bold
-                        accommodateMessage = accommodateMessage.replace(new RegExp(escapedHighlight, 'g'), '<span style="font-weight: bold;">' + highlight + '</span>');
-                    }
-                });
-            
-                
-                document.getElementById('control').innerText = controlMessage;
-                document.getElementById('accommodate').innerHTML = accommodateMessage;
-            } else {
-                // If hasLoaded is not true, keep checking on the next animation frame
-                requestAnimationFrame(checkHasLoaded);
-            }
-        }
-        // Start checking for hasLoaded
-        checkHasLoaded();
-    } else {
-        document.getElementById(current).style.display = 'none'
-        document.getElementById(show).style.display = 'block'
-    }
+    document.getElementById(current).style.display = 'none'
+    document.getElementById(show).style.display = 'block'
 }
 
-// document.getElementById('nextBtn4').addEventListener('click', function() {
-    
-// });
 
 // Get the modal
 var helpModal = document.getElementById("help-modal");
@@ -509,15 +414,6 @@ window.onclick = function(event) {
   if (event.target == helpModal) {
     helpModal.style.display = "none";
   }
-}
-
-function selectAlexVersion(select, unselect) {
-    selectedOption = select;
-    var selectedBox = document.getElementById(select);
-    selectedBox.classList.add('selected');
-
-    var unselectedBox = document.getElementById(unselect);
-    unselectedBox.classList.remove('selected');
 }
 
 document.getElementById('toggleButton').addEventListener('click', function() {
