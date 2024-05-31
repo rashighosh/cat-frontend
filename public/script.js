@@ -98,8 +98,8 @@ function modalInstructions(condition) {
     catStrategyElement.innerHTML = messageInstructions;
 }
 
-// const base_url = "http://44.209.126.3"
-const base_url = "http://127.0.0.1:8000"
+const base_url = "http://44.209.126.3"
+// const base_url = "http://127.0.0.1:8000"
 
 
 function closeModal() {
@@ -136,28 +136,28 @@ function appendAlexMessage2(message, audioDataUrl) {
     chatBox.appendChild(messageElement);
 
     // COMMENT OUT AUDIO FOR TESTING
-    // // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    // Create and append the audio element
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
+    // Play the video and loop when the audio starts playing
+    audioElement.addEventListener('play', function() {
+        video.loop = true; // Ensure video loops
+        video.play();
+        loadingSvg.style.visibility = 'visible';
+    });
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     userInput.disabled = false;
-    //     loadingSvg.style.visibility = 'hidden';
-    // });
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        video.currentTime = video.duration;
+        video.pause();
+        userInput.disabled = false;
+        loadingSvg.style.visibility = 'hidden';
+    });
 
-    // audioElement.play();
+    audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -239,7 +239,7 @@ function sendMessage() {
     transcript.set("USER " + localDateTime, userMessage);
 
     console.log(transcript)
-    // userInput.disabled = true;
+    userInput.disabled = true;
 
     fetch(base_url + '/api/assistant', {
         method: 'POST',
@@ -268,7 +268,7 @@ function sendMessage() {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
         ellipse.remove();        
-        // userInput.disabled = true;
+        userInput.disabled = true;
     });
 
     userInput.value = ''; // Clear input field after sending message
@@ -333,7 +333,7 @@ window.onload = function() {
     // const chatBox = document.getElementById('chat-box');
     chatBox.appendChild(ellipse);
 
-    // userInput.disabled = true;
+    userInput.disabled = true;
 
     console.log("AB TO SEND: " + JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition]}))
     fetch(base_url + `/api/assistant`, {
