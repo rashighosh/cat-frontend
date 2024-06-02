@@ -64,7 +64,7 @@ var CAT_IDS = [
 
 const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
 const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow of your conversation to be engaging based on your background information</b>.";
+const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow of your conversation based on your background information</b>.";
 const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
 const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
 
@@ -98,8 +98,8 @@ function modalInstructions(condition) {
     catStrategyElement.innerHTML = messageInstructions;
 }
 
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
+// const base_url = "http://44.209.126.3"
+const base_url = "http://127.0.0.1:8000"
 
 
 function closeModal() {
