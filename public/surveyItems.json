@@ -1,0 +1,20 @@
+[
+    {
+        "survey": "Communication Styles Inventory",
+        "item": "Talkativeness",
+        "question": "I like to talk a lot.",
+        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
+    },
+    {
+        "survey": "Communication Styles Inventory",
+        "item": "Informality",
+        "question": "I address others in a very casual way.",
+        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
+    },
+    {
+        "survey": "Communication Styles Inventory",
+        "item": "Conciseness",
+        "question": "Most of the time, I only need a few words to explain something.",
+        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
+    }
+]

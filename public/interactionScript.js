@@ -1,4 +1,3 @@
-const video = document.getElementById('myVideo');
 const chatBox = document.getElementById('chat-box');
 const concludeButton = document.getElementById('conclude-button');
 
@@ -8,12 +7,16 @@ var transcript = new Map()
 
 var id = ''
 var condition = ''
-let highlights = ''
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
 
 let progress = 0;
+
+// const base_url = "http://44.209.126.3"
+const base_url = "http://127.0.0.1:8000"
+
+
 
 function increaseProgress() {
     console.log("IN INCREASE PROGRESS")
@@ -62,11 +65,12 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to match your language and communication style during your conversation based on your background information</b>.";
-const interpretabilityMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to be clear and understandable during your conversation based on your background information</b>.";
-const discourseManagementMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to manage the flow of your conversation based on your background information</b>.";
-const interpersonalControlMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>We've programmed Alex to maintain a balanced power dynamic during your conversation based on your background information</b>.";
-const emotionalExpressionMessage = "You're about to chat with the virtual healthcare assistant, Alex. <b>Our goal is to program Alex to be emotionally expressive during your conversation based on your background information</b>.";
+const approximationMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to match your language and communication style during your conversation based on your background information</b>.";
+const interpretabilityMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to be clear and understandable during your conversation based on your background information</b>.";
+const discourseManagementMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to pay attention to and adjust to what you want to talk about during your conversation based on your background information</b>.";
+const interpersonalControlMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to respect and maintain a balanced power dynamic during your conversation based on your background information</b>.";
+const emotionalExpressionMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to be aware of your emotions and be emotionally expressive during your conversation based on your background information</b>.";
+const controlMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials.";
 
 let user_info = ""
 
@@ -75,6 +79,9 @@ function modalInstructions(condition) {
     let messageInstructions = ''
 
     switch (condition) {
+        case '0':
+            messageInstructions = controlMessage
+        break;
         case '1':
             messageInstructions = approximationMessage
         break;
@@ -92,15 +99,11 @@ function modalInstructions(condition) {
         break;
         default:
             // Handle the case where 'condition' is not '1', '2', '3', '4', or '5'
-            console.log("Condition is not '1', '2', '3', '4', or '5'.");
+            console.log("Condition is not '0', '1', '2', '3', '4', or '5'.");
         break;
     }
     catStrategyElement.innerHTML = messageInstructions;
 }
-
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
-
 
 function closeModal() {
     document.getElementById("myModal").style.display = "none";
@@ -144,6 +147,7 @@ function appendAlexMessage2(message, audioDataUrl) {
 
     // Play the video and loop when the audio starts playing
     audioElement.addEventListener('play', function() {
+        const video = document.getElementById('myVideo');
         video.loop = true; // Ensure video loops
         video.play();
         loadingSvg.style.visibility = 'visible';
@@ -151,6 +155,8 @@ function appendAlexMessage2(message, audioDataUrl) {
 
     // Pause the video when the audio stops playing
     audioElement.addEventListener('ended', function() {
+        const video = document.getElementById('myVideo');
+        console.log("IT HAS ENDED")
         video.currentTime = video.duration;
         video.pause();
         userInput.disabled = false;
@@ -283,10 +289,10 @@ window.onload = function() {
     id = urlParams.get('id')
     console.log(id);
     let userMessage = ''
-    var controlMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA.'
+    var controlInitialMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA.'
     var accommodateMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
 
-    if (condition === '0') { userMessage = controlMessage }
+    if (condition === '0') { userMessage = controlInitialMessage }
     else { userMessage = accommodateMessage }
     console.log(userMessage)
 
@@ -349,8 +355,6 @@ window.onload = function() {
         localDateTime = currentDate.toLocaleString();
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
-        transcript.set("ALEX CONTROL " + localDateTime, data.controlMessage);
-        transcript.set("ALEX ACCOMMODATE " + localDateTime, data.accommodateMessage);
         console.log(transcript)
     })
     .catch(error => console.error('Error:', error))
@@ -387,6 +391,16 @@ window.onload = function() {
 function navigateModalInstructions(current, show) {
     document.getElementById(current).style.display = 'none'
     document.getElementById(show).style.display = 'block'
+    console.log("HERE")
+    console.log(show)
+    if (show === 'message-5') {
+        console.log(condition)
+        if (condition == 0) {
+            console.log("GOING TO HIDE THE STUFF")
+            document.getElementById('toggleButton').style.display = 'none';
+            document.getElementById('toggleContent').style.display = 'none';
+        }
+    }
 }
 
 
