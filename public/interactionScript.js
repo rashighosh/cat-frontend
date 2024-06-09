@@ -130,7 +130,7 @@ function appendAlexMessage2(message, audioDataUrl) {
     labelText.className = "label-text";
     const messageText = document.createElement('span');
 
-    labelText.innerText = `Alex: `;
+    labelText.innerText = `Alex`;
     messageText.innerHTML = `${message}`;
 
     messageElement.className = "chatbot-message"
@@ -175,7 +175,7 @@ function appendUserMessage(message) {
     labelText.className = "label-text";
     const messageText = document.createElement('span');
 
-    labelText.innerText = `You: `;
+    labelText.innerText = `You`;
     messageText.innerText = `${message}`;
 
     messageElement.className = "user-message"
@@ -373,7 +373,7 @@ window.onload = function() {
     fetch('/transcript', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: id, bgInfoQualtrics: user_info,  transcript: transcriptString})
+        body: JSON.stringify({id: id, transcript: transcriptString, transcriptType: 'informationTranscript'})
     })
     .then(response => response.json())
     .then(data => {

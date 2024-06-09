@@ -1,30 +1,86 @@
 const surveyItems = [
     {
-        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading you a series of statements. For each statement, please enter a number between 1 and 7, where 1 means you completely disagree, and 7 means you completely agree. Please type <b>Continue</b> to proceed.",
-        "placeholder": "Type 'Continue' to proceed.",
+        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading you 3 statements. For each statement, please choose a number between 1 and 7 to rate your agreement with the statement. Please select <b>'Continue'</b> to proceed.",
+        "instructions": "Please select your response:",
+        "options": ['Continue']
     },
     {
+        "survey": "Communication Styles Inventory",
+        "item": "Talkativeness",
         "message": "Alright! First statement: <b>I like to talk a lot</b>.",
-        "placeholder": "Enter a number between 1 and 7, where 1 is completely disagree and 7 is completely agree",
-        "survey": "Communication Styles Inventory",
-        "item": "Informality",
-        "question": "I address others in a very casual way.",
-        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
+        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
+        "options": ['1', '2', '3', '4', '5', '6', '7']
     },
     {
-        "message": "Thank you! Next, do you generally address others in a very casual way?",
-        "placeholder": "Enter a number between 1 and 7, where 1 is completely disagree and 7 is completely agree",
         "survey": "Communication Styles Inventory",
         "item": "Informality",
-        "question": "I address others in a very casual way.",
-        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
+        "message": "Thank you! Next statement: <b>I generally address others in a very casual way</b>.",
+        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
+        "options": ['1', '2', '3', '4', '5', '6', '7']
     },
     {
         "survey": "Communication Styles Inventory",
         "item": "Conciseness",
-        "question": "Most of the time, I only need a few words to explain something.",
-        "scale": "Enter a number between 1 (completely disagree) and 7 (completely agree)."
-    }
+        "message": "Got it. Final statement: <b>Most of the time, I only need a few words to explain something</b>.",
+        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
+        "options": ['1', '2', '3', '4', '5', '6', '7']
+    },
+    {
+        "message": "Thanks for your responses! Now, I'm going to ask you 4 questions. This time, please choose a number between 1 and 5 to answer the question. Please select <b>Continue</b> to proceed.",
+        "instructions": "Please select your response:",
+        "options": ['Continue']
+    },
+    {
+        "survey": "BRIEF Health Literacy Screening Tool",
+        "item": "Help Read Materials",
+        "message": "Alright! First question: <b>How often do you have someone help you read health-related materials</b>?",
+        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
+        "options": ['1', '2', '3', '4', '5']
+    },
+    {
+        "survey": "BRIEF Health Literacy Screening Tool",
+        "item": "Filling Out Medical Forms",
+        "message": "Next, <b>How confident are you filling out medical forms by yourself</b>?",
+        "instructions": "Please select your response, where <em>1=Not At All</em>, <em>2=A Little Bit</em>, <em>3=Somewhat</em>, <em>4=Quite A Bit</em>, and <em>5=Extremely:</em>",
+        "options": ['1', '2', '3', '4', '5']
+    },
+    {
+        "survey": "BRIEF Health Literacy Screening Tool",
+        "item": "Understanding Written Info",
+        "message": "Third, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
+        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
+        "options": ['1', '2', '3', '4', '5']
+    },
+    {
+        "survey": "BRIEF Health Literacy Screening Tool",
+        "item": "Understanding What is Told",
+        "message": "Finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
+        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
+        "options": ['1', '2', '3', '4', '5']
+    },
+    {
+        "message": "Thanks for your responses! Finally, I will ask you three questions. This time, you can freely type your responses. Please select <b>Continue</b> to proceed.",
+        "instructions": "Please select your response:",
+        "options": ['Continue']
+    },
+    {
+        "survey": "Background Info",
+        "item": "Receiving Information",
+        "message": "First, <b>How do you usually go about receiving information about health-related topics</b>?",
+    },
+    {
+        "survey": "Background Info",
+        "item": "Who Do You Consult With",
+        "message": "Second, <b>Who do you typically consult with when making important health-related decisions, and how do they influence your choices</b>?",
+    },
+    {
+        "survey": "Background Info",
+        "item": "Opportunity to Participate",
+        "message": "Finally, <b>If you had the opportunity to participate in a clinical trial today, what factors would affect your decision</b>?",
+    },
+    {
+        "message": "Alright, thanks for sharing a little about yourself with me! Please click the button in the bottom right to proceed to talking about clinical trials.",
+    },
 ]
 
 let counter = 0;
@@ -33,6 +89,11 @@ console.log(surveyItems)
 
 const chatBox = document.getElementById('chat-box');
 const concludeButton = document.getElementById('conclude-button');
+
+const inputAreaText = document.getElementById('input-area');
+const inputAreaButtons = document.getElementById('input-area-buttons');
+
+var responsesArray = ["Continue", "Option 2", "Option 3"]
 
 var currentDate;
 var localDateTime;
@@ -55,19 +116,128 @@ const finishButton = document.getElementById('finish-button');
 // To disable the button
 finishButton.disabled = true;
 
+var buttonSelection = ''
 
-function appendAlexMessage2(message, audioDataUrl) {
+function increaseProgress() {
+    console.log("IN INCREASE PROGRESS")
+    if (progress < 13) {
+        progress++;
+        updateProgressBar();
+        updateProgressText();
+    }
+    if (progress >= 13) {
+        // Assuming you have a reference to the button element
+        const finishButton = document.getElementById('finish-button');
+
+        // To disable the button
+        finishButton.disabled = false;
+    }
+}
+
+function updateProgressBar() {
+    const progressBar = document.getElementById('progress');
+    const progressWidth = (progress / 13) * 100;
+    progressBar.style.width = `${progressWidth}%`;
+}
+
+function updateProgressText() {
+    const progressText = document.getElementById('progress-text');
+    progressText.textContent = `Progress: ${Math.floor(progress * (100/13))}%`;
+}
+
+// Function to dynamically generate buttons
+function generateButtons(responsesArray) {
+
+    console.log("responsesArray:", responsesArray)
+    // Array of response options
+    // Get the container for buttons
+    let buttonsContainer = document.getElementById("user-message-buttons");
+
+    // Clear any existing buttons
+    buttonsContainer.innerHTML = '';
+
+    // Generate buttons for each response option
+    responsesArray.forEach(function(response) {
+        let button = document.createElement("button");
+        button.textContent = response;
+        button.classList.add("user-input-button");
+        button.id = response
+        buttonsContainer.appendChild(button);
+        button.onclick = function() {
+            selectButton(response);
+        };
+    });
+}
+
+function selectButton(response) {
+    console.log("USER BUTTON RESPONSE IS:", response);
+    let buttonsContainer = document.getElementById("user-message-buttons");
+    let selectedButton = document.getElementById(response);
+
+    // Check if the clicked button is already selected
+    if (selectedButton.classList.contains("selected")) {
+        // Deselect the button
+        selectedButton.innerText = selectedButton.innerText.replace('✔ ', ''); // Remove the check mark
+        selectedButton.classList.remove("selected");
+        // Update the buttonSelection variable or perform any other actions as needed
+        buttonSelection = ''; // or any other appropriate value
+    } else {
+        // Deselect all other buttons
+        let buttons = buttonsContainer.querySelectorAll(".user-input-button");
+        buttons.forEach(function(button) {
+            if (button.id !== response) {
+                button.innerText = button.innerText.replace('✔ ', ''); // Remove the check mark
+                button.classList.remove("selected");
+            }
+        });
+
+        // Select the clicked button
+        selectedButton.innerText = '✔ ' + selectedButton.innerText;
+        selectedButton.classList.add("selected");
+
+        // Update the buttonSelection variable or perform any other actions as needed
+        buttonSelection = response;
+    }
+}
+
+
+// if (counter <= 9) {
+//     console.log("HERE")
+    
+// } else {
+//     inputAreaText.style.display = "flex"
+//     inputAreaButtons.style.display = "none"
+// }
+
+
+function appendAlexMessage(message, audioDataUrl) {
     console.log("MESSAGE IS:", message)
+    console.log(counter)
 
-    userInput.placeholder = surveyItems[counter].placeholder;
-    counter++
+    if (counter <= 9) {
+        inputAreaText.style.display = "none"
+        inputAreaButtons.style.display = "flex"
+        generateButtons(surveyItems[counter].options)
+        document.getElementById("button-instructions").innerHTML = surveyItems[counter].instructions
+    } else if (counter === 13) {
+        inputAreaText.style.display = "none"
+        inputAreaButtons.style.display = "none"
+        finishButton.disabled = false
+    }
+    else {
+        inputAreaText.style.display = "flex"
+        inputAreaButtons.style.display = "none"
+    }
+    
+    counter++;
+    console.log("INCREMENTED COUNTER", counter)
     
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
     labelText.className = "label-text";
     const messageText = document.createElement('span');
 
-    labelText.innerText = `Alex: `;
+    labelText.innerText = `Alex`;
     messageText.innerHTML = `${message}`;
 
     messageElement.className = "chatbot-message"
@@ -76,31 +246,31 @@ function appendAlexMessage2(message, audioDataUrl) {
     chatBox.appendChild(messageElement);
 
     // COMMENT OUT AUDIO FOR TESTING
-    // Create and append the audio element
-    const audioElement = new Audio(audioDataUrl);
-    audioElement.controls = true;
-    chatBox.appendChild(audioElement);
-    audioElement.style.display = 'none'
+    // // Create and append the audio element
+    // const audioElement = new Audio(audioDataUrl);
+    // audioElement.controls = true;
+    // chatBox.appendChild(audioElement);
+    // audioElement.style.display = 'none'
 
-    // Play the video and loop when the audio starts playing
-    audioElement.addEventListener('play', function() {
-        const video = document.getElementById('myVideo');
-        video.loop = true; // Ensure video loops
-        video.play();
-        loadingSvg.style.visibility = 'visible';
-    });
+    // // Play the video and loop when the audio starts playing
+    // audioElement.addEventListener('play', function() {
+    //     const video = document.getElementById('myVideo');
+    //     video.loop = true; // Ensure video loops
+    //     video.play();
+    //     loadingSvg.style.visibility = 'visible';
+    // });
 
-    // Pause the video when the audio stops playing
-    audioElement.addEventListener('ended', function() {
-        const video = document.getElementById('myVideo');
-        console.log("IT HAS ENDED")
-        video.currentTime = video.duration;
-        video.pause();
-        userInput.disabled = false;
-        loadingSvg.style.visibility = 'hidden';
-    });
+    // // Pause the video when the audio stops playing
+    // audioElement.addEventListener('ended', function() {
+    //     const video = document.getElementById('myVideo');
+    //     console.log("IT HAS ENDED")
+    //     video.currentTime = video.duration;
+    //     video.pause();
+    //     userInput.disabled = false;
+    //     loadingSvg.style.visibility = 'hidden';
+    // });
 
-    audioElement.play();
+    // audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -112,7 +282,7 @@ function appendUserMessage(message) {
     labelText.className = "label-text";
     const messageText = document.createElement('span');
 
-    labelText.innerText = `You: `;
+    labelText.innerText = `You`;
     messageText.innerText = `${message}`;
 
     messageElement.className = "user-message"
@@ -143,7 +313,6 @@ function appendUserMessage(message) {
 }
 
 function appendLoadingDots() {
-    // <div id="lds-ellipsis" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     const ellipse = document.createElement('div');
     ellipse.className = "lds-ellipsis";
 
@@ -167,10 +336,19 @@ document.getElementById("user-input").addEventListener("keydown", function(event
     }
   });
 
-// Example of how you might call your API and use the response
-function sendMessage() {
-    const userMessage = userInput.value;
-    if (userMessage.trim() === '') return;
+function sendMessage(type) {
+    var userMessage
+    if (type === 'button') {
+        if (buttonSelection === '') { 
+            alert('Please select a button to continue.') 
+            return
+        } else {
+            userMessage = buttonSelection;
+        }
+    } else {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+    }
 
     appendUserMessage(userMessage);
 
@@ -182,7 +360,7 @@ function sendMessage() {
     informationTranscript.set("USER " + localDateTime, userMessage);
 
     console.log(informationTranscript)
-    userInput.disabled = true;
+    // userInput.disabled = true;
 
     let alexMessage = surveyItems[counter].message
 
@@ -193,7 +371,9 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage2(alexMessage, data.audio);
+        appendAlexMessage(alexMessage, data.audio);
+        buttonSelection = ''
+        increaseProgress();
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
@@ -207,7 +387,7 @@ function sendMessage() {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
         ellipse.remove();        
-        userInput.disabled = true;
+        // userInput.disabled = true;
     });
 
     userInput.value = ''; // Clear input field after sending message
@@ -244,10 +424,9 @@ window.onload = function() {
     ellipse.appendChild(l3)
 
     console.log("HERE ADDING ELIPPSE")
-    // const chatBox = document.getElementById('chat-box');
     chatBox.appendChild(ellipse);
 
-    userInput.disabled = true;
+    // userInput.disabled = true;
 
     fetch(base_url + `/api/cat/voice`, {
         method: 'POST',
@@ -256,7 +435,7 @@ window.onload = function() {
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage2(alexMessage, data.audio);
+        appendAlexMessage(alexMessage, data.audio);
     })
     .catch(error => console.error('Error:', error))
     .finally(() => {
@@ -293,3 +472,23 @@ window.onclick = function(event) {
     helpModal.style.display = "none";
   }
 }
+
+function logInformationTranscript() {
+    console.log("IN LOG TRANSCRIPT!")
+    let transcriptString = JSON.stringify(Object.fromEntries(informationTranscript));
+    fetch('/transcript', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: id, transcriptType: 'informationTranscript', transcript: transcriptString})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("logged to file")
+    })
+    .catch(error => console.error('Error:', error))
+    .finally(() => {
+        // Remove loading indicator after response received
+        console.log("check for transcript file")
+        window.location.href = "/interaction?" + id + "&c=" + condition;
+    });
+  }
