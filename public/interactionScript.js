@@ -3,7 +3,7 @@ const concludeButton = document.getElementById('conclude-button');
 
 var currentDate;
 var localDateTime;
-var transcript = new Map()
+var interactionTranscript = new Map()
 
 var id = ''
 var condition = ''
@@ -16,6 +16,116 @@ let progress = 0;
 // const base_url = "http://44.209.126.3"
 const base_url = "http://127.0.0.1:8000"
 
+var BRIEFscore = 0
+var commStyle = ''
+var userInfo = ''
+
+function calculateBRIEFScore(surveyAnswersBRIEF) {
+    for (const value of Object.values(surveyAnswersBRIEF)) {
+        // Check if the value is a number
+        if (typeof value === 'number') {
+            BRIEFscore += value;
+        }
+    }
+}
+
+function formatJSONObjectAsString(JSONObject, item) {
+    if (item === 'commStyle') {
+        for (const [key, value] of Object.entries(JSONObject)) {
+            commStyle += `${key}: ${value}; `;
+        }
+        commStyle = commStyle.trim().slice(0, -1);
+    } else {
+        for (const [key, value] of Object.entries(JSONObject)) {
+            userInfo += `${value}; `;
+        }
+        userInfo = userInfo.trim().slice(0, -1);
+    }
+}
+
+function getUserInfoFromDatabase(id) {
+    fetch('/userInformation', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: id})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("USER INFO DATA FROM SERVER:", data)
+        calculateBRIEFScore(data.surveyAnswersBRIEF)
+        formatJSONObjectAsString(data.surveyAnswersCommStyle, 'commStyle')
+        formatJSONObjectAsString(data.backgroundInfo, 'userInfo')
+        console.log("BREIF SCORE IS: ", BRIEFscore)
+        console.log("COMM STYLE IS IS: ", commStyle)
+        console.log("USER INFO IS IS: ", userInfo)
+    })
+    .catch(error => console.error('Error:', error))
+    .finally(() => {
+        // Remove loading indicator after response received
+        console.log("success")
+        let userMessage = ''
+        var controlInitialMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA.'
+        var accommodateMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
+
+        if (condition === '0') { userMessage = controlInitialMessage }
+        else { userMessage = accommodateMessage }
+        console.log(userMessage)
+            
+        interactionTranscript.set("id", id);
+        interactionTranscript.set("condition", condition);
+
+        condition = parseInt(condition)
+
+        currentDate = new Date();
+        // Convert the date and time to the user's local time zone
+        localDateTime = currentDate.toLocaleString();
+        // Output the local date and time
+        console.log("LOCAL DATE TIME IS: " + localDateTime);
+        interactionTranscript.set("USER " + localDateTime, userMessage);
+
+        // Actions to be performed when the page is fully loaded
+        const ellipse = document.createElement('div');
+        ellipse.className = "lds-ellipsis";
+        ellipse.setAttribute('id', "lds-ellipsis")
+
+        const l1 = document.createElement('div');
+        const l2 = document.createElement('div');
+        const l3 = document.createElement('div');
+
+        ellipse.appendChild(l1)
+        ellipse.appendChild(l2)
+        ellipse.appendChild(l3)
+
+        console.log("HERE ADDING ELIPPSE")
+        // const chatBox = document.getElementById('chat-box');
+        chatBox.appendChild(ellipse);
+
+        userInput.disabled = true;
+        console.log("USER INFO IS", userInfo)
+
+        fetch(base_url + `/api/cat/assistant`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
+        })
+        .then(response => response.json())
+        .then(data => {
+            checkModal(data.response, data.audio);
+            currentDate = new Date();
+            // Convert the date and time to the user's local time zone
+            localDateTime = currentDate.toLocaleString();
+            // Output the local date and time
+            console.log("LOCAL DATE TIME IS: " + localDateTime);
+        })
+        .catch(error => console.error('Error:', error))
+        .finally(() => {
+            // Remove loading indicator after response received
+            console.log("HERE SHOULD REMOVE ELIPPSE")
+            const ellipse = document.getElementById('lds-ellipsis');
+            ellipse.remove();
+        });
+    });
+}
 
 
 function increaseProgress() {
@@ -45,6 +155,22 @@ function increaseProgress() {
     progressText.textContent = `Progress: ${progress * 20}%`;
   }
 
+  function closeModal() {
+    document.getElementById("interactionModal").style.display = "none";
+}
+
+function checkModal(message, audioDataUrl) {
+    // Check the variable every 1 second (1000 milliseconds)
+var intervalId = setInterval(function() {
+    // Check if the variable is true
+    if (document.getElementById("myModal").style.display == "none") {
+        // Execute your function
+        appendAlexMessage2(message, audioDataUrl);
+        clearInterval(intervalId);
+    }
+}, 1000); // Interval set to 1000 milliseconds (1 second)
+}
+
 const finishButton = document.getElementById('finish-button');
 
 // To disable the button
@@ -65,55 +191,15 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-const approximationMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to match your language and communication style during your conversation based on your background information</b>.";
-const interpretabilityMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to be clear and understandable during your conversation based on your background information</b>.";
-const discourseManagementMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to pay attention to and adjust to what you want to talk about during your conversation based on your background information</b>.";
-const interpersonalControlMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to respect and maintain a balanced power dynamic during your conversation based on your background information</b>.";
-const emotionalExpressionMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials. <b>We have tailored Alex to be aware of your emotions and be emotionally expressive during your conversation based on your background information</b>.";
-const controlMessage = "You are about to chat with the virtual assistant, Alex. The information Alex shares is based on sources curated by health communication experts for educating people on clinical trials.";
-
-let user_info = ""
-
-function modalInstructions(condition) {
-    const catStrategyElement = document.getElementById("cat-strategy");
-    let messageInstructions = ''
-
-    switch (condition) {
-        case '0':
-            messageInstructions = controlMessage
-        break;
-        case '1':
-            messageInstructions = approximationMessage
-        break;
-        case '2':
-            messageInstructions = interpretabilityMessage
-        break;
-        case '3':
-            messageInstructions = interpersonalControlMessage
-        break;
-        case '4':
-            messageInstructions = discourseManagementMessage
-        break;
-        case '5':
-            messageInstructions = emotionalExpressionMessage
-        break;
-        default:
-            // Handle the case where 'condition' is not '1', '2', '3', '4', or '5'
-            console.log("Condition is not '0', '1', '2', '3', '4', or '5'.");
-        break;
-    }
-    catStrategyElement.innerHTML = messageInstructions;
-}
-
 function closeModal() {
-    document.getElementById("myModal").style.display = "none";
+    document.getElementById("interactionModal").style.display = "none";
 }
 
 function checkModal(message, audioDataUrl) {
     // Check the variable every 1 second (1000 milliseconds)
     var intervalId = setInterval(function() {
     // Check if the variable is true
-    if (document.getElementById("myModal").style.display == "none") {
+    if (document.getElementById("interactionModal").style.display == "none") {
         // Execute your function
         appendAlexMessage2(message, audioDataUrl);
         clearInterval(intervalId);
@@ -242,12 +328,11 @@ function sendMessage() {
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
     console.log("LOCAL DATE TIME IS: " + localDateTime);
-    transcript.set("USER " + localDateTime, userMessage);
+    interactionTranscript.set("USER " + localDateTime, userMessage);
 
-    console.log(transcript)
     userInput.disabled = true;
 
-    fetch(base_url + '/api/assistant', {
+    fetch(base_url + '/api/cat/assistant', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: user_info})
@@ -265,9 +350,7 @@ function sendMessage() {
         localDateTime = currentDate.toLocaleString();
         // Output the local date and time
         console.log("LOCAL DATE TIME IS: " + localDateTime);
-        transcript.set("ALEX " + localDateTime, data.response);
-
-        console.log(transcript)
+        interactionTranscript.set("ALEX " + localDateTime, data.response);
     })
     .catch(error => console.error('Error:', error))
     .finally(() => {
@@ -288,92 +371,17 @@ window.onload = function() {
     console.log(condition);
     id = urlParams.get('id')
     console.log(id);
-    let userMessage = ''
-    var controlInitialMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA.'
-    var accommodateMessage = 'Introduce yourself to the user and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
-
-    if (condition === '0') { userMessage = controlInitialMessage }
-    else { userMessage = accommodateMessage }
-    console.log(userMessage)
-
-    var BG1 = urlParams.get('BG1') + " "
-    var BG2 = urlParams.get('BG2') + " "
-    var BG3 = urlParams.get('BG3') + " "
-
-    console.log("BG INFO IS:", BG1, BG2, BG3)
-
-    user_info = BG1 + BG2 + BG3;
-
-    console.log("USER_INFO IS:", user_info)
-    
-    modalInstructions(condition)
-    
-    transcript.set("id", id);
-    transcript.set("condition", condition);
-
-    condition = parseInt(condition)
-
-    currentDate = new Date();
-    // Convert the date and time to the user's local time zone
-    localDateTime = currentDate.toLocaleString();
-    // Output the local date and time
-    console.log("LOCAL DATE TIME IS: " + localDateTime);
-    transcript.set("USER " + localDateTime, userMessage);
-
-    console.log(transcript)
-
-    // Actions to be performed when the page is fully loaded
-    const ellipse = document.createElement('div');
-    ellipse.className = "lds-ellipsis";
-    ellipse.setAttribute('id', "lds-ellipsis")
-
-    const l1 = document.createElement('div');
-    const l2 = document.createElement('div');
-    const l3 = document.createElement('div');
-
-    ellipse.appendChild(l1)
-    ellipse.appendChild(l2)
-    ellipse.appendChild(l3)
-
-    console.log("HERE ADDING ELIPPSE")
-    // const chatBox = document.getElementById('chat-box');
-    chatBox.appendChild(ellipse);
-
-    userInput.disabled = true;
-
-    console.log("AB TO SEND: " + JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition]}))
-    fetch(base_url + `/api/assistant`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: user_info})
-    })
-    .then(response => response.json())
-    .then(data => {
-        checkModal(data.response, data.audio);
-        currentDate = new Date();
-        // Convert the date and time to the user's local time zone
-        localDateTime = currentDate.toLocaleString();
-        // Output the local date and time
-        console.log("LOCAL DATE TIME IS: " + localDateTime);
-        console.log(transcript)
-    })
-    .catch(error => console.error('Error:', error))
-    .finally(() => {
-        // Remove loading indicator after response received
-        console.log("HERE SHOULD REMOVE ELIPPSE")
-        const ellipse = document.getElementById('lds-ellipsis');
-        ellipse.remove();
-    });
-
+    getUserInfoFromDatabase(id);
   };
 
   function logTranscript() {
     console.log("IN LOG TRANSCRIPT!")
-    let transcriptString = JSON.stringify(Object.fromEntries(transcript));
-    fetch('/transcript', {
+    let transcriptString = JSON.stringify(Object.fromEntries(interactionTranscript));
+
+    fetch('/log', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: id, transcript: transcriptString, transcriptType: 'informationTranscript'})
+        body: JSON.stringify({id: id, transcriptType: 'interactionTranscript', transcript: transcriptString})
     })
     .then(response => response.json())
     .then(data => {
@@ -385,23 +393,8 @@ window.onload = function() {
         console.log("check for transcript file")
         window.location.href = "https://ufl.qualtrics.com/jfe/form/SV_1TgxItlntE1uUzs?id=" + id + "&c=" + condition;
     });
+
   }
-
-
-function navigateModalInstructions(current, show) {
-    document.getElementById(current).style.display = 'none'
-    document.getElementById(show).style.display = 'block'
-    console.log("HERE")
-    console.log(show)
-    if (show === 'message-5') {
-        console.log(condition)
-        if (condition == 0) {
-            console.log("GOING TO HIDE THE STUFF")
-            document.getElementById('toggleButton').style.display = 'none';
-            document.getElementById('toggleContent').style.display = 'none';
-        }
-    }
-}
 
 
 // Get the modal
@@ -428,34 +421,4 @@ window.onclick = function(event) {
   if (event.target == helpModal) {
     helpModal.style.display = "none";
   }
-}
-
-document.getElementById('toggleButton').addEventListener('click', function() {
-    console.log("CLICKED")
-    var content = document.getElementById('toggleContent');
-    if (content.style.display === 'none') {
-      content.style.display = 'block';
-      content.innerHTML = "<strong>Information you entered in the pre-survey: </strong>" + user_info
-      document.getElementById('toggleButton').innerText = "▾ Click here to hide what information is being used to tailor Alex."
-    } else {
-      content.style.display = 'none';
-      document.getElementById('toggleButton').innerText = "▸ Click here to see what information is being used to tailor Alex."
-    }
-  });
-  
-  function checkCheckboxes(checkboxIds, current, show) {
-    var allChecked = true;
-
-    checkboxIds.forEach(function(id) {
-        var checkbox = document.getElementById(id);
-        if (!checkbox.checked) {
-            allChecked = false;
-        }
-    });
-
-    if (allChecked) {
-        navigateModalInstructions(current, show);
-    } else {
-        alert("Please select all checkboxes to continue.");
-    }
 }

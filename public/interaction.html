@@ -17,14 +17,24 @@
         <div id="progress"></div>
       </div>
     </div>
-    <div id="help-modal" class="help-modal">
-      <div class="help-modal-content">
-        <h3>How to complete the interaction with Alex</h3>
-        <img src="4.png" alt="How to Interact with Alex" height="575">
-        <br/>
+   <!-- Modal box -->
+   <div id="interactionModal" class="interaction-modal">
+    <div class="interaction-modal-content">
+        <h3>Welcome!</h3>
+        <p>You are about to begin your conversation about clinical trials with Alex.</p>
         <hr/>
+        <h4>How to Interact with Alex</h4>
+        <p>You will interact with Alex by typing in the chatbox. Alex will respond to you in the chatbox and speak to you, so make sure your audio is on!</p>
         <br/>
-        <button class="help-close">Close</button>
+        <h4>Requirements for conversation</h4>
+        <p>You may talk to Alex as long as you want, and ask as many questions as you'd like! You must ask Alex at least <u>5 questions</u>.</p>
+        <br/>
+        <h4>What to do when you're done</h4>
+        <p>When you are finished talking to Alex, click the "Finish Talking to Alex" button in the bottom right corner to be taken to the post-survey.</p>
+        <hr/>
+        <p><strong>When you're ready to begin, click "Let's start!" button below.</strong></p>
+        <br/>
+        <button class="start" onclick="closeModal()">Let's start!</button> <!-- Button to close the modal -->
       </div>
     </div>
     <div class="conversation-container">
@@ -86,6 +96,6 @@
 
     <button class="finish-button" id="finish-button" onclick="logTranscript()">Finish Talking to Alex</button>
 
-    <script src="script.js"></script>
+    <script src="interactionScript.js"></script>
 </body>
 </html>

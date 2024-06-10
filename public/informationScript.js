@@ -13,7 +13,7 @@ const surveyItems = [
     },
     {
         "survey": "Communication Styles Inventory",
-        "item": "Informality",
+        "item": "Casualness",
         "message": "Thank you! Next statement: <b>I generally address others in a very casual way</b>.",
         "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
         "options": ['1', '2', '3', '4', '5', '6', '7']
@@ -32,28 +32,28 @@ const surveyItems = [
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Help Read Materials",
+        "item": "Help Reading Health Materials Frequency",
         "message": "Alright! First question: <b>How often do you have someone help you read health-related materials</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
         "options": ['1', '2', '3', '4', '5']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Filling Out Medical Forms",
+        "item": "Filling Out Medical Forms Confidence",
         "message": "Next, <b>How confident are you filling out medical forms by yourself</b>?",
         "instructions": "Please select your response, where <em>1=Not At All</em>, <em>2=A Little Bit</em>, <em>3=Somewhat</em>, <em>4=Quite A Bit</em>, and <em>5=Extremely:</em>",
         "options": ['1', '2', '3', '4', '5']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Understanding Written Info",
+        "item": "Difficulty Learning About Condition From Written Info",
         "message": "Third, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
         "options": ['1', '2', '3', '4', '5']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Understanding What is Told",
+        "item": "Difficulty Understanding What is Told About Condition",
         "message": "Finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
         "options": ['1', '2', '3', '4', '5']
@@ -83,9 +83,10 @@ const surveyItems = [
     },
 ]
 
-let counter = 0;
+let surveyAnswers = {}
+let backgroundInfo = {}
 
-console.log(surveyItems)
+let counter = 0;
 
 const chatBox = document.getElementById('chat-box');
 const concludeButton = document.getElementById('conclude-button');
@@ -119,7 +120,6 @@ finishButton.disabled = true;
 var buttonSelection = ''
 
 function increaseProgress() {
-    console.log("IN INCREASE PROGRESS")
     if (progress < 13) {
         progress++;
         updateProgressBar();
@@ -148,7 +148,6 @@ function updateProgressText() {
 // Function to dynamically generate buttons
 function generateButtons(responsesArray) {
 
-    console.log("responsesArray:", responsesArray)
     // Array of response options
     // Get the container for buttons
     let buttonsContainer = document.getElementById("user-message-buttons");
@@ -170,7 +169,6 @@ function generateButtons(responsesArray) {
 }
 
 function selectButton(response) {
-    console.log("USER BUTTON RESPONSE IS:", response);
     let buttonsContainer = document.getElementById("user-message-buttons");
     let selectedButton = document.getElementById(response);
 
@@ -201,19 +199,7 @@ function selectButton(response) {
 }
 
 
-// if (counter <= 9) {
-//     console.log("HERE")
-    
-// } else {
-//     inputAreaText.style.display = "flex"
-//     inputAreaButtons.style.display = "none"
-// }
-
-
 function appendAlexMessage(message, audioDataUrl) {
-    console.log("MESSAGE IS:", message)
-    console.log(counter)
-
     if (counter <= 9) {
         inputAreaText.style.display = "none"
         inputAreaButtons.style.display = "flex"
@@ -230,7 +216,6 @@ function appendAlexMessage(message, audioDataUrl) {
     }
     
     counter++;
-    console.log("INCREMENTED COUNTER", counter)
     
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
@@ -344,10 +329,14 @@ function sendMessage(type) {
             return
         } else {
             userMessage = buttonSelection;
+            if (surveyItems[counter-1].item) {
+                surveyAnswers[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
+            }
         }
     } else {
         userMessage = userInput.value;
         if (userMessage.trim() === '') return;
+        backgroundInfo[surveyItems[counter-1].item.replace(/\s/g, "")] = userMessage;
     }
 
     appendUserMessage(userMessage);
@@ -356,10 +345,8 @@ function sendMessage(type) {
     // Convert the date and time to the user's local time zone
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
-    console.log("LOCAL DATE TIME IS: " + localDateTime);
     informationTranscript.set("USER " + localDateTime, userMessage);
 
-    console.log(informationTranscript)
     // userInput.disabled = true;
 
     let alexMessage = surveyItems[counter].message
@@ -378,9 +365,7 @@ function sendMessage(type) {
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
         // Output the local date and time
-        console.log("LOCAL DATE TIME IS: " + localDateTime);
         informationTranscript.set("ALEX " + localDateTime, alexMessage);
-        console.log(informationTranscript)
     })
     .catch(error => console.error('Error:', error))
     .finally(() => {
@@ -394,7 +379,6 @@ function sendMessage(type) {
 }
 
 window.onload = function() {
-    console.log("IN ON LOAD")
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     condition = urlParams.get('c')
@@ -407,8 +391,6 @@ window.onload = function() {
     currentDate = new Date();
     localDateTime = currentDate.toLocaleString();
     informationTranscript.set("ALEX " + localDateTime, alexMessage);
-
-    console.log(informationTranscript)
 
     // Actions to be performed when the page is fully loaded
     const ellipse = document.createElement('div');
@@ -423,7 +405,6 @@ window.onload = function() {
     ellipse.appendChild(l2)
     ellipse.appendChild(l3)
 
-    console.log("HERE ADDING ELIPPSE")
     chatBox.appendChild(ellipse);
 
     // userInput.disabled = true;
@@ -440,7 +421,6 @@ window.onload = function() {
     .catch(error => console.error('Error:', error))
     .finally(() => {
         // Remove loading indicator after response received
-        console.log("HERE SHOULD REMOVE ELIPPSE")
         const ellipse = document.getElementById('lds-ellipsis');
         ellipse.remove();
     });
@@ -476,10 +456,14 @@ window.onclick = function(event) {
 function logInformationTranscript() {
     console.log("IN LOG TRANSCRIPT!")
     let transcriptString = JSON.stringify(Object.fromEntries(informationTranscript));
-    fetch('/transcript', {
+
+    console.log(surveyAnswers)
+    console.log(backgroundInfo)
+
+    fetch('/log', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: id, transcriptType: 'informationTranscript', transcript: transcriptString})
+        body: JSON.stringify({id: id, transcriptType: 'informationTranscript', transcript: transcriptString, surveyAnswers: surveyAnswers, backgroundInfo: backgroundInfo})
     })
     .then(response => response.json())
     .then(data => {
@@ -489,6 +473,6 @@ function logInformationTranscript() {
     .finally(() => {
         // Remove loading indicator after response received
         console.log("check for transcript file")
-        window.location.href = "/interaction?" + id + "&c=" + condition;
+        window.location.href = "/interaction?id=" + id + "&c=" + condition;
     });
   }

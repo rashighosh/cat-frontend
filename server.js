@@ -105,12 +105,15 @@ app.post('/logUser', (req, res) => {
   });
 });
 
-
-
-app.post('/transcript', (req, res) => {
+app.post('/log', (req, res) => {
     // Extracting data from the request body
-    const { transcriptType, transcript, id } = req.body;
+    const { id, transcriptType, transcript, surveyAnswers, backgroundInfo } = req.body;
+
+    console.log("SURVEY ANSWERS", surveyAnswers)
+    console.log("BACKGROUND INFO ", backgroundInfo)
     
+    let queryString
+
     // BEGIN DATABASE STUFF: SENDING VERSION (R24 OR U01) AND ID TO DATABASE
     sql.connect(config, function (err) {
         if (err) {
@@ -120,13 +123,33 @@ app.post('/transcript', (req, res) => {
         // create Request object
         var request = new sql.Request();
 
-        // Construct SQL query with parameterized values
-        let queryString = `UPDATE CAT SET ${transcriptType} = @transcript WHERE id = @id`;
+        if (backgroundInfo != null && surveyAnswers != null) {
+          let updateColumnsSurvey = Object.keys(surveyAnswers).map(key => `${key} = @${key}`).join(', '); // Generate SET clause for surveyAnswers
+          let updateColumnsBackground = Object.keys(backgroundInfo).map(key => `${key} = @${key}`).join(', '); // Generate SET clause for backgroundInfo
+          let combinedUpdateColumns = [updateColumnsSurvey, updateColumnsBackground].join(', '); // Combine SET clauses
+          queryString = `UPDATE CAT SET ${transcriptType} = @transcript, ${combinedUpdateColumns} WHERE ID = @id`; // Construct UPDATE query
+        } else {
+          queryString = `UPDATE CAT SET ${transcriptType} = @transcript WHERE id = @id`;
+        }
         
-        // Bind parameterized values
-        request.input('id', sql.NVarChar, id);
-        request.input('transcript', sql.NVarChar, transcript);
-
+        if (backgroundInfo != null && surveyAnswers != null) {
+          // Bind parameterized values
+          request.input('id', sql.NVarChar, id);
+          request.input('transcript', sql.NVarChar, transcript);
+          // Bind parameterized values for updated columns in surveyAnswers
+          Object.entries(surveyAnswers).forEach(([key, value]) => {
+            request.input(key, sql.Int, value);
+          });
+          // Bind parameterized values for updated columns in backgroundInfo
+          Object.entries(backgroundInfo).forEach(([key, value]) => {
+            request.input(key, sql.NVarChar, value);
+          });
+        } else {
+          // Bind parameterized values
+          request.input('id', sql.NVarChar, id);
+          request.input('transcript', sql.NVarChar, transcript);
+        }
+        
         // Execute query
         request.query(queryString, function (err, recordset) {
             if (err) {
@@ -140,6 +163,60 @@ app.post('/transcript', (req, res) => {
     });
     // END DATABASE STUFF
 });
+
+app.post('/userInformation', (req, res) => {
+  const { id } = req.body;
+  // Connect to the database
+  sql.connect(config, function (err) {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    var request = new sql.Request();
+
+    // Execute the query to fetch survey answers
+    const surveyQueryCommStyle = `SELECT Talkativeness, Casualness, Conciseness FROM CAT WHERE ID = @id`;
+    // Bind parameterized values
+    request.input('id', sql.NVarChar, id);
+
+    request.query(surveyQueryCommStyle, function (err, surveyQueryCommStyleResult) {
+        if (err) {
+            console.error('Error fetching survey answers:', err);
+            return res.status(500).json({ error: 'Error fetching survey answers' });
+        }
+
+        const surveyQueryBRIEF = `SELECT HelpReadingHealthMaterialsFrequency, FillingOutMedicalFormsConfidence, DifficultyLearningAboutConditionFromWrittenInfo, DifficultyUnderstandingWhatisToldAboutCondition FROM CAT WHERE ID = @id`;
+        request.query(surveyQueryBRIEF, function (err, surveyQueryBRIEFResult) {
+          if (err) {
+              console.error('Error fetching survey answers:', err);
+              return res.status(500).json({ error: 'Error fetching survey answers' });
+          }
+
+        // Execute the query to fetch background info
+        const backgroundQuery = `SELECT ReceivingInformation, WhoDoYouConsultWith, OpportunitytoParticipate FROM CAT WHERE ID = @id`;
+        request.query(backgroundQuery, function (err, backgroundResult) {
+            if (err) {
+                console.error('Error fetching background info:', err);
+                return res.status(500).json({ error: 'Error fetching background info' });
+            }
+
+            // Close the database connection
+            sql.close();
+
+            // Extract the data from the query results
+            const surveyAnswersCommStyle = surveyQueryCommStyleResult.recordset[0];
+            const surveyAnswersBRIEF = surveyQueryBRIEFResult.recordset[0];
+            const backgroundInfo = backgroundResult.recordset[0];
+
+            // Send the data back to the client
+            res.json({ surveyAnswersCommStyle, surveyAnswersBRIEF, backgroundInfo });
+        });
+    });
+});
+  });
+});
+
 
 
 
