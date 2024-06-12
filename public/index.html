@@ -25,7 +25,7 @@
               </div>
               <div class="check-item">
                 <input type="checkbox" id="checkbox2">
-              <label for="checkbox2">The virtual assistant is powered by AI and <strong>may use AI to adjust its communication style </strong> based on your <strong>inputs and background information from the pre-survey</strong>.</label>
+              <label for="checkbox2">The virtual assistant is powered by AI and <strong>may use AI to adjust its communication style </strong> based on <strong>your inputs</strong>.</label>
               </div>
               <br/>
               <p>I have read and acknowledged the information above (select all checkboxes).</p>
@@ -40,12 +40,16 @@
               <h4>What will the Virtual Assistant do?</h4>
               <div class="check-item">
                 <input type="checkbox" id="checkbox3">
-                <label for="checkbox3">The virtual assistant will answer specific questions you ask and <strong>may adjust the way it communicates</strong> with you based on <strong>your inputs and background information you entered in the pre-survey</strong>.</label>
+                <label for="checkbox3">First, the virtual assistant will <strong>ask you a few questions to learn more about you</strong>.</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" id="checkbox4">
+                <label for="checkbox4">Then, the virual assistant will <strong>use this information to tailor the way it answers your questions</strong> about clinical trials.</label>
               </div>
               <br/>
               <p>I have read and acknowledged the information above (select all checkboxes).</p>
               <br/>
-              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox3'], `message-fc2`,`message-fc3`)">Continue ►</button>
+              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox3', 'checkbox4'], `message-fc2`,`message-fc3`)">Continue ►</button>
             </div>
             <div id="message-fc3">
               <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
@@ -54,17 +58,17 @@
               <hr/><br/>
               <h4>What do I need to do?</h4>
               <div class="check-item">
-                <input type="checkbox" id="checkbox4">
-                <label for="checkbox4"><strong>REMEMBER:</strong> The virtual assistant is providing <strong>general information about clinical trials</strong> and will attempt to answer your questions. The virtual assistant <strong>may adjust its communication style</strong> based on your <strong>inputs and background information from the pre-survey</strong>.</label>
+                <input type="checkbox" id="checkbox5">
+                <label for="checkbox5"><strong>REMEMBER:</strong> The virtual assistant is providing <strong>general information about clinical trials</strong> and will attempt to answer your questions. The virtual assistant <strong>may adjust its communication style</strong> based on <strong>your inputs</strong>.</label>
               </div>
               <div class="check-item">
-                <input type="checkbox" id="checkbox5">
-                <label for="checkbox5"><strong>SUSPEND DISBELIEF:</strong> Temporarily set aside skepticism about the realism of the virtual interaction to maximize learning.</label>
+                <input type="checkbox" id="checkbox6">
+                <label for="checkbox6"><strong>SUSPEND DISBELIEF:</strong> Temporarily set aside skepticism about the realism of the virtual interaction to maximize learning.</label>
               </div>
               <br/>
               <p>I have read and acknowledged the information above (select all checkboxes).</p>
               <br/>
-              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox4', 'checkbox5'], `message-fc3`,`message-1`)">Continue ►</button>
+              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox5', 'checkbox6'], `message-fc3`,`message-1`)">Continue ►</button>
             </div>
             <div id="message-1">
               <h3>Welcome to Learning about Clinical Trials with Alex!</h3>

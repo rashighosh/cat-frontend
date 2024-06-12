@@ -1,72 +1,58 @@
 const surveyItems = [
     {
-        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading you 3 statements. For each statement, please choose a number between 1 and 7 to rate your agreement with the statement. Please select <b>'Continue'</b> to proceed.",
-        "instructions": "Please select your response:",
-        "options": ['Continue']
-    },
-    {
         "survey": "Communication Styles Inventory",
         "item": "Talkativeness",
-        "message": "Alright! First statement: <b>I like to talk a lot</b>.",
-        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
-        "options": ['1', '2', '3', '4', '5', '6', '7']
+        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading you 7 statements. Please rate each statement by selecting a number. <br/> Alright! First statement: <b>I like to talk a lot</b>.",
+        "options": ['1', '2', '3', '4', '5', '6', '7'],
+        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "Communication Styles Inventory",
         "item": "Casualness",
         "message": "Thank you! Next statement: <b>I generally address others in a very casual way</b>.",
-        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
-        "options": ['1', '2', '3', '4', '5', '6', '7']
+        "options": ['1', '2', '3', '4', '5', '6', '7'],
+        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "Communication Styles Inventory",
         "item": "Conciseness",
         "message": "Got it. Final statement: <b>Most of the time, I only need a few words to explain something</b>.",
-        "instructions": "Please select your response, where <em>1=Completely Disagree</em> and <em>7=Completely Agree:</em>",
-        "options": ['1', '2', '3', '4', '5', '6', '7']
-    },
-    {
-        "message": "Thanks for your responses! Now, I'm going to ask you 4 questions. This time, please choose a number between 1 and 5 to answer the question. Please select <b>Continue</b> to proceed.",
-        "instructions": "Please select your response:",
-        "options": ['Continue']
+        "options": ['1', '2', '3', '4', '5', '6', '7'],
+        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Help Reading Health Materials Frequency",
-        "message": "Alright! First question: <b>How often do you have someone help you read health-related materials</b>?",
+        "message": "Alright! Now, <b>How often do you have someone help you read health-related materials</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
-        "options": ['1', '2', '3', '4', '5']
+        "options": ['1', '2', '3', '4', '5'],
+        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Filling Out Medical Forms Confidence",
         "message": "Next, <b>How confident are you filling out medical forms by yourself</b>?",
-        "instructions": "Please select your response, where <em>1=Not At All</em>, <em>2=A Little Bit</em>, <em>3=Somewhat</em>, <em>4=Quite A Bit</em>, and <em>5=Extremely:</em>",
-        "options": ['1', '2', '3', '4', '5']
+        "options": ['1', '2', '3', '4', '5'],
+        "label": ['Not at All', 'A Little Bit', 'Somewhat', 'Quite a Bit', 'Extremely']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Difficulty Learning About Condition From Written Info",
-        "message": "Third, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
-        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
-        "options": ['1', '2', '3', '4', '5']
+        "message": "Noted. And <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
+        "options": ['1', '2', '3', '4', '5'],
+        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Difficulty Understanding What is Told About Condition",
-        "message": "Finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
-        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
-        "options": ['1', '2', '3', '4', '5']
-    },
-    {
-        "message": "Thanks for your responses! Finally, I will ask you three questions. This time, you can freely type your responses. Please select <b>Continue</b> to proceed.",
-        "instructions": "Please select your response:",
-        "options": ['Continue']
+        "message": "Okay, finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
+        "options": ['1', '2', '3', '4', '5'],
+        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
     },
     {
         "survey": "Background Info",
         "item": "Receiving Information",
-        "message": "First, <b>How do you usually go about receiving information about health-related topics</b>?",
+        "message": "Thanks for your responses! To wrap up, I'll ask you three more questions. <br/> First, <b>How do you usually go about receiving information about health-related topics</b>?",
     },
     {
         "survey": "Background Info",
@@ -77,13 +63,22 @@ const surveyItems = [
         "survey": "Background Info",
         "item": "Opportunity to Participate",
         "message": "Finally, <b>If you had the opportunity to participate in a clinical trial today, what factors would affect your decision</b>?",
-    },
-    {
-        "message": "Alright, thanks for sharing a little about yourself with me! Please click the button in the bottom right to proceed to talking about clinical trials.",
-    },
+    }
 ]
 
-let surveyAnswers = {}
+var CAT_IDS = [
+    "control_assistant_id",
+    "approximation_assistant_id",
+    "interpretability_assistant_id",
+    "interpersonal_control_assistant_id",
+    "discourse_management_assistant_id",
+    "emotional_expression_assistant_id"
+]
+
+console.log(surveyItems)
+
+let surveyAnswersCommStyle = {}
+let surveyAnswersBRIEF = {}
 let backgroundInfo = {}
 
 let counter = 0;
@@ -119,6 +114,31 @@ finishButton.disabled = true;
 
 var buttonSelection = ''
 
+var BRIEFscore = 0
+var commStyle = ''
+var userInfo = ''
+
+function calculateBRIEFScore(surveyAnswersBRIEF) {
+    for (const value of Object.values(surveyAnswersBRIEF)) {
+        // Check if the value is a number
+        BRIEFscore += parseInt(value);
+    }
+}
+
+function formatJSONObjectAsString(JSONObject, item) {
+    if (item === 'commStyle') {
+        for (const [key, value] of Object.entries(JSONObject)) {
+            commStyle += `${key}: ${value}; `;
+        }
+        commStyle = commStyle.trim().slice(0, -1);
+    } else {
+        for (const [key, value] of Object.entries(JSONObject)) {
+            userInfo += `${value}; `;
+        }
+        userInfo = userInfo.trim().slice(0, -1);
+    }
+}
+
 function increaseProgress() {
     if (progress < 13) {
         progress++;
@@ -147,7 +167,6 @@ function updateProgressText() {
 
 // Function to dynamically generate buttons
 function generateButtons(responsesArray) {
-
     // Array of response options
     // Get the container for buttons
     let buttonsContainer = document.getElementById("user-message-buttons");
@@ -156,15 +175,27 @@ function generateButtons(responsesArray) {
     buttonsContainer.innerHTML = '';
 
     // Generate buttons for each response option
-    responsesArray.forEach(function(response) {
+    responsesArray.forEach(function(response, index) {
         let button = document.createElement("button");
         button.textContent = response;
         button.classList.add("user-input-button");
         button.id = response
-        buttonsContainer.appendChild(button);
         button.onclick = function() {
             selectButton(response);
         };
+
+        let likertButtonItem  = document.createElement("div");
+        likertButtonItem.classList.add("likert-button-item");
+
+        
+        let likertButtonLabel  = document.createElement("p");
+        likertButtonLabel.classList.add("likert-label");
+        likertButtonLabel.textContent = surveyItems[counter].label[index];
+        likertButtonItem.appendChild(likertButtonLabel);
+
+
+        likertButtonItem.appendChild(button);
+        buttonsContainer.appendChild(likertButtonItem)
     });
 }
 
@@ -200,16 +231,11 @@ function selectButton(response) {
 
 
 function appendAlexMessage(message, audioDataUrl) {
-    if (counter <= 9) {
+    if (counter <= 6) {
         inputAreaText.style.display = "none"
         inputAreaButtons.style.display = "flex"
         generateButtons(surveyItems[counter].options)
-        document.getElementById("button-instructions").innerHTML = surveyItems[counter].instructions
-    } else if (counter === 13) {
-        inputAreaText.style.display = "none"
-        inputAreaButtons.style.display = "none"
-        finishButton.disabled = false
-    }
+    } 
     else {
         inputAreaText.style.display = "flex"
         inputAreaButtons.style.display = "none"
@@ -323,20 +349,31 @@ document.getElementById("user-input").addEventListener("keydown", function(event
 
 function sendMessage(type) {
     var userMessage
-    if (type === 'button') {
-        if (buttonSelection === '') { 
-            alert('Please select a button to continue.') 
-            return
-        } else {
-            userMessage = buttonSelection;
-            if (surveyItems[counter-1].item) {
-                surveyAnswers[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
+    if (counter <= 10) {
+        if (type === 'button') {
+            if (buttonSelection === '') { 
+                alert('Please select a button to continue.') 
+                return
+            } else {
+                userMessage = buttonSelection;
+                if (surveyItems[counter-1].item) {
+                    if (counter <= 3) {
+                        surveyAnswersCommStyle[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
+                    } else {
+                        surveyAnswersBRIEF[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
+                    }
+                    console.log(surveyAnswersCommStyle)
+                    console.log(surveyAnswersBRIEF)
+                }
             }
+        } else {
+            userMessage = userInput.value;
+            if (userMessage.trim() === '') return;
+            backgroundInfo[surveyItems[counter-1].item.replace(/\s/g, "")] = userMessage;
         }
     } else {
         userMessage = userInput.value;
         if (userMessage.trim() === '') return;
-        backgroundInfo[surveyItems[counter-1].item.replace(/\s/g, "")] = userMessage;
     }
 
     appendUserMessage(userMessage);
@@ -348,32 +385,71 @@ function sendMessage(type) {
     informationTranscript.set("USER " + localDateTime, userMessage);
 
     // userInput.disabled = true;
+    console.log(counter)
+    if (counter < 10) {
+        let alexMessage = surveyItems[counter].message
+        fetch(base_url + '/api/cat/voice', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({agent_message: alexMessage})
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendAlexMessage(alexMessage, data.audio);
+            buttonSelection = ''
+            increaseProgress();
+            currentDate = new Date();
+            // Convert the date and time to the user's local time zone
+            localDateTime = currentDate.toLocaleString();
+            // Output the local date and time
+            informationTranscript.set("ALEX " + localDateTime, alexMessage);
+        })
+        .catch(error => console.error('Error:', error))
+        .finally(() => {
+            // Remove loading indicator after response received
+            const ellipse = document.getElementById('lds-ellipsis');
+            ellipse.remove();        
+            // userInput.disabled = true;
+        });
+    } else {
+        if (counter === 10) {
+            calculateBRIEFScore(surveyAnswersBRIEF)
+            formatJSONObjectAsString(surveyAnswersCommStyle, 'commStyle')
+            formatJSONObjectAsString(backgroundInfo, 'userInfo')
 
-    let alexMessage = surveyItems[counter].message
-
-    fetch(base_url + '/api/cat/voice', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({agent_message: alexMessage})
-    })
-    .then(response => response.json())
-    .then(data => {
-        appendAlexMessage(alexMessage, data.audio);
-        buttonSelection = ''
-        increaseProgress();
-        currentDate = new Date();
-        // Convert the date and time to the user's local time zone
-        localDateTime = currentDate.toLocaleString();
-        // Output the local date and time
-        informationTranscript.set("ALEX " + localDateTime, alexMessage);
-    })
-    .catch(error => console.error('Error:', error))
-    .finally(() => {
-        // Remove loading indicator after response received
-        const ellipse = document.getElementById('lds-ellipsis');
-        ellipse.remove();        
-        // userInput.disabled = true;
-    });
+            console.log("IN HERE")
+            var controlInitialMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA.'
+            var accommodateMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
+            if (condition === '0') { userMessage = controlInitialMessage }
+            else { userMessage = accommodateMessage }
+        } 
+        console.log("BRIEF SCORE:", BRIEFscore)
+        console.log("COMM STYLE:", commStyle)
+        console.log("BG INFO:", userInfo)
+        console.log(userMessage)
+        fetch(base_url + `/api/cat/assistant`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendAlexMessage(data.response, data.audio);
+            currentDate = new Date();
+            // Convert the date and time to the user's local time zone
+            localDateTime = currentDate.toLocaleString();
+            // Output the local date and time
+            console.log("LOCAL DATE TIME IS: " + localDateTime);
+        })
+        .catch(error => console.error('Error:', error))
+        .finally(() => {
+            // Remove loading indicator after response received
+            console.log("HERE SHOULD REMOVE ELIPPSE")
+            const ellipse = document.getElementById('lds-ellipsis');
+            ellipse.remove();
+        });
+    }
+    
 
     userInput.value = ''; // Clear input field after sending message
 }
