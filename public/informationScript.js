@@ -2,28 +2,28 @@ const surveyItems = [
     {
         "survey": "Communication Styles Inventory",
         "item": "Talkativeness",
-        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading you 7 statements. Please rate each statement by selecting a number. <br/> Alright! First statement: <b>I like to talk a lot</b>.",
+        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading 7 statements/questions. Please rate each statement by selecting a number below. <br/><br/> The first statement is: <b>I like to talk a lot</b>.",
         "options": ['1', '2', '3', '4', '5', '6', '7'],
         "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "Communication Styles Inventory",
         "item": "Casualness",
-        "message": "Thank you! Next statement: <b>I generally address others in a very casual way</b>.",
+        "message": "Got it. Next, <b>I generally address others in a very casual way</b>.",
         "options": ['1', '2', '3', '4', '5', '6', '7'],
         "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "Communication Styles Inventory",
         "item": "Conciseness",
-        "message": "Got it. Final statement: <b>Most of the time, I only need a few words to explain something</b>.",
+        "message": "Alright, moving on: <b>Most of the time, I only need a few words to explain something</b>.",
         "options": ['1', '2', '3', '4', '5', '6', '7'],
         "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Help Reading Health Materials Frequency",
-        "message": "Alright! Now, <b>How often do you have someone help you read health-related materials</b>?",
+        "message": "Okay. Now, <b>How often do you have someone help you read health-related materials</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
         "options": ['1', '2', '3', '4', '5'],
         "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
@@ -31,14 +31,14 @@ const surveyItems = [
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Filling Out Medical Forms Confidence",
-        "message": "Next, <b>How confident are you filling out medical forms by yourself</b>?",
+        "message": "Got it. Next, <b>How confident are you filling out medical forms by yourself</b>?",
         "options": ['1', '2', '3', '4', '5'],
         "label": ['Not at All', 'A Little Bit', 'Somewhat', 'Quite a Bit', 'Extremely']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Difficulty Learning About Condition From Written Info",
-        "message": "Noted. And <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
+        "message": "Noted. And, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
         "options": ['1', '2', '3', '4', '5'],
         "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
     },
@@ -52,17 +52,17 @@ const surveyItems = [
     {
         "survey": "Background Info",
         "item": "Receiving Information",
-        "message": "Thanks for your responses! To wrap up, I'll ask you three more questions. <br/> First, <b>How do you usually go about receiving information about health-related topics</b>?",
+        "message": "Thanks! To wrap up, I'll ask you three last questions. For these, you can type your responses below. <br/><br/> First, <b>How do you usually receive information about health-related topics</b>?",
     },
     {
         "survey": "Background Info",
         "item": "Who Do You Consult With",
-        "message": "Second, <b>Who do you typically consult with when making important health-related decisions, and how do they influence your choices</b>?",
+        "message": "Alright. Second, <b>Who do you typically consult with when making important health-related decisions</b>?",
     },
     {
         "survey": "Background Info",
         "item": "Opportunity to Participate",
-        "message": "Finally, <b>If you had the opportunity to participate in a clinical trial today, what factors would affect your decision</b>?",
+        "message": "Noted. Finally, <b>If you could participate in a clinical trial today, what factors would affect your decision</b>?",
     }
 ]
 
@@ -76,6 +76,9 @@ var CAT_IDS = [
 ]
 
 console.log(surveyItems)
+
+let scripted_voice_base_url = "https://rashi-cat-study.s3.amazonaws.com/scripted/"
+// let scripted_voice_base_url = "boop"
 
 let surveyAnswersCommStyle = {}
 let surveyAnswersBRIEF = {}
@@ -133,7 +136,7 @@ function formatJSONObjectAsString(JSONObject, item) {
         commStyle = commStyle.trim().slice(0, -1);
     } else {
         for (const [key, value] of Object.entries(JSONObject)) {
-            userInfo += `${value}; `;
+            userInfo += `${key}: ${value}; `;
         }
         userInfo = userInfo.trim().slice(0, -1);
     }
@@ -229,6 +232,28 @@ function selectButton(response) {
     }
 }
 
+function enableInput() {
+    if (counter <= 7) {
+        var userButtonsArea = document.getElementById("user-message-buttons");
+        var userButtonsSend = document.getElementById("send-btn-likert");
+        userButtonsArea.classList.remove("unclickable");
+        userButtonsSend.classList.remove("unclickable");
+    } else {
+        userInput.disabled = false;
+    }
+}
+
+function disableInput() {
+    if (counter <= 6) {
+        var userButtonsArea = document.getElementById("user-message-buttons");
+        var userButtonsSend = document.getElementById("send-btn-likert");
+        userButtonsArea.classList.add("unclickable");
+        userButtonsSend.classList.add("unclickable");
+    } else {
+        userInput.disabled = true;
+    }
+}
+
 
 function appendAlexMessage(message, audioDataUrl) {
     if (counter <= 6) {
@@ -239,6 +264,10 @@ function appendAlexMessage(message, audioDataUrl) {
     else {
         inputAreaText.style.display = "flex"
         inputAreaButtons.style.display = "none"
+    }
+
+    if (counter > 10) {
+        increaseProgress();
     }
     
     counter++;
@@ -256,32 +285,35 @@ function appendAlexMessage(message, audioDataUrl) {
     messageElement.appendChild(messageText);
     chatBox.appendChild(messageElement);
 
+    console.log("AUDIO STUFF")
+    console.log(audioDataUrl)
+
     // COMMENT OUT AUDIO FOR TESTING
-    // // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    // Create and append the audio element
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
+    // Play the video and loop when the audio starts playing
+    audioElement.addEventListener('play', function() {
+        const video = document.getElementById('myVideo');
+        video.loop = true; // Ensure video loops
+        video.play();
+        loadingSvg.style.visibility = 'visible';
+    });
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     const video = document.getElementById('myVideo');
-    //     console.log("IT HAS ENDED")
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     userInput.disabled = false;
-    //     loadingSvg.style.visibility = 'hidden';
-    // });
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        const video = document.getElementById('myVideo');
+        console.log("IT HAS ENDED")
+        video.currentTime = video.duration;
+        video.pause();
+        loadingSvg.style.visibility = 'hidden';
+        enableInput()
+    });
 
-    // audioElement.play();
+    audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -377,6 +409,7 @@ function sendMessage(type) {
     }
 
     appendUserMessage(userMessage);
+    disableInput()
 
     currentDate = new Date();
     // Convert the date and time to the user's local time zone
@@ -384,33 +417,25 @@ function sendMessage(type) {
     // Output the local date and time
     informationTranscript.set("USER " + localDateTime, userMessage);
 
-    // userInput.disabled = true;
     console.log(counter)
     if (counter < 10) {
         let alexMessage = surveyItems[counter].message
-        fetch(base_url + '/api/cat/voice', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({agent_message: alexMessage})
-        })
-        .then(response => response.json())
-        .then(data => {
-            appendAlexMessage(alexMessage, data.audio);
+
+        setTimeout(function() {
+            console.log("After 1.5 seconds");
+            appendAlexMessage(alexMessage, scripted_voice_base_url + (counter+1).toString() + '.mp3');
             buttonSelection = ''
-            increaseProgress();
             currentDate = new Date();
             // Convert the date and time to the user's local time zone
             localDateTime = currentDate.toLocaleString();
             // Output the local date and time
             informationTranscript.set("ALEX " + localDateTime, alexMessage);
-        })
-        .catch(error => console.error('Error:', error))
-        .finally(() => {
-            // Remove loading indicator after response received
+
             const ellipse = document.getElementById('lds-ellipsis');
             ellipse.remove();        
-            // userInput.disabled = true;
-        });
+
+        }, 1500); // 1500 milliseconds = 1.5 seconds
+
     } else {
         if (counter === 10) {
             calculateBRIEFScore(surveyAnswersBRIEF)
@@ -450,7 +475,6 @@ function sendMessage(type) {
         });
     }
     
-
     userInput.value = ''; // Clear input field after sending message
 }
 
@@ -483,23 +507,10 @@ window.onload = function() {
 
     chatBox.appendChild(ellipse);
 
-    // userInput.disabled = true;
+    disableInput();
 
-    fetch(base_url + `/api/cat/voice`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({agent_message: alexMessage })
-    })
-    .then(response => response.json())
-    .then(data => {
-        appendAlexMessage(alexMessage, data.audio);
-    })
-    .catch(error => console.error('Error:', error))
-    .finally(() => {
-        // Remove loading indicator after response received
-        const ellipse = document.getElementById('lds-ellipsis');
-        ellipse.remove();
-    });
+    appendAlexMessage(alexMessage, scripted_voice_base_url + '1.mp3');
+    ellipse.remove();
 
   };
 

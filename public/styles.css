@@ -64,16 +64,17 @@ h5 {
 
 .chat-container {
     width: 550px;
-    height: 650px;
+    height: 550px;
     background-color: white;
     margin: 0 auto;
-    padding: 25px;
+    padding: 15px;
     border: 0px;
     border-radius: 15px;
     margin: 15px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .chat-box {
@@ -87,7 +88,7 @@ h5 {
 }
 
 .input-area {
-    display: flex;
+    display: none;
     width: 100%;
     justify-content: space-between;
 }
@@ -153,6 +154,11 @@ h5 {
   border: 3px solid var(--blue);
 }
 
+.unclickable {
+  pointer-events: none;
+  opacity: 50%;
+}
+
 .user-input-button:hover {
   color: white;
   background-color: var(--blue) !important;
@@ -207,6 +213,7 @@ button:hover {
 video {
     border-radius: 50% !important;
     height: 150px;
+    width: 150px;
     margin: 15px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
@@ -330,7 +337,8 @@ video {
   align-items: center;
   text-align: center;
   justify-content: center;
-  width: 65%;
+  width: 75%;
+  height: 100%;
 }
 
 
@@ -371,7 +379,7 @@ svg{
   color: #df4300;
 }
 
-.send-btn-corner {
+#send-btn-likert {
   display: flex;
   width: 100%;
   justify-content: flex-end;
@@ -459,15 +467,26 @@ hr {
 
 #message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5 {
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .show {
-  display: block;
+  display: flex;
 }
 
-.modal-nav-button-area {
-  display: flex;
-  justify-content: space-between;
+.prev {
+  position: fixed;
+  bottom: 35px;
+  left: 55px
+}
+
+.next {
+  position: fixed;
+  bottom: 35px;
+  right: 55px
 }
 
 .modalNavBtn {
@@ -481,46 +500,11 @@ hr {
   border-radius: 19px;
   width: 105px;
   font-weight: 700 !important;
+  text-transform: 1.5px;
 }
 
 #message-fc1, #message-fc2, #message-fc3 {
   font-size: 19px !important;
-}
-
-#message-1, #message-2, #message-3, #message-4 p {
-  font-size: 25px !important;
-}
-
-#message-5 p {
-  font-size: 21px !important;
-}
-
-.select-which-alex {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.alex-option {
-  border: 1px solid var(--orange);
-  padding: 15px;
-  border-radius: 35px;
-  margin: 15px;
-  cursor: pointer; /* Change cursor to pointer on hover */
-  transition: .2s ease-in-out;
-  width: 45%;
-}
-
-.selected {
-  border: 0px;
-  background-color: var(--orange);
-  color: white;
-}
-
-.alex-option:hover {
-  background-color: var(--orange);
-  color: white;
 }
 
 .help-container {
@@ -622,4 +606,15 @@ hr {
   align-items: center;
   padding: 45px;
   text-align: center;
+}
+
+.info {
+  font-size: 17px !important;
+  margin-bottom: 7px;
+}
+
+.info-title {
+  font-size: 25px !important;
+  color: var(--dark);
+  margin-bottom: 7px;
 }

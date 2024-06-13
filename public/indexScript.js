@@ -33,7 +33,7 @@ window.onload = function() {
 
 function navigateModalInstructions(current, show) {
     document.getElementById(current).style.display = 'none'
-    document.getElementById(show).style.display = 'block'
+    document.getElementById(show).style.display = 'flex'
 }
   
 function checkCheckboxes(checkboxIds, current, show) {
