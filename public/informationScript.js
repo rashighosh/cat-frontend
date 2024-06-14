@@ -250,25 +250,25 @@ function selectButton(response) {
 }
 
 function enableInput() {
-    // if (counter <= 7) {
-    //     var userButtonsArea = document.getElementById("user-message-buttons");
-    //     var userButtonsSend = document.getElementById("send-btn-likert");
-    //     userButtonsArea.classList.remove("unclickable");
-    //     userButtonsSend.classList.remove("unclickable");
-    // } else {
-    //     userInput.disabled = false;
-    // }
+    if (counter <= 7) {
+        var userButtonsArea = document.getElementById("user-message-buttons");
+        var userButtonsSend = document.getElementById("send-btn-likert");
+        userButtonsArea.classList.remove("unclickable");
+        userButtonsSend.classList.remove("unclickable");
+    } else {
+        userInput.disabled = false;
+    }
 }
 
 function disableInput() {
-    // if (counter <= 6) {
-    //     var userButtonsArea = document.getElementById("user-message-buttons");
-    //     var userButtonsSend = document.getElementById("send-btn-likert");
-    //     userButtonsArea.classList.add("unclickable");
-    //     userButtonsSend.classList.add("unclickable");
-    // } else {
-    //     userInput.disabled = true;
-    // }
+    if (counter <= 6) {
+        var userButtonsArea = document.getElementById("user-message-buttons");
+        var userButtonsSend = document.getElementById("send-btn-likert");
+        userButtonsArea.classList.add("unclickable");
+        userButtonsSend.classList.add("unclickable");
+    } else {
+        userInput.disabled = true;
+    }
 }
 
 
@@ -303,31 +303,31 @@ function appendAlexMessage(message, audioDataUrl) {
     console.log(audioDataUrl)
 
     // COMMENT OUT AUDIO FOR TESTING
-    // // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    // Create and append the audio element
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
+    // Play the video and loop when the audio starts playing
+    audioElement.addEventListener('play', function() {
+        const video = document.getElementById('myVideo');
+        video.loop = true; // Ensure video loops
+        video.play();
+        loadingSvg.style.visibility = 'visible';
+    });
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     const video = document.getElementById('myVideo');
-    //     console.log("IT HAS ENDED")
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     loadingSvg.style.visibility = 'hidden';
-    //     enableInput()
-    // });
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        const video = document.getElementById('myVideo');
+        console.log("IT HAS ENDED")
+        video.currentTime = video.duration;
+        video.pause();
+        loadingSvg.style.visibility = 'hidden';
+        enableInput()
+    });
 
-    // audioElement.play();
+    audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
