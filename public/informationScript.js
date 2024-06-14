@@ -26,7 +26,7 @@ const surveyItems = [
         "message": "Okay. Now, <b>How often do you have someone help you read health-related materials</b>?",
         "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
         "options": ['1', '2', '3', '4', '5'],
-        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
+        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
@@ -40,14 +40,14 @@ const surveyItems = [
         "item": "Difficulty Learning About Condition From Written Info",
         "message": "Noted. And, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
         "options": ['1', '2', '3', '4', '5'],
-        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
+        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
     },
     {
         "survey": "BRIEF Health Literacy Screening Tool",
         "item": "Difficulty Understanding What is Told About Condition",
         "message": "Okay, finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
         "options": ['1', '2', '3', '4', '5'],
-        "label": ['Always', 'Often', 'Sometimes', 'Occasionally', 'Never']
+        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
     },
     {
         "survey": "Background Info",
@@ -121,11 +121,27 @@ var BRIEFscore = 0
 var commStyle = ''
 var userInfo = ''
 
+function reverseScore(item) {
+    // Reverse the score for a given item.
+    // 1 becomes 5, 2 becomes 4, 3 stays 3, 4 becomes 2, and 5 becomes 1.
+    const reverseMapping = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1};
+    return reverseMapping[item] || item;
+}
+
 function calculateBRIEFScore(surveyAnswersBRIEF) {
-    for (const value of Object.values(surveyAnswersBRIEF)) {
-        // Check if the value is a number
-        BRIEFscore += parseInt(value);
+    for (const key in surveyAnswersBRIEF) {
+        if (surveyAnswersBRIEF.hasOwnProperty(key)) {
+            let value = surveyAnswersBRIEF[key];
+            // Reverse score item 2
+            if (key !== 'FillingOutMedicalFormsConfidence') {
+                value = reverseScore(value);
+            }
+            // Add the value to the total score
+            BRIEFscore += parseInt(value);
+        }
     }
+
+    console.log("BRIEF SCORE IS:", BRIEFscore)
 }
 
 function formatJSONObjectAsString(JSONObject, item) {
