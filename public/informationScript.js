@@ -158,30 +158,20 @@ function formatJSONObjectAsString(JSONObject, item) {
     }
 }
 
-function increaseProgress(type) {
-    if (type === 'info-gathering') {
-        console.log("IN INFO GATHERING", progress)
-        if (progress < 10) {
-            progress++;
-            updateProgressBar(10);
-            updateProgressText(10);
-        }
-    } else {
-        console.log("IN INTERACTION")
-        if (progress < 5) {
-            progress++
-            updateProgressBar(5);
-            updateProgressText(5);
-        }
-        if (progress >= 5) {
-            // Assuming you have a reference to the button element
-            const finishButton = document.getElementById('finish-button');
-    
-            // To disable the button
-            finishButton.disabled = false;
-        }
+function increaseProgress() {
+    console.log("IN INTERACTION")
+    if (progress < 5) {
+        progress++
+        updateProgressBar(5);
+        updateProgressText(5);
     }
-    
+    if (progress >= 5) {
+        // Assuming you have a reference to the button element
+        const finishButton = document.getElementById('finish-button');
+
+        // To disable the button
+        finishButton.disabled = false;
+    }
 }
 
 function updateProgressBar(num) {
@@ -192,8 +182,7 @@ function updateProgressBar(num) {
 
 function updateProgressText(num) {
     const progressText = document.getElementById('progress-text');
-    const progressLabel = (num === 10 ? 'Alex is asking you questions: ' : 'You are asking Alex questions: ')
-    progressText.textContent = `${progressLabel} ${Math.floor(progress * (100/num))}%`;
+    progressText.textContent = `Progress ${Math.floor(progress * (100/num))}%`;
 }
 
 // Function to dynamically generate buttons
@@ -261,25 +250,25 @@ function selectButton(response) {
 }
 
 function enableInput() {
-    if (counter <= 7) {
-        var userButtonsArea = document.getElementById("user-message-buttons");
-        var userButtonsSend = document.getElementById("send-btn-likert");
-        userButtonsArea.classList.remove("unclickable");
-        userButtonsSend.classList.remove("unclickable");
-    } else {
-        userInput.disabled = false;
-    }
+    // if (counter <= 7) {
+    //     var userButtonsArea = document.getElementById("user-message-buttons");
+    //     var userButtonsSend = document.getElementById("send-btn-likert");
+    //     userButtonsArea.classList.remove("unclickable");
+    //     userButtonsSend.classList.remove("unclickable");
+    // } else {
+    //     userInput.disabled = false;
+    // }
 }
 
 function disableInput() {
-    if (counter <= 6) {
-        var userButtonsArea = document.getElementById("user-message-buttons");
-        var userButtonsSend = document.getElementById("send-btn-likert");
-        userButtonsArea.classList.add("unclickable");
-        userButtonsSend.classList.add("unclickable");
-    } else {
-        userInput.disabled = true;
-    }
+    // if (counter <= 6) {
+    //     var userButtonsArea = document.getElementById("user-message-buttons");
+    //     var userButtonsSend = document.getElementById("send-btn-likert");
+    //     userButtonsArea.classList.add("unclickable");
+    //     userButtonsSend.classList.add("unclickable");
+    // } else {
+    //     userInput.disabled = true;
+    // }
 }
 
 
@@ -314,31 +303,31 @@ function appendAlexMessage(message, audioDataUrl) {
     console.log(audioDataUrl)
 
     // COMMENT OUT AUDIO FOR TESTING
-    // Create and append the audio element
-    const audioElement = new Audio(audioDataUrl);
-    audioElement.controls = true;
-    chatBox.appendChild(audioElement);
-    audioElement.style.display = 'none'
+    // // Create and append the audio element
+    // const audioElement = new Audio(audioDataUrl);
+    // audioElement.controls = true;
+    // chatBox.appendChild(audioElement);
+    // audioElement.style.display = 'none'
 
-    // Play the video and loop when the audio starts playing
-    audioElement.addEventListener('play', function() {
-        const video = document.getElementById('myVideo');
-        video.loop = true; // Ensure video loops
-        video.play();
-        loadingSvg.style.visibility = 'visible';
-    });
+    // // Play the video and loop when the audio starts playing
+    // audioElement.addEventListener('play', function() {
+    //     const video = document.getElementById('myVideo');
+    //     video.loop = true; // Ensure video loops
+    //     video.play();
+    //     loadingSvg.style.visibility = 'visible';
+    // });
 
-    // Pause the video when the audio stops playing
-    audioElement.addEventListener('ended', function() {
-        const video = document.getElementById('myVideo');
-        console.log("IT HAS ENDED")
-        video.currentTime = video.duration;
-        video.pause();
-        loadingSvg.style.visibility = 'hidden';
-        enableInput()
-    });
+    // // Pause the video when the audio stops playing
+    // audioElement.addEventListener('ended', function() {
+    //     const video = document.getElementById('myVideo');
+    //     console.log("IT HAS ENDED")
+    //     video.currentTime = video.duration;
+    //     video.pause();
+    //     loadingSvg.style.visibility = 'hidden';
+    //     enableInput()
+    // });
 
-    audioElement.play();
+    // audioElement.play();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -433,10 +422,6 @@ function sendMessage(type) {
         if (userMessage.trim() === '') return;
     }
 
-    if (counter < 11) {
-        increaseProgress('info-gathering');
-    }
-
     appendUserMessage(userMessage);
     disableInput()
 
@@ -491,12 +476,12 @@ function sendMessage(type) {
             console.log("DATA", data)
             if (data.topic === 1) {
                 console.log("IN DATA TOPIC IS 1")
-                if (counter === 11) {
-                    console.log("COUNTER IS 10")
-                    progress = -1;
-                    increaseProgress('interaction')
+                if (counter === 11) { 
+                    console.log("SHOW PROGRESS BAR")
+                    document.getElementById("progress-area").style.opacity = '100%';   
                 } else {
-                    increaseProgress('interaction')
+                    console.log("INCREASE PROGRESS")
+                    increaseProgress()
                 }
             }
             currentDate = new Date();
