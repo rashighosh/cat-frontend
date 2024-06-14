@@ -106,8 +106,8 @@ const loadingSvg = document.getElementById('loading-svg');
 
 let progress = 0;
 
-// const base_url = "http://44.209.126.3"
-const base_url = "http://127.0.0.1:8000"
+const base_url = "http://44.209.126.3"
+// const base_url = "http://127.0.0.1:8000"
 
 
 const finishButton = document.getElementById('finish-button');
@@ -142,30 +142,42 @@ function formatJSONObjectAsString(JSONObject, item) {
     }
 }
 
-function increaseProgress() {
-    if (progress < 13) {
-        progress++;
-        updateProgressBar();
-        updateProgressText();
+function increaseProgress(type) {
+    if (type === 'info-gathering') {
+        console.log("IN INFO GATHERING", progress)
+        if (progress < 10) {
+            progress++;
+            updateProgressBar(10);
+            updateProgressText(10);
+        }
+    } else {
+        console.log("IN INTERACTION")
+        if (progress < 5) {
+            progress++
+            updateProgressBar(5);
+            updateProgressText(5);
+        }
+        if (progress >= 5) {
+            // Assuming you have a reference to the button element
+            const finishButton = document.getElementById('finish-button');
+    
+            // To disable the button
+            finishButton.disabled = false;
+        }
     }
-    if (progress >= 13) {
-        // Assuming you have a reference to the button element
-        const finishButton = document.getElementById('finish-button');
-
-        // To disable the button
-        finishButton.disabled = false;
-    }
+    
 }
 
-function updateProgressBar() {
+function updateProgressBar(num) {
     const progressBar = document.getElementById('progress');
-    const progressWidth = (progress / 13) * 100;
+    const progressWidth = (progress / num) * 100;
     progressBar.style.width = `${progressWidth}%`;
 }
 
-function updateProgressText() {
+function updateProgressText(num) {
     const progressText = document.getElementById('progress-text');
-    progressText.textContent = `Progress: ${Math.floor(progress * (100/13))}%`;
+    const progressLabel = (num === 10 ? 'Alex is asking you questions: ' : 'You are asking Alex questions: ')
+    progressText.textContent = `${progressLabel} ${Math.floor(progress * (100/num))}%`;
 }
 
 // Function to dynamically generate buttons
@@ -265,10 +277,7 @@ function appendAlexMessage(message, audioDataUrl) {
         inputAreaText.style.display = "flex"
         inputAreaButtons.style.display = "none"
     }
-
-    if (counter > 10) {
-        increaseProgress();
-    }
+    console.log(counter)
     
     counter++;
     
@@ -408,6 +417,10 @@ function sendMessage(type) {
         if (userMessage.trim() === '') return;
     }
 
+    if (counter < 11) {
+        increaseProgress('info-gathering');
+    }
+
     appendUserMessage(userMessage);
     disableInput()
 
@@ -433,7 +446,6 @@ function sendMessage(type) {
 
             const ellipse = document.getElementById('lds-ellipsis');
             ellipse.remove();        
-
         }, 1500); // 1500 milliseconds = 1.5 seconds
 
     } else {
@@ -460,6 +472,17 @@ function sendMessage(type) {
         .then(response => response.json())
         .then(data => {
             appendAlexMessage(data.response, data.audio);
+            console.log("DATA", data)
+            if (data.topic === 1) {
+                console.log("IN DATA TOPIC IS 1")
+                if (counter === 11) {
+                    console.log("COUNTER IS 10")
+                    progress = -1;
+                    increaseProgress('interaction')
+                } else {
+                    increaseProgress('interaction')
+                }
+            }
             currentDate = new Date();
             // Convert the date and time to the user's local time zone
             localDateTime = currentDate.toLocaleString();
@@ -507,10 +530,12 @@ window.onload = function() {
 
     chatBox.appendChild(ellipse);
 
-    disableInput();
+    setTimeout(function() {
+        disableInput();
+        appendAlexMessage(alexMessage, scripted_voice_base_url + '1.mp3');
+        ellipse.remove();       
+    }, 1500); // 1500 milliseconds = 1.5 seconds
 
-    appendAlexMessage(alexMessage, scripted_voice_base_url + '1.mp3');
-    ellipse.remove();
 
   };
 
@@ -544,6 +569,7 @@ function logInformationTranscript() {
     console.log("IN LOG TRANSCRIPT!")
     let transcriptString = JSON.stringify(Object.fromEntries(informationTranscript));
 
+    let surveyAnswers = { ...surveyAnswersCommStyle, ...surveyAnswersBRIEF };
     console.log(surveyAnswers)
     console.log(backgroundInfo)
 
@@ -560,6 +586,6 @@ function logInformationTranscript() {
     .finally(() => {
         // Remove loading indicator after response received
         console.log("check for transcript file")
-        window.location.href = "/interaction?id=" + id + "&c=" + condition;
+        window.location.href = "https://ufl.qualtrics.com/jfe/form/SV_1TgxItlntE1uUzs/?id=" + id + "&c=" + condition;
     });
   }
