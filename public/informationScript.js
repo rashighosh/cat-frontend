@@ -2,7 +2,7 @@ const surveyItems = [
     {
         "survey": "Communication Styles Inventory",
         "item": "Talkativeness",
-        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading 7 statements/questions. Please rate each statement by selecting a number below. <br/><br/> The first statement is: <b>I like to talk a lot</b>.",
+        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading seven statements/questions. Please rate each statement by selecting a number below. <br/><br/> The first statement is: <b>I like to talk a lot</b>.",
         "options": ['1', '2', '3', '4', '5', '6', '7'],
         "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
     },
@@ -75,7 +75,6 @@ var CAT_IDS = [
     "emotional_expression_assistant_id"
 ]
 
-console.log(surveyItems)
 
 let scripted_voice_base_url = "https://rashi-cat-study.s3.amazonaws.com/scripted/"
 // let scripted_voice_base_url = "boop"
@@ -140,8 +139,6 @@ function calculateBRIEFScore(surveyAnswersBRIEF) {
             BRIEFscore += parseInt(value);
         }
     }
-
-    console.log("BRIEF SCORE IS:", BRIEFscore)
 }
 
 function formatJSONObjectAsString(JSONObject, item) {
@@ -159,18 +156,10 @@ function formatJSONObjectAsString(JSONObject, item) {
 }
 
 function increaseProgress() {
-    console.log("IN INTERACTION")
-    if (progress < 5) {
+    if (progress < 10) {
         progress++
-        updateProgressBar(5);
-        updateProgressText(5);
-    }
-    if (progress >= 5) {
-        // Assuming you have a reference to the button element
-        const finishButton = document.getElementById('finish-button');
-
-        // To disable the button
-        finishButton.disabled = false;
+        updateProgressBar(10);
+        updateProgressText(10);
     }
 }
 
@@ -282,7 +271,6 @@ function appendAlexMessage(message, audioDataUrl) {
         inputAreaText.style.display = "flex"
         inputAreaButtons.style.display = "none"
     }
-    console.log(counter)
     
     counter++;
     
@@ -298,9 +286,6 @@ function appendAlexMessage(message, audioDataUrl) {
     messageElement.appendChild(labelText);
     messageElement.appendChild(messageText);
     chatBox.appendChild(messageElement);
-
-    console.log("AUDIO STUFF")
-    console.log(audioDataUrl)
 
     // COMMENT OUT AUDIO FOR TESTING
     // Create and append the audio element
@@ -320,10 +305,16 @@ function appendAlexMessage(message, audioDataUrl) {
     // Pause the video when the audio stops playing
     audioElement.addEventListener('ended', function() {
         const video = document.getElementById('myVideo');
-        console.log("IT HAS ENDED")
         video.currentTime = video.duration;
         video.pause();
         loadingSvg.style.visibility = 'hidden';
+        if (progress >= 10) {
+            // Assuming you have a reference to the button element
+            const finishButton = document.getElementById('finish-button');
+    
+            // To disable the button
+            finishButton.disabled = false;
+        }
         enableInput()
     });
 
@@ -408,8 +399,6 @@ function sendMessage(type) {
                     } else {
                         surveyAnswersBRIEF[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
                     }
-                    console.log(surveyAnswersCommStyle)
-                    console.log(surveyAnswersBRIEF)
                 }
             }
         } else {
@@ -431,12 +420,10 @@ function sendMessage(type) {
     // Output the local date and time
     informationTranscript.set("USER " + localDateTime, userMessage);
 
-    console.log(counter)
     if (counter < 10) {
         let alexMessage = surveyItems[counter].message
 
         setTimeout(function() {
-            console.log("After 1.5 seconds");
             appendAlexMessage(alexMessage, scripted_voice_base_url + (counter+1).toString() + '.mp3');
             buttonSelection = ''
             currentDate = new Date();
@@ -454,17 +441,11 @@ function sendMessage(type) {
             calculateBRIEFScore(surveyAnswersBRIEF)
             formatJSONObjectAsString(surveyAnswersCommStyle, 'commStyle')
             formatJSONObjectAsString(backgroundInfo, 'userInfo')
-
-            console.log("IN HERE")
             var controlInitialMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA.'
             var accommodateMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
             if (condition === '0') { userMessage = controlInitialMessage }
             else { userMessage = accommodateMessage }
         } 
-        console.log("BRIEF SCORE:", BRIEFscore)
-        console.log("COMM STYLE:", commStyle)
-        console.log("BG INFO:", userInfo)
-        console.log(userMessage)
         fetch(base_url + `/api/cat/assistant`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -473,14 +454,10 @@ function sendMessage(type) {
         .then(response => response.json())
         .then(data => {
             appendAlexMessage(data.response, data.audio);
-            console.log("DATA", data)
             if (data.topic === 1) {
-                console.log("IN DATA TOPIC IS 1")
                 if (counter === 11) { 
-                    console.log("SHOW PROGRESS BAR")
                     document.getElementById("progress-area").style.opacity = '100%';   
                 } else {
-                    console.log("INCREASE PROGRESS")
                     increaseProgress()
                 }
             }
@@ -488,17 +465,15 @@ function sendMessage(type) {
             // Convert the date and time to the user's local time zone
             localDateTime = currentDate.toLocaleString();
             // Output the local date and time
-            console.log("LOCAL DATE TIME IS: " + localDateTime);
+            informationTranscript.set("ALEX " + localDateTime, data.response);
         })
         .catch(error => console.error('Error:', error))
         .finally(() => {
             // Remove loading indicator after response received
-            console.log("HERE SHOULD REMOVE ELIPPSE")
             const ellipse = document.getElementById('lds-ellipsis');
             ellipse.remove();
         });
     }
-    
     userInput.value = ''; // Clear input field after sending message
 }
 
@@ -567,12 +542,9 @@ window.onclick = function(event) {
 }
 
 function logInformationTranscript() {
-    console.log("IN LOG TRANSCRIPT!")
     let transcriptString = JSON.stringify(Object.fromEntries(informationTranscript));
 
     let surveyAnswers = { ...surveyAnswersCommStyle, ...surveyAnswersBRIEF };
-    console.log(surveyAnswers)
-    console.log(backgroundInfo)
 
     fetch('/log', {
         method: 'POST',
@@ -586,7 +558,6 @@ function logInformationTranscript() {
     .catch(error => console.error('Error:', error))
     .finally(() => {
         // Remove loading indicator after response received
-        console.log("check for transcript file")
         window.location.href = "https://ufl.qualtrics.com/jfe/form/SV_1TgxItlntE1uUzs/?id=" + id + "&c=" + condition;
     });
   }

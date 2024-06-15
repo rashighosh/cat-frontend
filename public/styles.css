@@ -508,9 +508,9 @@ hr {
   text-transform: 1.5px;
 }
 
-#message-fc1, #message-fc2, #message-fc3 {
+/* #message-fc1, #message-fc2, #message-fc3 {
   font-size: 19px !important;
-}
+} */
 
 .help-container {
   text-align: center;
