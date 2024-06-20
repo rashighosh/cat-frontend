@@ -5,14 +5,7 @@ var transcript = new Map()
 var id = ''
 var condition = ''
 
-var CAT_IDS = [
-    "control_assistant_id",
-    "approximation_assistant_id",
-    "interpretability_assistant_id",
-    "interpersonal_control_assistant_id",
-    "discourse_management_assistant_id",
-    "emotional_expression_assistant_id"
-]
+var cat_assistant_id = ""
 
 window.onload = function() {
     const queryString = window.location.search;
@@ -20,12 +13,20 @@ window.onload = function() {
     condition = urlParams.get('c')
     id = urlParams.get('id')
 
+    if (condition === 6) {
+        cat_assistant_id = "accommodation_assistant_id"
+    } else if (condition === 0) {
+        cat_assistant_id = "control_assistant_id"
+    }
+
+    console.log(cat_assistant_id)
+
     condition = parseInt(condition)
     currentDate = new Date();
 
     console.log("User entered application at:", currentDate)
     console.log("User ID is:", id)
-    console.log("CAT condition is: " + condition + ": " + CAT_IDS[condition])
+    console.log("CAT condition is: " + cat_assistant_id + ": " + cat_assistant_id)
 
     logToDatabase(id, condition, currentDate);
 };

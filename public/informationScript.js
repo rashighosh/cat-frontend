@@ -68,12 +68,10 @@ const surveyItems = [
 
 var CAT_IDS = [
     "control_assistant_id",
-    "approximation_assistant_id",
-    "interpretability_assistant_id",
-    "interpersonal_control_assistant_id",
-    "discourse_management_assistant_id",
-    "emotional_expression_assistant_id"
+    "accommodation_assistant_id",
 ]
+
+var cat_assistant_id = ""
 
 
 let scripted_voice_base_url = "https://rashi-cat-study.s3.amazonaws.com/scripted/"
@@ -144,7 +142,7 @@ function calculateBRIEFScore(surveyAnswersBRIEF) {
 function formatJSONObjectAsString(JSONObject, item) {
     if (item === 'commStyle') {
         for (const [key, value] of Object.entries(JSONObject)) {
-            commStyle += `${key}: ${value}; `;
+            commStyle += `${key}: ${value}/7; `;
         }
         commStyle = commStyle.trim().slice(0, -1);
     } else {
@@ -160,6 +158,13 @@ function increaseProgress() {
         progress++
         updateProgressBar(10);
         updateProgressText(10);
+    }
+    if (progress >= 10) {
+         // Assuming you have a reference to the button element
+         const finishButton = document.getElementById('finish-button');
+    
+         // To disable the button
+         finishButton.disabled = false;
     }
 }
 
@@ -308,13 +313,6 @@ function appendAlexMessage(message, audioDataUrl) {
         video.currentTime = video.duration;
         video.pause();
         loadingSvg.style.visibility = 'hidden';
-        if (progress >= 10) {
-            // Assuming you have a reference to the button element
-            const finishButton = document.getElementById('finish-button');
-    
-            // To disable the button
-            finishButton.disabled = false;
-        }
         enableInput()
     });
 
@@ -449,7 +447,7 @@ function sendMessage(type) {
         fetch(base_url + `/api/cat/assistant`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({user_id: id, cat_bot_id: CAT_IDS[condition], user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
+            body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
         })
         .then(response => response.json())
         .then(data => {
@@ -484,6 +482,14 @@ window.onload = function() {
     console.log(condition);
     id = urlParams.get('id')
     console.log(id);
+
+    if (condition === '6') {
+        cat_assistant_id = "accommodative_assistant_id"
+    } else if (condition === '0') {
+        cat_assistant_id = "control_assistant_id"
+    }
+
+    console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
 
     var alexMessage = surveyItems[counter].message
 
