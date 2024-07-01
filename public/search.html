@@ -11,12 +11,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="progress-area" id="progress-area">
-      <div id="progress-text">Progress: 0%</div>
-      <div id="progress-bar">
-        <div id="progress"></div>
-      </div>
-    </div>
     <div id="help-modal" class="help-modal">
       <div class="help-modal-content">
         <div class="help-row">
@@ -101,14 +95,6 @@
                   </line>
                 </g>
               </svg>
-              <div class="topics-container">
-                <h4>Topics to Cover</h4>
-                <p id="topic1">☐ Safety in Clinical Trials</p>
-                <p id="topic2">☐ Clinical Trial Process</p>
-                <p id="topic3">☐ Time and Compensation</p>
-                <p id="topic4">☐ Risks and Benefits</p>
-                <p id="topic5">☐ Information and Resources</p>
-              </div>
         </div>
         <div class="chat-container">
             <div class="chat-box" id="chat-box"></div>
@@ -120,22 +106,11 @@
                   <svg id="send-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.447 11.105-16-8A1 1 0 0 0 3.152 4.53L7.82 12l-4.668 7.47a1 1 0 0 0 1.3 1.425l16-8a1 1 0 0 0 0-1.79zM6.731 17.517 9.554 13H12a1 1 0 0 0 0-2H9.554L6.731 6.483 17.764 12z" style="fill:#ffffff"/></svg>
                 </button>
             </div>
-
-            <div id="input-area-buttons">
-              <div id="user-message-buttons"></div>
-              <div id="send-btn-likert">
-                <button id="send-btn" onclick="sendMessage(`button`)">
-                  Send 
-                  <svg id="send-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.447 11.105-16-8A1 1 0 0 0 3.152 4.53L7.82 12l-4.668 7.47a1 1 0 0 0 1.3 1.425l16-8a1 1 0 0 0 0-1.79zM6.731 17.517 9.554 13H12a1 1 0 0 0 0-2H9.554L6.731 6.483 17.764 12z" style="fill:#ffffff"/></svg>
-                </button>
-              </div> 
-          </div>
-          
         </div>
     </div>
 
     <button class="finish-button" id="finish-button" onclick="logInformationTranscript()">Finish Talking to Alex</button>
 
-    <script src="informationScript.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>
