@@ -4,6 +4,7 @@ var transcript = new Map()
 
 var id = ''
 var condition = ''
+var bhls = 0
 
 var cat_assistant_id = ""
 
@@ -12,10 +13,11 @@ window.onload = function() {
     const urlParams = new URLSearchParams(queryString);
     condition = urlParams.get('c')
     id = urlParams.get('id')
+    bhls = urlParams.get('bhls')
 
-    if (condition === 6) {
+    if (condition === '6') {
         cat_assistant_id = "accommodation_assistant_id"
-    } else if (condition === 0) {
+    } else if (condition === '0') {
         cat_assistant_id = "control_assistant_id"
     }
 
@@ -26,7 +28,8 @@ window.onload = function() {
 
     console.log("User entered application at:", currentDate)
     console.log("User ID is:", id)
-    console.log("CAT condition is: " + cat_assistant_id + ": " + cat_assistant_id)
+    console.log("CAT condition is: " + condition + " - " + cat_assistant_id)
+    console.log("BHLS:", bhls)
 
     logToDatabase(id, condition, currentDate);
 };
@@ -80,5 +83,5 @@ function logToDatabase(id, condition, currentDate) {
 }
 
 function nextPage() {
-    window.location.href = `/information?id=${id}&c=${condition}`
+    window.location.href = `/information?id=${id}&bhls=${bhls}&c=${condition}`
 }

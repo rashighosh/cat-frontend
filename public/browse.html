@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Alex: Virtual Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="help-modal" class="help-modal">
+      <div class="help-modal-content">
+        <div class="help-row">
+          <div class="help-col">
+            <p class="info-title help">💬 Select buttons or type to talk to Alex.</p>
+            <p class="info help">At the <b>bottom of the chatbox</b>, you will see an area for you to respond to Alex by either <b>selecting a button</b> or <b>typing</b>.</p>
+          </div>
+          <img src="1.png" alt="Requirements for Conversation" height="155">
+        </div>
+        <hr/>
+        <div class="help-row">
+          <div class="help-col">
+            <p class="info-title help">🔊 Make sure your audio is on!</p>
+            <p class="info help">Alex will respond in the chatbox via text, but also <b>speak to you</b>! You will <b>not be able to respond while Alex is speaking</b>.</p>
+          </div>
+          <img src="2.png" alt="Requirements for Conversation" height="155">
+        </div>
+        <hr/>
+        <div class="help-row">
+          <div class="help-col">
+            <p class="info-title help">🗨️ When you begin the interaction, Alex will ask you questions about yourself.</p>
+            <p class="info help">This information will be used to <b>tailor your interaction</b>.</p>
+          </div>
+          <img src="3.png" alt="Requirements for Conversation" height="155">
+        </div>
+        <hr/>
+        <div class="help-row">
+          <div class="help-col">
+            <p class="info-title help">✅ Then, you may ask Alex as many questions about clinical trials as you like!</p>
+            <p class="info help">However, <b>you are required to ask Alex at least 5 questions about clinical trials</b> to continue to the post-survey. When <b>complete</b>, you will <b>be able to click a button at the bottom right corner</b> of your screen to proceed.</p>
+          </div>
+          <img src="4.png" alt="Requirements for Conversation" height="155">
+        </div>
+        <br/>
+        <button class="help-close">Close</button>
+      </div>
+    </div>
+    <div class="main-container">
+      <div class="ct-container">
+        <div class="ct-title-area">
+          <h1 id="ct-title">CT Title</h1>
+        </div>
+        <div class="ct-content-area">
+        <h2>General Information</h2>
+          <div class="info-area">
+            <h3>Study Type: &nbsp;</h3>
+            <p id="ct-type"></p>
+          </div>
+          <h3 style="margin-bottom: 0px !important">Primary Outcome</h3>
+          <p id="ct-outcome">Primary Outcome</p>
+          <h3>Brief Summary</h3>
+          <p id="ct-summary">Description</p>
+        <br/>
+        <h2>Eligibility Criteria</h2>
+        <div class="info-area">
+          <h3>Sex: &nbsp;</h3>
+          <p id="ct-sex"></p>
+        </div>
+        <div class="info-area">
+          <h3>Minimum Age: &nbsp;</h3>
+          <p id="ct-minAge"></p>
+        </div>
+        <div class="info-area">
+          <h3>Maximum Age: &nbsp;</h3>
+          <p id="ct-maxAge"></p>
+        </div>
+        <h3>More Eligibility Details</h3>
+        <!-- <ul id="criteriaList"></ul> -->
+        <div id="criteriaList"></div>
+      </div>
+      <div class="ct-footer-area">
+        <button id="1" class="selected-study" onclick="getTrial(`NCT04990895`,`1`, `2`, `3`)">Study 1</button>
+        <button id="2" onclick="getTrial(`NCT05488145`,`2`, `1`, `3`)">Study 2</button>
+        <button id="3" onclick="getTrial(`NCT05868187`,`3`, `2`, `1`)">Study 3</button>
+      </div>
+    </div>
+      <div class="conversation-container">
+        <div class="help-container">
+          <button id="help-icon">&#63;</button>
+        </div>
+          <div class="alex-container">
+              <video id="myVideo">
+                  <source src="https://rashi-cat-study.s3.amazonaws.com/generic.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+              </video>
+              <h3>Alex</h3>
+              <h5>Virtual Assistant</h5>
+              <!-- <button class="conclude-button" id="conclude-button" onclick="concludeConversation(); removeButton()">I'm Done Asking Questions</button> -->
+              <svg id="loading-svg" width="10px" height="8px" viewBox="0 0 10 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Audio" transform="translate(0.000000, 0.500000)" stroke="currentColor" stroke-width="1" fill-rule="evenodd"
+                    stroke-linecap="round">
+                    <line x1="8.5" y1="0.493135" x2="8.5" y2="6.50687" id="Line-5">
+                      <animate attributeType="XML" attributeName="y1" values="2;0;2" keyTimes="0;0.5;1" dur=".8s"
+                        repeatCount="indefinite"></animate>
+                      <animate attributeType="XML" attributeName="y2" values="5;7;5" keyTimes="0;0.5;1" dur=".8s"
+                        repeatCount="indefinite"></animate>
+                    </line>
+                    <line x1="6.5" y1="0.789016" x2="6.5" y2="6.21098" id="Line-4">
+                      <animate attributeType="XML" attributeName="y1" values="0;2;0" keyTimes="0;0.5;1" dur=".5s"
+                        repeatCount="indefinite"></animate>
+                      <animate attributeType="XML" attributeName="y2" values="7;5;7" keyTimes="0;0.5;1" dur=".5s"
+                        repeatCount="indefinite"></animate>
+                    </line>
+                    <line x1="4.5" y1="1.67582" x2="4.5" y2="5.32418" id="Line-3">
+                      <animate attributeType="XML" attributeName="y1" values="1;3;1" keyTimes="0;0.5;1" dur=".6s"
+                        repeatCount="indefinite"></animate>
+                      <animate attributeType="XML" attributeName="y2" values="6;4;6" keyTimes="0;0.5;1" dur=".6s"
+                        repeatCount="indefinite"></animate>
+                    </line>
+                    <line x1="2.5" y1="1.14678" x2="2.5" y2="5.85322" id="Line-2">
+                      <animate attributeType="XML" attributeName="y1" values="2;1;2" keyTimes="0;0.5;1" dur=".7s"
+                        repeatCount="indefinite"></animate>
+                      <animate attributeType="XML" attributeName="y2" values="5;6;5" keyTimes="0;0.5;1" dur=".7s"
+                        repeatCount="indefinite"></animate>
+                    </line>
+                    <line x1="0.5" y1="1.67582" x2="0.5" y2="5.32418" id="Line-1">
+                      <animate attributeType="XML" attributeName="y1" values="3;0;3" keyTimes="0;0.5;1" dur=".9s"
+                        repeatCount="indefinite"></animate>
+                      <animate attributeType="XML" attributeName="y2" values="4;7;4" keyTimes="0;0.5;1" dur=".9s"
+                        repeatCount="indefinite"></animate>
+                    </line>
+                  </g>
+                </svg>
+          </div>
+          <div class="chat-container">
+              <div class="chat-box" id="chat-box"></div>
+
+              <div class="input-area" id="input-area">
+                  <textarea id="user-input" class="user-input" placeholder="Type a message..."></textarea>
+                  <button id="send-btn" onclick="sendMessage(`text`)">
+                    Send
+                    <svg id="send-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.447 11.105-16-8A1 1 0 0 0 3.152 4.53L7.82 12l-4.668 7.47a1 1 0 0 0 1.3 1.425l16-8a1 1 0 0 0 0-1.79zM6.731 17.517 9.554 13H12a1 1 0 0 0 0-2H9.554L6.731 6.483 17.764 12z" style="fill:#ffffff"/></svg>
+                  </button>
+              </div>
+          </div>
+      </div>
+
+      <button class="finish-button" id="finish-button" onclick="logInformationTranscript()">Finish Talking to Alex</button>
+    </div>
+
+    <script src="browse.js"></script>
+</body>
+</html>

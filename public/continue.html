@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Alex: Virtual Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="myModal" class="modal">
+          <div class="modal-content">
+            <div id="continuQuestion">
+              <h3>Thank you for talking to Alex!</h3>
+              <p style="font-size: 23px;">Now that you've talked about clinical trials, would you like to <span style="color: var(--orange); font-weight: bold;">browse real trials</span> with Alex?</p>
+              <br/>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <button onclick="logBrowseTrialsChoice(`Yes`)" style="padding: 11px; margin: 11px 0; font-size: 19px"><b>Yes</b>, I'd like to browse trials.</button>
+                <button onclick="logBrowseTrialsChoice(`No`)"style="padding: 11px; margin: 11px 0; font-size: 19px"><b>No</b>, I do not want to browse trials.</button>
+              </div> 
+            </div>
+        </div>
+    </div>
+    <script src="continueScript.js"></script>
+</body>
+</html>

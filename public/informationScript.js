@@ -1,78 +1,40 @@
-const surveyItems = [
-    {
-        "survey": "Communication Styles Inventory",
-        "item": "Talkativeness",
-        "message": "Hi, I'm Alex! Before we start talking about clinical trials, I'd like to learn more about you to help tailor our conversation. I'll start by reading seven statements/questions. Please rate each statement by selecting a number below. <br/><br/> The first statement is: <b>I am a talkative person</b>.",
-        "options": ['1', '2', '3', '4', '5', '6', '7'],
-        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
-    },
-    {
-        "survey": "Communication Styles Inventory",
-        "item": "Casualness",
-        "message": "Got it. Next, <b>I generally address others in a very casual way</b>.",
-        "options": ['1', '2', '3', '4', '5', '6', '7'],
-        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
-    },
-    {
-        "survey": "Communication Styles Inventory",
-        "item": "Conciseness",
-        "message": "Alright, moving on: <b>Most of the time, I only need a few words to explain something</b>.",
-        "options": ['1', '2', '3', '4', '5', '6', '7'],
-        "label": ['Completely Disagree', '', '', 'Neither Disagree nor Agree', '', '', 'Completely Agree']
-    },
-    {
-        "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Help Reading Health Materials Frequency",
-        "message": "Okay. Now, <b>How often do you have someone help you read health-related materials</b>?",
-        "instructions": "Please select your response, where <em>1=Always</em>, <em>2=Often</em>, <em>3=Sometimes</em>, <em>4=Occasionally</em>, and <em>5=Never:</em>",
-        "options": ['1', '2', '3', '4', '5'],
-        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
-    },
-    {
-        "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Filling Out Medical Forms Confidence",
-        "message": "Got it. Next, <b>How confident are you filling out medical forms by yourself</b>?",
-        "options": ['1', '2', '3', '4', '5'],
-        "label": ['Not at All', 'A Little Bit', 'Somewhat', 'Quite a Bit', 'Extremely']
-    },
-    {
-        "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Difficulty Learning About Condition From Written Info",
-        "message": "Noted. And, <b>How often do you have problems learning about your medical condition because of difficulty understanding written information</b>?",
-        "options": ['1', '2', '3', '4', '5'],
-        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
-    },
-    {
-        "survey": "BRIEF Health Literacy Screening Tool",
-        "item": "Difficulty Understanding What is Told About Condition",
-        "message": "Okay, finally, <b>How often do you have a problem understanding what is told to you about your medical condition</b>?",
-        "options": ['1', '2', '3', '4', '5'],
-        "label": ['Never', 'Rarely', 'Sometimes', 'Often', 'Always']
-    },
-    {
-        "survey": "Background Info",
-        "item": "Receiving Information",
-        "message": "Thanks! To wrap up, I'll ask you three last questions. For these, you can type your responses below. <br/><br/> First, <b>How do you usually receive information about health-related topics</b>?",
-    },
-    {
-        "survey": "Background Info",
-        "item": "Who Do You Consult With",
-        "message": "Alright. Second, <b>Who do you typically consult with when making important health-related decisions</b>?",
-    },
-    {
-        "survey": "Background Info",
-        "item": "Opportunity to Participate",
-        "message": "Noted. Finally, <b>If you could participate in a clinical trial today, what factors would affect your decision</b>?",
-    }
-]
-
 var CAT_IDS = [
     "control_assistant_id",
     "accommodation_assistant_id",
 ]
 
-var cat_assistant_id = ""
+// Initialize the array
+let topicsObject = {}
+for (let i = 1; i <= 5; i++) {
+    topicsObject[i] = false;
+}
 
+function checkTopic(topic) {
+    if(topic == 1 || topic == "Safety in Clinical Trials") { topic = 1 }
+    if(topic == 2 || topic == "Understanding and Comfort with the Clinical Trial Process") { topic = 2 }
+    if(topic == 3 || topic == "Logistical, Time, and Financial Barriers to Participation") { topic = 3 }
+    if(topic == 4 || topic == "Risks and Benefits of Clinical Trials") { topic = 4 }
+    if(topic == 5 || topic == "Awareness and Information Accessibility") { topic = 5 }
+    console.log("TOPIC IS: " + topic)
+    let topicElem = "topic" + topic
+    var topicHTML = document.getElementById(topicElem)
+    topicHTML.style.color = "green"
+    var textContent = topicHTML.textContent;
+    var newTextContent = textContent.replace('☐', '☑'); // Replace 'oldChar' with the character you want to replace and 'newChar' with the character you want to replace it with
+    topicHTML.textContent = newTextContent;
+    topicsObject[topic] = true
+    let allTrue = Object.values(topicsObject).every(value => value === true);
+    // To disable the button
+    console.log(allTrue)
+    if (allTrue === true) {
+        finishButton.disabled = false;
+    }   
+}
+
+// const base_url = "http://44.209.126.3"
+const base_url = "http://127.0.0.1:8000"
+
+var cat_assistant_id = ""
 
 let scripted_voice_base_url = "https://rashi-cat-study.s3.amazonaws.com/scripted/"
 // let scripted_voice_base_url = "boop"
@@ -81,7 +43,8 @@ let surveyAnswersCommStyle = {}
 let surveyAnswersBRIEF = {}
 let backgroundInfo = {}
 
-let counter = 0;
+let returningUser = false;
+let firstMessage = true
 
 const chatBox = document.getElementById('chat-box');
 const concludeButton = document.getElementById('conclude-button');
@@ -97,15 +60,10 @@ var informationTranscript = new Map()
 
 var id = ''
 var condition = ''
+var bhls = 0
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
-
-let progress = 0;
-
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
-
 
 const finishButton = document.getElementById('finish-button');
 
@@ -117,27 +75,6 @@ var buttonSelection = ''
 var BRIEFscore = 0
 var commStyle = ''
 var userInfo = ''
-
-function reverseScore(item) {
-    // Reverse the score for a given item.
-    // 1 becomes 5, 2 becomes 4, 3 stays 3, 4 becomes 2, and 5 becomes 1.
-    const reverseMapping = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1};
-    return reverseMapping[item] || item;
-}
-
-function calculateBRIEFScore(surveyAnswersBRIEF) {
-    for (const key in surveyAnswersBRIEF) {
-        if (surveyAnswersBRIEF.hasOwnProperty(key)) {
-            let value = surveyAnswersBRIEF[key];
-            // Reverse score item 2
-            if (key !== 'FillingOutMedicalFormsConfidence') {
-                value = reverseScore(value);
-            }
-            // Add the value to the total score
-            BRIEFscore += parseInt(value);
-        }
-    }
-}
 
 function formatJSONObjectAsString(JSONObject, item) {
     if (item === 'commStyle') {
@@ -153,136 +90,25 @@ function formatJSONObjectAsString(JSONObject, item) {
     }
 }
 
-function increaseProgress() {
-    if (progress < 10) {
-        progress++
-        updateProgressBar(10);
-        updateProgressText(10);
-    }
-    if (progress >= 10) {
-         // Assuming you have a reference to the button element
-         const finishButton = document.getElementById('finish-button');
-    
-         // To disable the button
-         finishButton.disabled = false;
-    }
-}
-
-function updateProgressBar(num) {
-    const progressBar = document.getElementById('progress');
-    const progressWidth = (progress / num) * 100;
-    progressBar.style.width = `${progressWidth}%`;
-}
-
-function updateProgressText(num) {
-    const progressText = document.getElementById('progress-text');
-    progressText.textContent = `Progress ${Math.floor(progress * (100/num))}%`;
-}
-
-// Function to dynamically generate buttons
-function generateButtons(responsesArray) {
-    // Array of response options
-    // Get the container for buttons
-    let buttonsContainer = document.getElementById("user-message-buttons");
-
-    // Clear any existing buttons
-    buttonsContainer.innerHTML = '';
-
-    // Generate buttons for each response option
-    responsesArray.forEach(function(response, index) {
-        let button = document.createElement("button");
-        button.textContent = response;
-        button.classList.add("user-input-button");
-        button.id = response
-        button.onclick = function() {
-            selectButton(response);
-        };
-
-        let likertButtonItem  = document.createElement("div");
-        likertButtonItem.classList.add("likert-button-item");
-
-        
-        let likertButtonLabel  = document.createElement("p");
-        likertButtonLabel.classList.add("likert-label");
-        likertButtonLabel.textContent = surveyItems[counter].label[index];
-        likertButtonItem.appendChild(likertButtonLabel);
-
-
-        likertButtonItem.appendChild(button);
-        buttonsContainer.appendChild(likertButtonItem)
-    });
-}
-
-function selectButton(response) {
-    let buttonsContainer = document.getElementById("user-message-buttons");
-    let selectedButton = document.getElementById(response);
-
-    // Check if the clicked button is already selected
-    if (selectedButton.classList.contains("selected")) {
-        // Deselect the button
-        selectedButton.innerText = selectedButton.innerText.replace('✔ ', ''); // Remove the check mark
-        selectedButton.classList.remove("selected");
-        // Update the buttonSelection variable or perform any other actions as needed
-        buttonSelection = ''; // or any other appropriate value
-    } else {
-        // Deselect all other buttons
-        let buttons = buttonsContainer.querySelectorAll(".user-input-button");
-        buttons.forEach(function(button) {
-            if (button.id !== response) {
-                button.innerText = button.innerText.replace('✔ ', ''); // Remove the check mark
-                button.classList.remove("selected");
-            }
-        });
-
-        // Select the clicked button
-        selectedButton.innerText = '✔ ' + selectedButton.innerText;
-        selectedButton.classList.add("selected");
-
-        // Update the buttonSelection variable or perform any other actions as needed
-        buttonSelection = response;
-    }
-}
-
 function enableInput() {
-    // if (counter <= 7) {
-    //     var userButtonsArea = document.getElementById("user-message-buttons");
-    //     var userButtonsSend = document.getElementById("send-btn-likert");
-    //     userButtonsArea.classList.remove("unclickable");
-    //     userButtonsSend.classList.remove("unclickable");
-    // } else {
-    //     userInput.disabled = false;
-    // }
+    // userInput.disabled = false;
 }
 
 function disableInput() {
-    // if (counter <= 6) {
-    //     var userButtonsArea = document.getElementById("user-message-buttons");
-    //     var userButtonsSend = document.getElementById("send-btn-likert");
-    //     userButtonsArea.classList.add("unclickable");
-    //     userButtonsSend.classList.add("unclickable");
-    // } else {
-    //     userInput.disabled = true;
-    // }
+    // userInput.disabled = true;
 }
 
 
 function appendAlexMessage(message, audioDataUrl) {
-    if (counter <= 6) {
-        inputAreaText.style.display = "none"
-        inputAreaButtons.style.display = "flex"
-        generateButtons(surveyItems[counter].options)
-    } 
-    else {
-        inputAreaText.style.display = "flex"
-        inputAreaButtons.style.display = "none"
-    }
-    
-    counter++;
-    
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
     labelText.className = "label-text";
     const messageText = document.createElement('span');
+
+    const avatarImg = document.createElement('img');
+    avatarImg.src = 'https://rashi-cat-study.s3.amazonaws.com/generic.gif'; // Replace with your image path
+    avatarImg.alt = 'Alex';
+    avatarImg.className = 'alex-icon';
 
     labelText.innerText = `Alex`;
     messageText.innerHTML = `${message}`;
@@ -290,14 +116,24 @@ function appendAlexMessage(message, audioDataUrl) {
     messageElement.className = "chatbot-message"
     messageElement.appendChild(labelText);
     messageElement.appendChild(messageText);
-    chatBox.appendChild(messageElement);
+
+    const alexMessage = document.createElement('div');
+    alexMessage.className = "alex-message-item"
+
+    alexMessage.appendChild(avatarImg)
+    alexMessage.appendChild(messageElement);
+
+    chatBox.appendChild(alexMessage)
+
 
     // COMMENT OUT AUDIO FOR TESTING
-    // // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    // Create and append the audio element
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
+
+    audioElement.play();
 
     // // Play the video and loop when the audio starts playing
     // audioElement.addEventListener('play', function() {
@@ -307,16 +143,13 @@ function appendAlexMessage(message, audioDataUrl) {
     //     loadingSvg.style.visibility = 'visible';
     // });
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     loadingSvg.style.visibility = 'hidden';
-    //     enableInput()
-    // });
-
-    // audioElement.play();
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        const alexIcons = document.querySelectorAll('.alex-icon');
+        // Select the last element
+        const lastAlexIcon = alexIcons[alexIcons.length - 1];
+        lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
+    });
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -361,6 +194,50 @@ function appendLoadingDots() {
     chatBox.appendChild(ellipse);
 }
 
+function formatResponseWithAnnotations(response, annotations) {
+    let citationNumber = 1;
+    let citationMap = {};
+    let annotationKeys = Object.keys(annotations);
+
+    // Replace each annotation with a citation number
+    for (let key of annotationKeys) {
+        let citation = `[${citationNumber}]`;
+        citationMap[citationNumber] = annotations[key];
+        // Replace all occurrences of the key in the response with the citation number wrapped in a link
+        response = response.replace(new RegExp(key, 'g'), `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${annotations[key].replace(/ /g, '+')}" title="${annotations[key]}">${citation}</a>`);
+        citationNumber++;
+    }
+    
+    return response;
+}
+
+function parseAndReplaceCitations(text) {
+    // Regular expression to match citation placeholders like &#8203;:citation[oaicite:2]{index=2}&#8203;
+    const citationRegex = /【\d+:\d+†(.*?)】/g;
+
+    let citationNumber = 1;
+    let citationMap = {};
+    let response = text;
+
+    // Replace each citation placeholder with the formatted citation number and link
+    response = response.replace(citationRegex, (match, key) => {
+        citationMap[citationNumber] = key.trim();
+        // Generate HTML link for the citation
+        return `[${citationNumber}]`;
+    });
+
+    // Replace each citation number in the response with the HTML link
+    Object.keys(citationMap).forEach(citationNum => {
+        const citation = `[${citationNum}]`;
+        const linkText = citationMap[citationNum];
+        const encodedLink = encodeURIComponent(linkText.trim().replace(/ /g, '+'));
+        const link = `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${encodedLink}" title="${linkText}">${citation}</a>`;
+        response = response.replace(new RegExp(`\\[${citationNum}\\]`, 'g'), link);
+    });
+
+    return response;
+}
+
 // JavaScript function to trigger when the user hits Enter after typing in the input field
 document.getElementById("user-input").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -369,112 +246,65 @@ document.getElementById("user-input").addEventListener("keydown", function(event
     }
   });
 
-function sendMessage(type) {
-    console.log("HERE")
-    console.log(counter)
+function sendMessage() {
+    console.log("returning user is:", returningUser)
     var userMessage
-    if (counter <= 10) {
-        if (type === 'button') {
-            if (buttonSelection === '') { 
-                alert('Please select a button to continue.') 
-                return
-            } else {
-                userMessage = buttonSelection;
-                if (surveyItems[counter-1].item) {
-                    if (counter <= 3) {
-                        surveyAnswersCommStyle[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
-                    } else {
-                        surveyAnswersBRIEF[surveyItems[counter-1].item.replace(/\s/g, "")] = buttonSelection;
-                    }
-                }
-            }
-        } else {
-            userMessage = userInput.value;
-            if (userMessage.trim() === '') return;
-            backgroundInfo[surveyItems[counter-1].item.replace(/\s/g, "")] = userMessage;
-        }
-    } else {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '' && counter !== 99999) return;
-    }
-    // if (counter !== 99999) {
-    //     appendUserMessage(userMessage);
-    // }
-    
-    disableInput()
 
     currentDate = new Date();
     // Convert the date and time to the user's local time zone
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
-    informationTranscript.set("USER " + localDateTime, userMessage);
+    
+    if (firstMessage === true) {
+        appendLoadingDots()
+        var controlInitialMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
+        var accommodateMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
 
-    if (counter < 10) {
-        console.log("HERE IN COUNTER LESS THAN 10")
-        let alexMessage = surveyItems[counter].message
+        if (condition === '0') { userMessage = controlInitialMessage }
+            else { userMessage = accommodateMessage }
 
-        setTimeout(function() {
-            appendAlexMessage(alexMessage, scripted_voice_base_url + (counter+1).toString() + '.mp3');
-            buttonSelection = ''
-            currentDate = new Date();
-            // Convert the date and time to the user's local time zone
-            localDateTime = currentDate.toLocaleString();
-            // Output the local date and time
-            informationTranscript.set("ALEX " + localDateTime, alexMessage);
-
-            const ellipse = document.getElementById('lds-ellipsis');
-            ellipse.remove();        
-        }, 1500); // 1500 milliseconds = 1.5 seconds
-
+        informationTranscript.set("SYSTEM " + localDateTime, userMessage);
     } else {
-        console.log("IN ELSE STATEMENT")
-        if (counter === 10) {
-            calculateBRIEFScore(surveyAnswersBRIEF)
-            formatJSONObjectAsString(surveyAnswersCommStyle, 'commStyle')
-            formatJSONObjectAsString(backgroundInfo, 'userInfo')
-            logUserInfo();
-            var controlInitialMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA.'
-            var accommodateMessage = 'Thank the user for sharing their information, let them know you are ready to start talking about clinical trials, and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
-            if (condition === '0') { userMessage = controlInitialMessage }
-            else { userMessage = accommodateMessage }
-        } 
-        if (counter === 99999) {
-            console.log("IN COUNTER IS 99999")
-            appendLoadingDots();
-            var controlInitialMessage = 'Welcome the user back and list 2-3 things you can talk about based on your PERSONA.'
-            var accommodateMessage = 'Welcome the user back, and list 2-3 things you can talk about based on your PERSONA and the following Background Information:'
-            if (condition === '0') { userMessage = controlInitialMessage }
-            else { userMessage = accommodateMessage }
-        } 
-        fetch(base_url + `/api/cat/assistant`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
-        })
-        .then(response => response.json())
-        .then(data => {
-            appendAlexMessage(data.response, data.audio);
-            if (data.topic === 1) {
-                if (counter === 11) { 
-                    document.getElementById("progress-area").style.opacity = '100%';   
-                } else {
-                    increaseProgress()
-                }
-            }
-            currentDate = new Date();
-            // Convert the date and time to the user's local time zone
-            localDateTime = currentDate.toLocaleString();
-            // Output the local date and time
-            informationTranscript.set("ALEX " + localDateTime, data.response);
-        })
-        .catch(error => console.error('Error:', error))
-        .finally(() => {
-            // Remove loading indicator after response received
-            const ellipse = document.getElementById('lds-ellipsis');
-            console.log(ellipse)
-            ellipse.remove();
-        });
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
     }
+    
+    disableInput()
+    
+    fetch(base_url + `/api/cat/assistant`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, health_literacy: bhls})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("ANNOTATIONS:", data.annotations)
+        var formattedResponse = formatResponseWithAnnotations(data.response, data.annotations)
+        formattedResponse = parseAndReplaceCitations(formattedResponse)
+        console.log("AUDIO:", data.audio)
+        appendAlexMessage(formattedResponse, data.audio);
+        console.log("TOPIC IS:", data.topic)
+        console.log(firstMessage)
+        if (firstMessage === false) { checkTopic(data.topic) }
+        
+        currentDate = new Date();
+        // Convert the date and time to the user's local time zone
+        localDateTime = currentDate.toLocaleString();
+        // Output the local date and time
+        informationTranscript.set("ALEX " + localDateTime, data.response);
+        updateTranscript()
+        firstMessage = false
+    })
+    .catch(error => console.error('Error:', error))
+    .finally(() => {
+        // Remove loading indicator after response received
+        const ellipse = document.getElementById('lds-ellipsis');
+        console.log(ellipse)
+        ellipse.remove();
+    });
     userInput.value = ''; // Clear input field after sending message
 }
 
@@ -485,6 +315,8 @@ window.onload = function() {
     console.log(condition);
     id = urlParams.get('id')
     console.log(id);
+    bhls = urlParams.get('bhls')
+    console.log(bhls)
 
     if (condition === '6') {
         cat_assistant_id = "accommodative_assistant_id"
@@ -494,7 +326,9 @@ window.onload = function() {
 
     console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
 
-    fetch('/userInformation', {
+    firstMessage = true
+
+    fetch('/getUserInfo', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id: id})
@@ -506,33 +340,9 @@ window.onload = function() {
         return response.json();
     })
     .then(data => {
-        console.log("User exists.", data);
-        let backgroundInfoCompleted = Object.values(data.backgroundInfo).every(value => value === null);
-        let surveyAnswersBRIEFCompleted = Object.values(data.surveyAnswersBRIEF).every(value => value === null);
-        let surveyAnswersCommStyleCompleted = Object.values(data.surveyAnswersCommStyle).every(value => value === null);
-
-        if (backgroundInfoCompleted && surveyAnswersBRIEFCompleted && surveyAnswersCommStyleCompleted === true) {
-            console.log("User has not answered intro questions yet.")
-            var alexMessage = surveyItems[counter].message
-
-            currentDate = new Date();
-            localDateTime = currentDate.toLocaleString();
-            informationTranscript.set("ALEX " + localDateTime, alexMessage);
-
-            // Actions to be performed when the page is fully loaded
-            appendLoadingDots();
-
-            setTimeout(function() {
-                disableInput();
-                appendAlexMessage(alexMessage, scripted_voice_base_url + '1.mp3');
-                ellipse.remove();       
-            }, 1500); // 1500 milliseconds = 1.5 seconds
-
-        } else {
-            console.log("User HAS answered intro questions!!!")
-            counter = 99999;
-            sendMessage('text')
-        }
+        console.log("User exists.", data)
+        returningUser = true;
+        sendMessage('text')
     })
     .catch(error => {
         if (error.message === 'HTTP status 404') {
@@ -544,10 +354,6 @@ window.onload = function() {
     .finally(() => {
         console.log("Done checking if user exists.");
     });
-
-    
-
-
   };
 
 // Get the modal
@@ -615,6 +421,6 @@ function logUserInfo() {
     .catch(error => console.error('Error logging other data:', error))
 }
 
-  function checkUser() {
-    
+function nextPage() {
+    window.location.href = `/continue?id=${id}&c=${condition}`
 }

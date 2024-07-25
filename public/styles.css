@@ -1,13 +1,13 @@
 
 :root {
-    --blue: #2971B7;
-    --orange: #df4300;
-    --gradient: linear-gradient(90deg, rgba(41,113,183,1) 0%, rgb(223, 127, 89) 100%);
-    --gradient-bg: linear-gradient(90deg, rgba(41, 112, 183, 0.3) 0%, rgba(183, 105, 41, 0.3) 100%);
-    --grey: #b5b5b5;
-    --dark: #323232;
+    --blue: #002657;
+    --orange: #fa4616;
+    --gradient: linear-gradient(90deg, rgba(0,38,87,.5) 0%, rgb(250,70,22,.5) 100%);
+    --gradient-bg: linear-gradient(45deg, rgba(0,38,87, 0.15) 0%, rgba(250,70,22, 0.15) 100%);
+    --gradient-light: linear-gradient(90deg, rgba(242, 169, 0,1) 0%, rgb(250,70,22,1) 100%);
+    --grey: #c7c9c8;
+    --dark: #343741;
   }
-
 
 body {
     display: flex;
@@ -19,7 +19,46 @@ body {
     font-weight: 400;
     background-image: var(--gradient-bg);
     color: var(--dark);
+    margin: 0;
 }
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+  margin: 0px 1px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Custom tooltip styles */
+a[title] {
+  position: relative; /* Ensure positioning relative to the link */
+  text-decoration: none; /* Remove default underline */
+}
+
+a[title]:hover::after {
+  content: attr(title); /* Display the title text as content */
+  position: absolute; /* Position the tooltip */
+  background-color: var(--blue); /* Background color */
+  color: #fff; /* Text color */
+  padding: 4px 8px; /* Padding around the text */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 11px; /* Font size */
+  white-space: nowrap; /* Prevent line breaks */
+  z-index: 999; /* Ensure tooltip stays on top */
+  left: 50%; /* Position horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  bottom: 20px; /* Position vertically */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.2s ease-in-out; /* Smooth fade-in/out effect */
+}
+
+a[title]:hover::after {
+  opacity: 1; /* Show tooltip on hover */
+}
+
 
 h3 {
     font-family: "Poppins", sans-serif;
@@ -88,7 +127,7 @@ h5 {
 }
 
 .input-area {
-    display: none;
+    display: flex;
     width: 100%;
     justify-content: space-between;
 }
@@ -236,10 +275,16 @@ video {
     color: white;
     border: 3px solid transparent;
     padding: 7px;
-    margin: 11px 7px 11px 7px !important;
     border-radius: 11px 11px 11px 0px;
     display: flex;
     flex-direction: column;
+}
+
+.alex-message-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin: 11px 7px 11px 7px !important;
 }
 
 .label-text {
@@ -247,6 +292,13 @@ video {
     text-transform: uppercase;
     font-size: 13px;
     opacity: 75%;
+}
+
+.alex-icon {
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
+  margin-right: 11px;
 }
 
 /* Load animation */
@@ -431,7 +483,7 @@ p {
 hr {
   border: 0; /* Remove the default border */
   height: 1px; /* Set the height of the horizontal rule */
-  width: 85%;
+  width: 100%;
   background-color: var(--dark); /* Set the color of the horizontal rule */
   margin: 15px 15px; /* Add some margin above and below the horizontal rule */
 }
@@ -470,7 +522,7 @@ hr {
   color: green;
 }
 
-#message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5 {
+#message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5, #message-6  {
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -595,11 +647,6 @@ hr {
 .check-item {
   margin: 7px 0px !important;
 }
-
-hr {
-  width: 100%;
-}
-
 /* CSS for modal */
 .interaction-modal {
   display: block;
@@ -645,4 +692,101 @@ hr {
 .info.help {
   font-size: 15px !important;
   margin-bottom: 7px;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.main-container .ct-container {
+  background-color: white;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container .ct-content-area {
+  padding: 15px 25px;
+}
+
+.main-container .conversation-container {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.ct-container h1 {
+  font-size: 19px;
+  background-color: var(--blue);
+  color: white;
+  margin-top: 0;
+  padding: 11px;
+}
+
+.ct-container h2 {
+  font-size: 15px;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin: 5px 0;
+  text-align: center;
+}
+
+.ct-container h3 {
+  font-size: 13px;
+  text-align: left;
+  color: var(--dark);
+  text-transform: uppercase;
+  margin: 5px 0 !important;
+}
+
+.ct-container .scroll-area{
+  height: 205px !important;
+  overflow-y: scroll;
+  border: 1px solid var(--orange);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.ct-container .info-area {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+#criteriaList ul {
+  margin-top: 0px;
+}
+
+.ct-content-area {
+  overflow-y: scroll;
+}
+
+.ct-footer-area {
+  /* height: 7%; */
+  background-color: var(--blue);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.ct-footer-area button {
+  border: 1px solid white;
+  padding: 9px;
+}
+
+.ct-footer-area button:hover {
+  background-image: var(--gradient-light);
+  border: 1px solid var(--gradient-light);
+}
+
+.ct-footer-area .selected-study {
+  background-color: var(--orange) !important;
+  border: 1px solid var(--orange);
+  font-weight: bold;
 }

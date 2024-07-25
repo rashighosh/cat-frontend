@@ -1,0 +1,458 @@
+{
+  "protocolSection": {
+    "identificationModule": {
+      "nctId": "NCT05868187",
+      "orgStudyIdInfo": {
+        "id": "HRP - 503"
+      },
+      "organization": {
+        "fullName": "University of Cincinnati",
+        "class": "OTHER"
+      },
+      "briefTitle": "CanRestoreFunction Cancer-related Fatigue ( CRF )",
+      "officialTitle": "CanRestoreFunction: Cancer-Related Fatigue Management",
+      "acronym": "CRF"
+    },
+    "statusModule": {
+      "statusVerifiedDate": "2023-05",
+      "overallStatus": "RECRUITING",
+      "expandedAccessInfo": {
+        "hasExpandedAccess": false
+      },
+      "startDateStruct": {
+        "date": "2023-03-01",
+        "type": "ACTUAL"
+      },
+      "primaryCompletionDateStruct": {
+        "date": "2023-12-31",
+        "type": "ESTIMATED"
+      },
+      "completionDateStruct": {
+        "date": "2024-04-30",
+        "type": "ESTIMATED"
+      },
+      "studyFirstSubmitDate": "2023-02-07",
+      "studyFirstSubmitQcDate": "2023-05-11",
+      "studyFirstPostDateStruct": {
+        "date": "2023-05-22",
+        "type": "ACTUAL"
+      },
+      "lastUpdateSubmitDate": "2023-05-11",
+      "lastUpdatePostDateStruct": {
+        "date": "2023-05-22",
+        "type": "ACTUAL"
+      }
+    },
+    "sponsorCollaboratorsModule": {
+      "responsibleParty": {
+        "type": "PRINCIPAL_INVESTIGATOR",
+        "investigatorFullName": "Anne Fleischer",
+        "investigatorTitle": "Associate Professor",
+        "investigatorAffiliation": "University of Cincinnati"
+      },
+      "leadSponsor": {
+        "name": "University of Cincinnati",
+        "class": "OTHER"
+      },
+      "collaborators": [
+        {
+          "name": "University of Dayton",
+          "class": "OTHER"
+        }
+      ]
+    },
+    "oversightModule": {
+      "oversightHasDmc": false,
+      "isFdaRegulatedDrug": false,
+      "isFdaRegulatedDevice": false
+    },
+    "descriptionModule": {
+      "briefSummary": "The goal of this randomized control trial is to determine if participating in an 8-week online cancer-related fatigue management intervention consisting of individualized exercise program, one-on-one goal setting and action plan development and interactive educational module will significantly reduce the perception of cancer-related fatigue, improve the quality of life, improve perceived cognition, and perceived function of breast cancer compared to a wait-list control group. The aim the project is to determine if an online cancerrelated fatigue management program is associated with 1. A decrease in cancer-related fatigue. 2. An improved perception of their ability and satisfaction in completing important activities 3. Greater quality of life. 4. Improved mobility 5. Improved perceived cognition"
+    },
+    "conditionsModule": {
+      "conditions": [
+        "Breast Neoplasm"
+      ],
+      "keywords": [
+        "cancer-related fatigue",
+        "breast cancer",
+        "exercise",
+        "problem-solving",
+        "online interactive education"
+      ]
+    },
+    "designModule": {
+      "studyType": "INTERVENTIONAL",
+      "phases": [
+        "NA"
+      ],
+      "designInfo": {
+        "allocation": "RANDOMIZED",
+        "interventionModel": "PARALLEL",
+        "primaryPurpose": "TREATMENT",
+        "maskingInfo": {
+          "masking": "SINGLE",
+          "whoMasked": [
+            "OUTCOMES_ASSESSOR"
+          ]
+        }
+      },
+      "enrollmentInfo": {
+        "count": 32,
+        "type": "ESTIMATED"
+      }
+    },
+    "armsInterventionsModule": {
+      "armGroups": [
+        {
+          "label": "Exercise, Problem-Solving and Education",
+          "type": "EXPERIMENTAL",
+          "description": "Individualized exercise program Weekly Goals setting and problem-solving session to create a weekly action plan Four Assigned interactive educational modules",
+          "interventionNames": [
+            "Behavioral: Exercise, Problem-Solving Session and Education"
+          ]
+        },
+        {
+          "label": "Usual Care",
+          "type": "NO_INTERVENTION",
+          "description": "Participants will complete their daily routines as they typically do."
+        }
+      ],
+      "interventions": [
+        {
+          "type": "BEHAVIORAL",
+          "name": "Exercise, Problem-Solving Session and Education",
+          "description": "Complete assigned exercises three times a week Complete Action plan co-developed Complete part or all of one of the four interactive educational modules",
+          "armGroupLabels": [
+            "Exercise, Problem-Solving and Education"
+          ]
+        }
+      ]
+    },
+    "outcomesModule": {
+      "primaryOutcomes": [
+        {
+          "measure": "Brief Fatigue Inventory",
+          "description": "This 9-item scale assesses the severity and interference of fatigue based on a 0 (no fatigue) to 10 (greatest fatigue) scale",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "Brief Fatigue Inventory",
+          "description": "This 9-item scale assesses the severity and interference of fatigue based on a 0 (no fatigue) to 10 (greatest fatigue) scale",
+          "timeFrame": "4-week"
+        },
+        {
+          "measure": "Brief Fatigue Inventory",
+          "description": "This 9-item scale assesses the severity and interference of fatigue based on a 0 (no fatigue) to 10 (greatest fatigue) scale",
+          "timeFrame": "8-week"
+        }
+      ],
+      "secondaryOutcomes": [
+        {
+          "measure": "Canadian Occupational Performance Measure",
+          "description": "The OT administers the COPM, which is a semi-structured interview to understand the routine activities that the participant completes daily, specifically their self-care, leisure, and social activities. The participant rates the importance of each of the activities using a 0 to 10 scale. Zero indicates \"no importance\" and 10 indicates \"very important.\" Then the participant separately rates their perception of how well they currently perform each of the important activities and how satisfied they are with their performance using a 0 to 10 scale. Zero indicates that \"they are not able to perform\" or \"they are not satisfied\" and 10 indicates that \"they are able to perform the activity well\" or \"they are very satisfied.\"",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "Canadian Occupational Performance Measure",
+          "description": "The OT administers the COPM, which is a semi-structured interview to understand the routine activities that the participant completes daily, specifically their self-care, leisure, and social activities. The participant rates the importance of each of the activities using a 0 to 10 scale. Zero indicates \"no importance\" and 10 indicates \"very important.\" Then the participant separately rates their perception of how well they currently perform each of the important activities and how satisfied they are with their performance using a 0 to 10 scale. Zero indicates that \"they are not able to perform\" or \"they are not satisfied\" and 10 indicates that \"they are able to perform the activity well\" or \"they are very satisfied.\"",
+          "timeFrame": "4-week"
+        },
+        {
+          "measure": "Canadian Occupational Performance Measure",
+          "description": "The OT administers the COPM, which is a semi-structured interview to understand the routine activities that the participant completes daily, specifically their self-care, leisure, and social activities. The participant rates the importance of each of the activities using a 0 to 10 scale. Zero indicates \"no importance\" and 10 indicates \"very important.\" Then the participant separately rates their perception of how well they currently perform each of the important activities and how satisfied they are with their performance using a 0 to 10 scale. Zero indicates that \"they are not able to perform\" or \"they are not satisfied\" and 10 indicates that \"they are able to perform the activity well\" or \"they are very satisfied.\"",
+          "timeFrame": "8-week"
+        },
+        {
+          "measure": "Functional Assessment of Chronic Illness Therapy-Fatigue",
+          "description": "This 40-item 5-point Likert scale (0=Not at all 1=A little bit 2=Somewhat 3= Quite a bit 4=Very much) evaluates quality of life in individuals with fatigue as measured in 5 domains: physical, social/family, emotional, functional well-being, and fatigue. Higher scores reflect greater quality of life",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "Functional Assessment of Chronic Illness Therapy-Fatigue",
+          "description": "This 40-item 5-point Likert scale (0=Not at all 1=A little bit 2=Somewhat 3= Quite a bit 4=Very much) evaluates quality of life in individuals with fatigue as measured in 5 domains: physical, social/family, emotional, functional well-being, and fatigue. Higher scores reflect greater quality of life",
+          "timeFrame": "4-weeks"
+        },
+        {
+          "measure": "Functional Assessment of Chronic Illness Therapy-Fatigue",
+          "description": "This 40-item 5-point Likert scale (0=Not at all 1=A little bit 2=Somewhat 3= Quite a bit 4=Very much) evaluates quality of life in individuals with fatigue as measured in 5 domains: physical, social/family, emotional, functional well-being, and fatigue. Higher scores reflect greater quality of life",
+          "timeFrame": "8-weeks"
+        },
+        {
+          "measure": "PROMIS Cognitive Function Ability 8a",
+          "description": "This 8-item 5-point Likert scale \\[Never, Rarely (Once) Sometimes (Two or three times) Often (About once a day) Very often (Several times a day)\\] evaluates patient-perceived cognitive abilities, its interference with daily functioning, whether other people observe cognitive impairments, and its impact on quality of life",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "PROMIS Cognitive Function Ability 8a",
+          "description": "This 8-item 5-point Likert scale \\[Never, Rarely (Once) Sometimes (Two or three times) Often (About once a day) Very often (Several times a day)\\] evaluates patient-perceived cognitive abilities, its interference with daily functioning, whether other people observe cognitive impairments, and its impact on quality of life",
+          "timeFrame": "4-weeks"
+        },
+        {
+          "measure": "PROMIS Cognitive Function Ability 8a",
+          "description": "This 8-item 5-point Likert scale \\[Never, Rarely (Once) Sometimes (Two or three times) Often (About once a day) Very often (Several times a day)\\] evaluates patient-perceived cognitive abilities, its interference with daily functioning, whether other people observe cognitive impairments, and its impact on quality of life",
+          "timeFrame": "8-weeks"
+        },
+        {
+          "measure": "Promis Applied Cognitive Abilities 8a",
+          "description": "This 8-item 5-point Likert scale \\[Not at all A little bit, Somewhat, Quite a bit, Very much\\] evaluates the patient-perceived cognitive deficits",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "Promis Applied Cognitive Abilities 8a",
+          "description": "This 8-item 5-point Likert scale \\[Not at all A little bit, Somewhat, Quite a bit, Very much\\] evaluates the patient-perceived cognitive deficits",
+          "timeFrame": "4-weeks"
+        },
+        {
+          "measure": "Promis Applied Cognitive Abilities 8a",
+          "description": "This 8-item 5-point Likert scale \\[Not at all A little bit, Somewhat, Quite a bit, Very much\\] evaluates the patient-perceived cognitive deficits",
+          "timeFrame": "8-weeks"
+        },
+        {
+          "measure": "6-minute walk test",
+          "description": "Participants completes a 6-minute walk at their chosen pace and with permitted standing rest breaks",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "6-minute walk test",
+          "description": "Participants completes a 6-minute walk at their chosen pace and with permitted standing rest breaks",
+          "timeFrame": "4-weeks"
+        },
+        {
+          "measure": "6-minute walk test",
+          "description": "Participants completes a 6-minute walk at their chosen pace and with permitted standing rest breaks",
+          "timeFrame": "8-weeks"
+        },
+        {
+          "measure": "30 second sit to stand",
+          "description": "Participants are seated in a standard height fixed chair without armrests, which is placed against a wall. They will move from sitting to standing and back to sitting position, with arms crossed against chest. The number of complete stands and sits",
+          "timeFrame": "Baseline"
+        },
+        {
+          "measure": "30 second sit to stand",
+          "description": "Participants are seated in a standard height fixed chair without armrests, which is placed against a wall. They will move from sitting to standing and back to sitting position, with arms crossed against chest. The number of complete stands and sits",
+          "timeFrame": "4-weeks"
+        },
+        {
+          "measure": "30 second sit to stand",
+          "description": "Participants are seated in a standard height fixed chair without armrests, which is placed against a wall. They will move from sitting to standing and back to sitting position, with arms crossed against chest. The number of complete stands and sits",
+          "timeFrame": "8-weeks"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 1"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 2"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 3"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 4"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 5"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 6"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 7"
+        },
+        {
+          "measure": "Average number of steps",
+          "description": "Fitbit will track the number of steps that the participants takes each day",
+          "timeFrame": "Week 8"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 1"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 2"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 3"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 4"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 5"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 6"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 7"
+        },
+        {
+          "measure": "Average heart rate",
+          "description": "Fitbit will track daily heart rate of each participant",
+          "timeFrame": "Week 8"
+        }
+      ]
+    },
+    "eligibilityModule": {
+      "eligibilityCriteria": "Inclusion Criteria:\n\n* been diagnosed with any type of cancer within 5 years of enrollment,\n* received chemotherapy and/or radiation therapy\n* have access to mobile device or computer\n* have basic computer or mobile device skills,\n* have a significant level of fatigue defined as \\>3 on 0-10 scale using the Oneitem Fatigue Scale\n\nExclusion Criteria:\n\n* have metastatic cancer (Stage 4),\n* do not have a signed medical release by their physician or physician extender indicating that the participant can safely participate in the exercise program,\n* chronic fatigue prior to cancer diagnosis, such as fibromyalgia\n* are unable to follow verbal or written assessment instructions, are non-English speaking",
+      "healthyVolunteers": true,
+      "sex": "ALL",
+      "minimumAge": "18 Years",
+      "maximumAge": "70 Years",
+      "stdAges": [
+        "ADULT",
+        "OLDER_ADULT"
+      ]
+    },
+    "contactsLocationsModule": {
+      "centralContacts": [
+        {
+          "name": "Anne Fleischer, Ph.D",
+          "role": "CONTACT",
+          "phone": "513-558-3732",
+          "email": "fleiscae@ucmail.uc.edu"
+        },
+        {
+          "name": "Mary Fisher, Ph.D",
+          "role": "CONTACT",
+          "phone": "937-229-5617",
+          "email": "Mary.Fisher@udayton.edu"
+        }
+      ],
+      "overallOfficials": [
+        {
+          "name": "Anne Fleischer, Ph.D",
+          "affiliation": "University of Cincinnati",
+          "role": "PRINCIPAL_INVESTIGATOR"
+        }
+      ],
+      "locations": [
+        {
+          "facility": "University of Cincinnati",
+          "status": "RECRUITING",
+          "city": "Cincinnati",
+          "state": "Ohio",
+          "zip": "45221",
+          "country": "United States",
+          "contacts": [
+            {
+              "name": "Anne Fleischer, Ph.D",
+              "role": "CONTACT",
+              "phone": "513-558-3732",
+              "email": "CaRehabResearch@gmail.com"
+            }
+          ],
+          "geoPoint": {
+            "lat": 39.12713,
+            "lon": -84.51435
+          }
+        }
+      ]
+    }
+  },
+  "derivedSection": {
+    "miscInfoModule": {
+      "versionHolder": "2024-06-26"
+    },
+    "conditionBrowseModule": {
+      "meshes": [
+        {
+          "id": "D000001943",
+          "term": "Breast Neoplasms"
+        },
+        {
+          "id": "D000005221",
+          "term": "Fatigue"
+        }
+      ],
+      "ancestors": [
+        {
+          "id": "D000009371",
+          "term": "Neoplasms by Site"
+        },
+        {
+          "id": "D000009369",
+          "term": "Neoplasms"
+        },
+        {
+          "id": "D000001941",
+          "term": "Breast Diseases"
+        },
+        {
+          "id": "D000012871",
+          "term": "Skin Diseases"
+        }
+      ],
+      "browseLeaves": [
+        {
+          "id": "M5220",
+          "name": "Breast Neoplasms",
+          "asFound": "Breast Neoplasms",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M8364",
+          "name": "Fatigue",
+          "asFound": "Fatigue",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M5218",
+          "name": "Breast Diseases",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M15674",
+          "name": "Skin Diseases",
+          "relevance": "LOW"
+        }
+      ],
+      "browseBranches": [
+        {
+          "abbrev": "BC04",
+          "name": "Neoplasms"
+        },
+        {
+          "abbrev": "BC17",
+          "name": "Skin and Connective Tissue Diseases"
+        },
+        {
+          "abbrev": "All",
+          "name": "All Conditions"
+        },
+        {
+          "abbrev": "BC23",
+          "name": "Symptoms and General Pathology"
+        }
+      ]
+    }
+  },
+  "hasResults": false
+}

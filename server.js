@@ -7,6 +7,7 @@ const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
 require('dotenv').config()
 
+
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -42,13 +43,26 @@ app.get('/', (req, res) => {
 });
 
 // Define a route for the homepage
-app.get('/search', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'search.html'));
+app.get('/browse', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'browse.html'));
 });
 
 // Define a route for the homepage
 app.get('/information', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'information.html'));
+});
+
+// Define a route for the homepage
+app.get('/continue', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'continue.html'));
+});
+
+// Define a route for the homepage
+app.get('/gross', (req, res) => {
+  // Set the content type to plain text
+  res.setHeader('Content-Type', 'text/plain');
+  // Send the plain text content
+  res.send('gross');
 });
 
 app.post('/logUser', (req, res) => {
@@ -179,7 +193,7 @@ app.post('/updateTranscript', (req, res) => {
   });
 });
 
-app.post('/userInformation', (req, res) => {
+app.post('/getUserInfo', (req, res) => {
   const { id } = req.body;
   
   // Connect to the database
@@ -214,7 +228,7 @@ app.post('/userInformation', (req, res) => {
                   return res.status(500).json({ error: 'Error fetching survey answers' });
               }
 
-              const surveyQueryBRIEF = `SELECT HelpReadingHealthMaterialsFrequency, FillingOutMedicalFormsConfidence, DifficultyLearningAboutConditionFromWrittenInfo, DifficultyUnderstandingWhatisToldAboutCondition, BRIEFScore FROM CAT WHERE ID = @id`;
+              const surveyQueryBRIEF = `SELECT BRIEFScore FROM CAT WHERE ID = @id`;
               request.query(surveyQueryBRIEF, function (err, surveyQueryBRIEFResult) {
                   if (err) {
                       console.error('Error fetching survey answers:', err);
@@ -244,6 +258,35 @@ app.post('/userInformation', (req, res) => {
       });
   });
 });
+
+app.post('/logBrowseTrialsChoice', (req, res) => {
+  const { id, BrowseTrialsChoice } = req.body;
+
+  console.log("BrowseTrialsChoice", BrowseTrialsChoice);
+
+  sql.connect(config, function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    var request = new sql.Request();
+    let queryString = `UPDATE CAT SET BrowseTrialsChoice = @BrowseTrialsChoice WHERE ID = @id`;
+
+    request.input('id', sql.NVarChar, id);
+    request.input('BrowseTrialsChoice', sql.NVarChar, BrowseTrialsChoice);
+
+    request.query(queryString, function (err, recordset) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      res.status(200).json({ message: 'BrowseTrialsChoice updated successfully.' });
+    });
+  });
+});
+
 
 
 
