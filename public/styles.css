@@ -301,6 +301,12 @@ video {
   margin-right: 11px;
 }
 
+.alex-profile {
+  height: 75px;
+  width: 75px;
+  border-radius: 50%;
+}
+
 /* Load animation */
 
 .lds-ellipsis {
@@ -415,6 +421,14 @@ video {
   position: absolute;
   bottom: 15px;
   right: 35px;
+  width: 105px;
+  padding: 11px;
+}
+
+.finish-talking-button {
+  position: absolute;
+  bottom: 15px;
+  right: 35px;
   width: 175px;
   padding: 11px;
 }
@@ -425,21 +439,36 @@ video {
   cursor: not-allowed; /* Example: Change cursor to not-allowed */
 }
 
-svg{
-  width: 3vw;
-  height: 3vh;
-  max-width: 100px;
-  color: #df4300;
+.pulse-orange {
+  animation: pulse-animation-orange 1.5s infinite;
+}
+
+.pulse-blue {
+  animation: pulse-animation-blue 1.5s infinite;
+}
+
+@keyframes pulse-animation-orange {
+  0% {
+    box-shadow: 0 0 0 0px rgba(250, 70, 22, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 11px rgba(250, 70, 22, 0);
+  }
+}
+
+@keyframes pulse-animation-blue {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 38, 87, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 11px rgba(0, 38, 87, 0);
+  }
 }
 
 #send-btn-likert {
   display: flex;
   width: 100%;
   justify-content: flex-end;
-}
-
-#loading-svg {
-  visibility: hidden;
 }
 
 .progress-area {
@@ -522,8 +551,16 @@ hr {
   color: green;
 }
 
-#message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5, #message-6  {
+#message-fc2, #message-fc3, #message-1, #message-2, #message-3, #message-4, #message-5, #message-6, #message-2-browse, #message-3-browse  {
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#message-1-browse {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -559,10 +596,6 @@ hr {
   font-weight: 700 !important;
   text-transform: 1.5px;
 }
-
-/* #message-fc1, #message-fc2, #message-fc3 {
-  font-size: 19px !important;
-} */
 
 .help-container {
   text-align: center;

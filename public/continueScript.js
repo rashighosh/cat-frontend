@@ -1,11 +1,13 @@
 let id
 let condition
+let bhls
 
 window.onload = function() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     id = urlParams.get('id')
     condition = urlParams.get('c')
+    bhls = urlParams.get('bhls')
 }
 
 function logBrowseTrialsChoice(choice) {
@@ -21,9 +23,9 @@ function logBrowseTrialsChoice(choice) {
     .then(data => {
         console.log("Choice logged successfully");
         if (choice === 'Yes') {
-            window.location.href = `/browse?id=${id}&c=${condition}`
+            window.location.href = `/browseInstructions?id=${id}&bhls=${bhls}&c=${condition}`
         } else {
-            window.location.href = `/gross`
+            window.location.href = `https://ufl.qualtrics.com/jfe/form/SV_bdT4OdUMSNUf5oq?id=${id}&bhls=${bhls}&c=${condition}&browsed=0`
         }
         
     })

@@ -21,6 +21,7 @@ var browseTranscript = new Map()
 
 var id = ''
 var condition = ''
+var bhls = ''
 
 const userInput = document.getElementById('user-input');
 const loadingSvg = document.getElementById('loading-svg');
@@ -145,61 +146,16 @@ document.addEventListener("DOMContentLoaded", function() {
     getTrial("NCT04990895", "1", "2", "3")
 });
 
-
-function formatResponseWithAnnotations(response, annotations) {
-    console.log(response)
-    console.log(annotations)
-    let citationNumber = 1;
-    let citationMap = {};
-    let annotationKeys = Object.keys(annotations);
-
-    // Replace each annotation with a citation number
-    for (let key of annotationKeys) {
-        let citation = `[${citationNumber}]`;
-        citationMap[citationNumber] = annotations[key];
-        // Replace all occurrences of the key in the response with the citation number wrapped in a link
-        response = response.replace(new RegExp(key, 'g'), `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${annotations[key].replace(/ /g, '+')}" title="${annotations[key]}">${citation}</a>`);
-        citationNumber++;
-    }
-    console.log("NEW RESPONES:", response)
-    return response;
-}
-
-function parseAndReplaceCitations(text) {
-    // Regular expression to match citation placeholders like &#8203;:citation[oaicite:2]{index=2}&#8203;
-    const citationRegex = /【\d+:\d+†(.*?)】/g;
-
-    let citationNumber = 1;
-    let citationMap = {};
-    let response = text;
-
-    // Replace each citation placeholder with the formatted citation number and link
-    response = response.replace(citationRegex, (match, key) => {
-        citationMap[citationNumber] = key.trim();
-        // Generate HTML link for the citation
-        return `[${citationNumber}]`;
-    });
-
-    // Replace each citation number in the response with the HTML link
-    Object.keys(citationMap).forEach(citationNum => {
-        const citation = `[${citationNum}]`;
-        const linkText = citationMap[citationNum];
-        const encodedLink = encodeURIComponent(linkText.trim().replace(/ /g, '+'));
-        const link = `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${encodedLink}" title="${linkText}">${citation}</a>`;
-        response = response.replace(new RegExp(`\\[${citationNum}\\]`, 'g'), link);
-    });
-
-    return response;
-}
-
-
-
-
 function appendAlexMessage(message, audioDataUrl) {
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
     labelText.className = "label-text";
     const messageText = document.createElement('span');
+
+    const avatarImg = document.createElement('img');
+    avatarImg.src = 'https://rashi-cat-study.s3.amazonaws.com/generic.gif'; // Replace with your image path
+    avatarImg.alt = 'Alex';
+    avatarImg.className = 'alex-icon pulse-orange';
 
     labelText.innerText = `Alex`;
     messageText.innerHTML = `${message}`;
@@ -207,33 +163,32 @@ function appendAlexMessage(message, audioDataUrl) {
     messageElement.className = "chatbot-message"
     messageElement.appendChild(labelText);
     messageElement.appendChild(messageText);
-    chatBox.appendChild(messageElement);
+
+    const alexMessage = document.createElement('div');
+    alexMessage.className = "alex-message-item"
+
+    alexMessage.appendChild(avatarImg)
+    alexMessage.appendChild(messageElement);
+
+    chatBox.appendChild(alexMessage)
 
     // COMMENT OUT AUDIO FOR TESTING
     // Create and append the audio element
-    // const audioElement = new Audio(audioDataUrl);
-    // audioElement.controls = true;
-    // chatBox.appendChild(audioElement);
-    // audioElement.style.display = 'none'
+    const audioElement = new Audio(audioDataUrl);
+    audioElement.controls = true;
+    chatBox.appendChild(audioElement);
+    audioElement.style.display = 'none'
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
+    audioElement.play();
 
-    // // Pause the video when the audio stops playing
-    // audioElement.addEventListener('ended', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.currentTime = video.duration;
-    //     video.pause();
-    //     loadingSvg.style.visibility = 'hidden';
-    //     enableInput()
-    // });
-
-    // audioElement.play();
+    // Pause the video when the audio stops playing
+    audioElement.addEventListener('ended', function() {
+        const alexIcons = document.querySelectorAll('.alex-icon');
+        // Select the last element
+        const lastAlexIcon = alexIcons[alexIcons.length - 1];
+        lastAlexIcon.classList.remove('pulse-orange');
+        lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
+    });
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -310,9 +265,7 @@ function sendMessage() {
     .then(response => response.json())
     .then(data => {
         console.log(data.response)
-        var formattedResponse = data.response.replace(/\【.*?\】/g, '');
-        formattedResponse = formattedResponse.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        appendAlexMessage(formattedResponse, data.audio);
+        appendAlexMessage(data.response, data.audio);
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
         localDateTime = currentDate.toLocaleString();
@@ -337,6 +290,7 @@ window.onload = function() {
     condition = urlParams.get('c')
     console.log(condition);
     id = urlParams.get('id')
+    bhls = urlParams.get('bhls')
     console.log(id);
 
     if (condition === '6') {
@@ -453,4 +407,8 @@ function updateTranscript() {
         console.log("Transcript updated successfully");
     })
     .catch(error => console.error('Error logging transcript:', error));
+}
+
+function nextPage() {
+    window.location.href = `https://ufl.qualtrics.com/jfe/form/SV_bdT4OdUMSNUf5oq?id=${id}&bhls=${bhls}&c=${condition}&browsed=1`
 }

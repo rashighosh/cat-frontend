@@ -85,3 +85,7 @@ function logToDatabase(id, condition, currentDate) {
 function nextPage() {
     window.location.href = `/information?id=${id}&bhls=${bhls}&c=${condition}`
 }
+
+function nextPageBrowse() {
+    window.location.href = `/browse?id=${id}&bhls=${bhls}&c=${condition}`
+}

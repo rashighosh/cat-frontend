@@ -48,6 +48,11 @@ app.get('/browse', (req, res) => {
 });
 
 // Define a route for the homepage
+app.get('/browseInstructions', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'browseInstructions.html'));
+});
+
+// Define a route for the homepage
 app.get('/information', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'information.html'));
 });
@@ -68,9 +73,6 @@ app.get('/gross', (req, res) => {
 app.post('/logUser', (req, res) => {
   // Extracting data from the request body
   const { id, condition, startTime } = req.body;
-  console.log("id IS: ", id);
-  console.log("condition IS: ", condition);  
-  console.log("startTime IS: ", startTime);  
 
   // BEGIN DATABASE STUFF: SENDING VERSION (R24 OR U01) AND ID TO DATABASE
   sql.connect(config, function (err) {

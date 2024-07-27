@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Alex: Virtual Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="myModal" class="modal">
+          <div class="modal-content">
+            <div id="message-1-browse">
+              <p class="info-title">You will be able to browse 3 pre-selected clinical trials.</p>
+              <p>On the <b>left</b> side of your screen, you will see <b>3 pre-selected clinical trials</b>. Click the <b>study number buttons at the bottom to navigate</b> between the 3 clinical trials.</p>
+              <br/>
+              <img src="4.png" alt="Requirements for Conversation" height="295">
+              <br/>
+              <button class="modalNavBtn" onclick="navigateModalInstructions(`message-1-browse`,`message-2-browse`)">Continue ►</button>
+            </div>
+            <div id="message-2-browse">
+              <p class="info-title">You can ask Alex questions about the clinical trials.</p>
+              <p class="info">On the <b>right</b> side of your screen, you can <b>chat with Alex</b> about the trials. You need to refer to each trial by their <b>study number</b> (eg, Study 1) so <b>Alex knows which study</b> you are asking about.</p>
+              <p class="info">Alex <b>cannot help you enroll</b> in any of the studies, but you will be able to <b>request more information</b> about a study <b>after talking to Alex</b>.</p>
+              <br/>
+              <img src="5.png" alt="Requirements for Conversation" height="295">
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn prev" onclick="navigateModalInstructions(`message-2-browse`,`message-1-browse`)">◀ Back</button>
+                <button class="modalNavBtn next" onclick="navigateModalInstructions(`message-2-browse`,`message-3-browse`)">Next ►</button>
+              </div>
+            </div>
+            <div id="message-3-browse">
+              <p class="info-title">Ask as many or as little questions as you'd like!</p>
+              <p class="info">There are <b>no requirements</b> for how many questions you have to ask Alex. When you're done, click the button in the <b>bottom right to finish the virtual interaction</b>.</p>
+              <br/>
+              <img src="6.png" alt="Requirements for Conversation" height="295">
+              <br/>
+              <div class="modal-nav-button-area">
+                <button class="modalNavBtn prev" onclick="navigateModalInstructions(`message-3-browse`,`message-2-browse`)">◀ Back</button>
+                <button id="start" class="next" onclick="nextPageBrowse()">Begin!</button> <!-- Button to close the modal -->
+              </div>
+            </div>
+        </div>
+    </div>
+    <script src="indexScript.js"></script>
+</body>
+</html>

@@ -10,11 +10,11 @@ for (let i = 1; i <= 5; i++) {
 }
 
 function checkTopic(topic) {
-    if(topic == 1 || topic == "Safety in Clinical Trials") { topic = 1 }
-    if(topic == 2 || topic == "Understanding and Comfort with the Clinical Trial Process") { topic = 2 }
-    if(topic == 3 || topic == "Logistical, Time, and Financial Barriers to Participation") { topic = 3 }
-    if(topic == 4 || topic == "Risks and Benefits of Clinical Trials") { topic = 4 }
-    if(topic == 5 || topic == "Awareness and Information Accessibility") { topic = 5 }
+    if(topic == 1 || topic == "Safety") { topic = 1 }
+    if(topic == 2 || topic == "Randomization") { topic = 2 }
+    if(topic == 3 || topic == "Eligibility") { topic = 3 }
+    if(topic == 4 || topic == "Logistics") { topic = 4 }
+    if(topic == 5 || topic == "Benefits & Risks") { topic = 5 }
     console.log("TOPIC IS: " + topic)
     let topicElem = "topic" + topic
     var topicHTML = document.getElementById(topicElem)
@@ -28,6 +28,7 @@ function checkTopic(topic) {
     console.log(allTrue)
     if (allTrue === true) {
         finishButton.disabled = false;
+        finishButton.classList.add('pulse-blue');
     }   
 }
 
@@ -108,7 +109,7 @@ function appendAlexMessage(message, audioDataUrl) {
     const avatarImg = document.createElement('img');
     avatarImg.src = 'https://rashi-cat-study.s3.amazonaws.com/generic.gif'; // Replace with your image path
     avatarImg.alt = 'Alex';
-    avatarImg.className = 'alex-icon';
+    avatarImg.className = 'alex-icon pulse-orange';
 
     labelText.innerText = `Alex`;
     messageText.innerHTML = `${message}`;
@@ -125,7 +126,6 @@ function appendAlexMessage(message, audioDataUrl) {
 
     chatBox.appendChild(alexMessage)
 
-
     // COMMENT OUT AUDIO FOR TESTING
     // Create and append the audio element
     const audioElement = new Audio(audioDataUrl);
@@ -135,19 +135,12 @@ function appendAlexMessage(message, audioDataUrl) {
 
     audioElement.play();
 
-    // // Play the video and loop when the audio starts playing
-    // audioElement.addEventListener('play', function() {
-    //     const video = document.getElementById('myVideo');
-    //     video.loop = true; // Ensure video loops
-    //     video.play();
-    //     loadingSvg.style.visibility = 'visible';
-    // });
-
     // Pause the video when the audio stops playing
     audioElement.addEventListener('ended', function() {
         const alexIcons = document.querySelectorAll('.alex-icon');
         // Select the last element
         const lastAlexIcon = alexIcons[alexIcons.length - 1];
+        lastAlexIcon.classList.remove('pulse-orange');
         lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
     });
 
@@ -194,50 +187,6 @@ function appendLoadingDots() {
     chatBox.appendChild(ellipse);
 }
 
-function formatResponseWithAnnotations(response, annotations) {
-    let citationNumber = 1;
-    let citationMap = {};
-    let annotationKeys = Object.keys(annotations);
-
-    // Replace each annotation with a citation number
-    for (let key of annotationKeys) {
-        let citation = `[${citationNumber}]`;
-        citationMap[citationNumber] = annotations[key];
-        // Replace all occurrences of the key in the response with the citation number wrapped in a link
-        response = response.replace(new RegExp(key, 'g'), `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${annotations[key].replace(/ /g, '+')}" title="${annotations[key]}">${citation}</a>`);
-        citationNumber++;
-    }
-    
-    return response;
-}
-
-function parseAndReplaceCitations(text) {
-    // Regular expression to match citation placeholders like &#8203;:citation[oaicite:2]{index=2}&#8203;
-    const citationRegex = /【\d+:\d+†(.*?)】/g;
-
-    let citationNumber = 1;
-    let citationMap = {};
-    let response = text;
-
-    // Replace each citation placeholder with the formatted citation number and link
-    response = response.replace(citationRegex, (match, key) => {
-        citationMap[citationNumber] = key.trim();
-        // Generate HTML link for the citation
-        return `[${citationNumber}]`;
-    });
-
-    // Replace each citation number in the response with the HTML link
-    Object.keys(citationMap).forEach(citationNum => {
-        const citation = `[${citationNum}]`;
-        const linkText = citationMap[citationNum];
-        const encodedLink = encodeURIComponent(linkText.trim().replace(/ /g, '+'));
-        const link = `<a target="_blank" href="https://rashi-cat-study.s3.amazonaws.com/resources/${encodedLink}" title="${linkText}">${citation}</a>`;
-        response = response.replace(new RegExp(`\\[${citationNum}\\]`, 'g'), link);
-    });
-
-    return response;
-}
-
 // JavaScript function to trigger when the user hits Enter after typing in the input field
 document.getElementById("user-input").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -281,11 +230,7 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("ANNOTATIONS:", data.annotations)
-        var formattedResponse = formatResponseWithAnnotations(data.response, data.annotations)
-        formattedResponse = parseAndReplaceCitations(formattedResponse)
-        console.log("AUDIO:", data.audio)
-        appendAlexMessage(formattedResponse, data.audio);
+        appendAlexMessage(data.response, data.audio);
         console.log("TOPIC IS:", data.topic)
         console.log(firstMessage)
         if (firstMessage === false) { checkTopic(data.topic) }
@@ -422,5 +367,5 @@ function logUserInfo() {
 }
 
 function nextPage() {
-    window.location.href = `/continue?id=${id}&c=${condition}`
+    window.location.href = `/continue?id=${id}&bhls=${bhls}&c=${condition}`
 }
