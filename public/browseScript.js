@@ -7,8 +7,8 @@ var BRIEFscore = 0
 var commStyle = ''
 var userInfo = ''
 
-// const base_url = "http://44.209.126.3"
-const base_url = "http://127.0.0.1:8000"
+const base_url = "http://44.209.126.3"
+// const base_url = "http://127.0.0.1:8000"
 
 var cat_assistant_id = ""
 
