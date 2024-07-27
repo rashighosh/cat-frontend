@@ -28,31 +28,13 @@ const loadingSvg = document.getElementById('loading-svg');
 
 let progress = 0;
 
-const finishButton = document.getElementById('finish-button');
-
-// To disable the button
-finishButton.disabled = true;
 
 function enableInput() {
-    // userInput.disabled = false;
+    userInput.disabled = false;
 }
 
 function disableInput() {
-    // userInput.disabled = true;
-}
-
-function formatJSONObjectAsString(JSONObject, item) {
-    if (item === 'commStyle') {
-        for (const [key, value] of Object.entries(JSONObject)) {
-            commStyle += `${key}: ${value}/7; `;
-        }
-        commStyle = commStyle.trim().slice(0, -1);
-    } else {
-        for (const [key, value] of Object.entries(JSONObject)) {
-            userInfo += `${key}: ${value}; `;
-        }
-        userInfo = userInfo.trim().slice(0, -1);
-    }
+    userInput.disabled = true;
 }
 
 function convertTextToHTML(text) {
@@ -188,6 +170,7 @@ function appendAlexMessage(message, audioDataUrl) {
         const lastAlexIcon = alexIcons[alexIcons.length - 1];
         lastAlexIcon.classList.remove('pulse-orange');
         lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
+        enableInput();
     });
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
@@ -301,7 +284,7 @@ window.onload = function() {
 
     console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
 
-    var alexMessage = "Greet the user tell them you have 3 virtual clinical trials you can help them browse; for specific trials, ask them to specify Study 1, Study 2, or Study 3. Suggest 1-2 questions you can answer."
+    var alexMessage = "Tell the user you have 3 virtual clinical trials you can help them browse by specifying Study 1, Study 2, or Study 3. Suggest 1-2 questions you can answer."
 
     appendLoadingDots();
     
@@ -324,22 +307,17 @@ window.onload = function() {
     })
     .then(data => {
         console.log("CHECKED FO RUSER GOT SOME DATA COOL")
-        BRIEFscore = data.surveyAnswersBRIEF.BRIEFScore;
-        formatJSONObjectAsString(data.surveyAnswersCommStyle, 'commStyle')
-        formatJSONObjectAsString(data.backgroundInfo, 'userInfo')
 
         console.log("AB TO CALL PYTHON API TO BROWSE")
         fetch(base_url + `/api/cat/browse`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: alexMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
+            body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: alexMessage, health_literacy: bhls})
         })
         .then(response => response.json())
         .then(data => {
             console.log(data.response)
-            var formattedResponse = data.response.replace(/\【.*?\】/g, '');
-            formattedResponse = formattedResponse.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            appendAlexMessage(formattedResponse, data.audio);
+            appendAlexMessage(data.response, data.audio);
             currentDate = new Date();
             // Convert the date and time to the user's local time zone
             localDateTime = currentDate.toLocaleString();

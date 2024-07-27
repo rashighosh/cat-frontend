@@ -92,11 +92,11 @@ function formatJSONObjectAsString(JSONObject, item) {
 }
 
 function enableInput() {
-    // userInput.disabled = false;
+    userInput.disabled = false;
 }
 
 function disableInput() {
-    // userInput.disabled = true;
+    userInput.disabled = true;
 }
 
 
@@ -142,6 +142,7 @@ function appendAlexMessage(message, audioDataUrl) {
         const lastAlexIcon = alexIcons[alexIcons.length - 1];
         lastAlexIcon.classList.remove('pulse-orange');
         lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
+        enableInput();
     });
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
