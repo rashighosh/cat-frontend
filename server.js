@@ -121,54 +121,6 @@ app.post('/logUser', (req, res) => {
   });
 });
 
-app.post('/logUserInfo', (req, res) => {
-  const { id, surveyAnswers, briefScore, backgroundInfo } = req.body;
-
-  console.log("SURVEY ANSWERS", surveyAnswers)
-  console.log("BACKGROUND INFO ", backgroundInfo)
-  console.log("BRIEF SCORE", briefScore)
-
-  sql.connect(config, function (err) {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    var request = new sql.Request();
-    let queryString;
-
-    if (backgroundInfo != null && surveyAnswers != null) {
-      let updateColumnsSurvey = Object.keys(surveyAnswers).map(key => `${key} = @${key}`).join(', ');
-      let updateColumnsBackground = Object.keys(backgroundInfo).map(key => `${key} = @${key}`).join(', ');
-      let combinedUpdateColumns = [updateColumnsSurvey, updateColumnsBackground, 'BRIEFScore = @briefScore'].join(', ');
-      queryString = `UPDATE CAT SET ${combinedUpdateColumns} WHERE ID = @id`;
-    } else {
-      queryString = `UPDATE CAT SET BRIEFScore = @briefScore WHERE id = @id`;
-    }
-
-    request.input('id', sql.NVarChar, id);
-    request.input('briefScore', sql.Int, briefScore);
-
-    if (backgroundInfo != null && surveyAnswers != null) {
-      Object.entries(surveyAnswers).forEach(([key, value]) => {
-        request.input(key, sql.Int, value);
-      });
-      Object.entries(backgroundInfo).forEach(([key, value]) => {
-        request.input(key, sql.NVarChar, value);
-      });
-    }
-
-    request.query(queryString, function (err, recordset) {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-
-      res.status(200).json({ message: 'Other data inserted successfully.' });
-    });
-  });
-});
-
 app.post('/updateTranscript', (req, res) => {
   const { id, transcriptType, transcript } = req.body;
 
@@ -220,43 +172,10 @@ app.post('/getUserInfo', (req, res) => {
           if (userCheckResult.recordset[0].userCount === 0) {
               return res.status(404).json({ error: 'User not found' });
           }
-
-          // If user exists, proceed with fetching data
-          const surveyQueryCommStyle = `SELECT Talkativeness, Casualness, Conciseness FROM CAT WHERE ID = @id`;
-
-          request.query(surveyQueryCommStyle, function (err, surveyQueryCommStyleResult) {
-              if (err) {
-                  console.error('Error fetching survey answers:', err);
-                  return res.status(500).json({ error: 'Error fetching survey answers' });
-              }
-
-              const surveyQueryBRIEF = `SELECT BRIEFScore FROM CAT WHERE ID = @id`;
-              request.query(surveyQueryBRIEF, function (err, surveyQueryBRIEFResult) {
-                  if (err) {
-                      console.error('Error fetching survey answers:', err);
-                      return res.status(500).json({ error: 'Error fetching survey answers' });
-                  }
-
-                  const backgroundQuery = `SELECT ReceivingInformation, WhoDoYouConsultWith, OpportunitytoParticipate FROM CAT WHERE ID = @id`;
-                  request.query(backgroundQuery, function (err, backgroundResult) {
-                      if (err) {
-                          console.error('Error fetching background info:', err);
-                          return res.status(500).json({ error: 'Error fetching background info' });
-                      }
-
-                      // Close the database connection
-                      sql.close();
-
-                      // Extract the data from the query results
-                      const surveyAnswersCommStyle = surveyQueryCommStyleResult.recordset[0];
-                      const surveyAnswersBRIEF = surveyQueryBRIEFResult.recordset[0];
-                      const backgroundInfo = backgroundResult.recordset[0];
-
-                      // Send the data back to the client
-                      res.json({ surveyAnswersCommStyle, surveyAnswersBRIEF, backgroundInfo });
-                  });
-              });
-          });
+          // Close the database connection
+          sql.close();
+          // Send the data back to the client
+          res.json({ message: "user exists!" });
       });
   });
 });

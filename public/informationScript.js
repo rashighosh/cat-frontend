@@ -341,26 +341,6 @@ function updateTranscript() {
     .catch(error => console.error('Error logging transcript:', error));
 }
 
-function logUserInfo() {
-    let surveyAnswers = { ...surveyAnswersCommStyle, ...surveyAnswersBRIEF };
-
-    fetch('/logUserInfo', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            id: id, 
-            surveyAnswers: surveyAnswers, 
-            briefScore: BRIEFscore,  
-            backgroundInfo: backgroundInfo
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("User info logged successfully");
-    })
-    .catch(error => console.error('Error logging other data:', error))
-}
-
 function nextPage() {
     window.location.href = `/continue?id=${id}&bhls=${bhls}&c=${condition}`
 }
