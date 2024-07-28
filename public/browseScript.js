@@ -243,7 +243,7 @@ function sendMessage() {
     fetch(base_url + `/api/cat/browse`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, user_info: userInfo, comm_style: commStyle, health_literacy: BRIEFscore})
+        body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, health_literacy: bhls})
     })
     .then(response => response.json())
     .then(data => {
@@ -284,7 +284,7 @@ window.onload = function() {
 
     console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
 
-    var alexMessage = "Tell the user you have 3 virtual clinical trials you can help them browse by specifying Study 1, Study 2, or Study 3. Suggest 1-2 questions you can answer."
+    var alexMessage = "Introduce yourself, and let the user know to refer to the clinical trials as Study 1, Study 2, or Study 3. Suggest 1-2 questions you can answer."
 
     appendLoadingDots();
     
