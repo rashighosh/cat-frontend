@@ -9,12 +9,18 @@ for (let i = 1; i <= 5; i++) {
     topicsObject[i] = false;
 }
 
+let counter = 0;
+
+console.log(topicsObject)
+
 function checkTopic(topic) {
+    counter = counter + 1;
     if(topic == 1 || topic == "Safety") { topic = 1 }
     if(topic == 2 || topic == "Randomization") { topic = 2 }
     if(topic == 3 || topic == "Eligibility") { topic = 3 }
     if(topic == 4 || topic == "Logistics") { topic = 4 }
     if(topic == 5 || topic == "Benefits & Risks") { topic = 5 }
+    if(topic ==0) {return}
     console.log("TOPIC IS: " + topic)
     let topicElem = "topic" + topic
     var topicHTML = document.getElementById(topicElem)
@@ -26,7 +32,8 @@ function checkTopic(topic) {
     let allTrue = Object.values(topicsObject).every(value => value === true);
     // To disable the button
     console.log(allTrue)
-    if (allTrue === true) {
+    console.log(counter)
+    if (allTrue === true || counter == 7) {
         finishButton.disabled = false;
         finishButton.classList.add('pulse-blue');
     }   
