@@ -64,6 +64,7 @@ var condition = ''
 var bhls = 0
 
 const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-btn');
 const loadingSvg = document.getElementById('loading-svg');
 
 const finishButton = document.getElementById('finish-button');
@@ -77,26 +78,14 @@ var BRIEFscore = 0
 var commStyle = ''
 var userInfo = ''
 
-function formatJSONObjectAsString(JSONObject, item) {
-    if (item === 'commStyle') {
-        for (const [key, value] of Object.entries(JSONObject)) {
-            commStyle += `${key}: ${value}/7; `;
-        }
-        commStyle = commStyle.trim().slice(0, -1);
-    } else {
-        for (const [key, value] of Object.entries(JSONObject)) {
-            userInfo += `${key}: ${value}; `;
-        }
-        userInfo = userInfo.trim().slice(0, -1);
-    }
-}
-
 function enableInput() {
     userInput.disabled = false;
+    sendButton.disabled = false;
 }
 
 function disableInput() {
     userInput.disabled = true;
+    sendButton.disabled = true;
 }
 
 
@@ -197,6 +186,7 @@ document.getElementById("user-input").addEventListener("keydown", function(event
   });
 
 function sendMessage() {
+    disableInput();
     console.log("returning user is:", returningUser)
     var userMessage
 
@@ -313,7 +303,11 @@ var helpSpan = document.getElementsByClassName("help-close")[0];
 
 // When the user clicks on the button, open the modal
 helpBtn.onclick = function() {
-    helpModal.style.display = "block";
+    helpModal.style.display = "flex";
+    currentURLelement = document.getElementById("current-link-help")
+    const currentURL = window.location.href;
+    console.log(currentURL);
+    currentURLelement.innerHTML = currentURL
 }
 
 // When the user clicks on <span> (x), close the modal

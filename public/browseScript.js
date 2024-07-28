@@ -24,6 +24,7 @@ var condition = ''
 var bhls = ''
 
 const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-btn');
 const loadingSvg = document.getElementById('loading-svg');
 
 let progress = 0;
@@ -31,10 +32,12 @@ let progress = 0;
 
 function enableInput() {
     userInput.disabled = false;
+    sendButton.disabled = false;
 }
 
 function disableInput() {
     userInput.disabled = true;
+    sendButton.disabled = true;
 }
 
 function convertTextToHTML(text) {
@@ -267,7 +270,8 @@ function sendMessage() {
 }
 
 window.onload = function() {
-    document.getElementById('input-area').style.display = 'flex';
+    console.log("IN ONLOAD")
+    disableInput();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     condition = urlParams.get('c')
@@ -353,7 +357,11 @@ var helpSpan = document.getElementsByClassName("help-close")[0];
 
 // When the user clicks on the button, open the modal
 helpBtn.onclick = function() {
-    helpModal.style.display = "block";
+    helpModal.style.display = "flex";
+    currentURLelement = document.getElementById("current-link-help")
+    const currentURL = window.location.href;
+    console.log(currentURL);
+    currentURLelement.innerHTML = currentURL
 }
 
 // When the user clicks on <span> (x), close the modal

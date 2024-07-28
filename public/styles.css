@@ -439,6 +439,12 @@ video {
   cursor: not-allowed; /* Example: Change cursor to not-allowed */
 }
 
+#send-btn:disabled {
+  /* Your styles for disabled button */
+  opacity: 0.5; /* Example: Reduce opacity */
+  cursor: not-allowed; /* Example: Change cursor to not-allowed */
+}
+
 .pulse-orange {
   animation: pulse-animation-orange 1.5s infinite;
 }
@@ -449,7 +455,7 @@ video {
 
 @keyframes pulse-animation-orange {
   0% {
-    box-shadow: 0 0 0 0px rgba(250, 70, 22, 0.2);
+    box-shadow: 0 0 0 0px rgba(250, 70, 22, 0.5);
   }
   100% {
     box-shadow: 0 0 0 11px rgba(250, 70, 22, 0);
@@ -612,7 +618,7 @@ hr {
 .help-col {
   display: flex;
   flex-direction: column;
-  width: 55%;
+  width: 75%;
   text-align: center;
 }
 
@@ -631,6 +637,8 @@ hr {
 
 .help-modal {
   display: none;
+  justify-content: center;  /* Center horizontally */
+  align-items: center;  /* Center vertically */
   position: fixed;
   z-index: 1;
   left: 0;
@@ -649,7 +657,7 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 75%;
+  max-width: 55%;
 }
 
 .help-close {
