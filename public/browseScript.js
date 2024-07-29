@@ -327,6 +327,7 @@ window.onload = function() {
             localDateTime = currentDate.toLocaleString();
             // Output the local date and time
             browseTranscript.set("ALEX " + localDateTime, data.response);
+            updateTranscript();
         })
         .catch(error => console.error('Error:', error))
         .finally(() => {
