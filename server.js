@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 var sql = require("mssql");
+var mysql = require('mysql');
 var favicon = require('serve-favicon');
 const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
@@ -16,22 +17,36 @@ app.use(favicon(path.join(__dirname,'public','favicon.ico')));
 // Parse application/json
 app.use(bodyParser.json());
 
+// var con = mysql.createConnection({
+//   host: process.env.SERVER,
+//   user: process.env.USER,
+//   password: process.env.PASSWORD,
+//   database: process.env.DATABASE
+// });
+
 const config = {
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    server: process.env.SERVER,
-    port: parseInt(process.env.DBPORT, 10), 
-    database: process.env.DATABASE,
-    pool: {
-      max: 10,
-      min: 0,
-      idleTimeoutMillis: 30000
-    },
-    options: {
-      encrypt: true, // for azure
-      trustServerCertificate: true // change to true for local dev / self-signed certs
-    }
+  host: process.env.SERVER,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
 }
+
+// const config = {
+//     user: process.env.USER,
+//     password: process.env.PASSWORD,
+//     server: process.env.SERVER,
+//     port: parseInt(process.env.DBPORT, 10), 
+//     database: process.env.DATABASE,
+//     pool: {
+//       max: 10,
+//       min: 0,
+//       idleTimeoutMillis: 30000
+//     },
+//     options: {
+//       encrypt: true, // for azure
+//       trustServerCertificate: true // change to true for local dev / self-signed certs
+//     }
+// }
 
 
 // Serve static files from the 'public' directory
@@ -74,48 +89,40 @@ app.post('/logUser', (req, res) => {
   // Extracting data from the request body
   const { id, condition, startTime } = req.body;
 
-  // BEGIN DATABASE STUFF: SENDING VERSION (R24 OR U01) AND ID TO DATABASE
-  sql.connect(config, function (err) {
+  // Create a connection to the database
+  const connection = mysql.createConnection(config);
+
+  connection.connect(function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    // create Request object
-    var request = new sql.Request();
-
     // Check if ID already exists
-    let checkIfExistsQuery = `SELECT TOP 1 ID FROM CAT WHERE ID = @id`;
-
-    // Bind parameterized value for ID
-    request.input('id', sql.NVarChar, id);
+    const checkIfExistsQuery = `SELECT 1 FROM CAT WHERE ID = ? LIMIT 1`;
 
     // Execute the query to check if the ID already exists
-    request.query(checkIfExistsQuery, function (err, recordset) {
+    connection.query(checkIfExistsQuery, [id], function (err, results) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Database: Internal Server Error' });
       }
 
-      // If the recordset has rows, then the ID already exists
-      if (recordset && recordset.recordset.length > 0) {
+      // If the results have rows, then the ID already exists
+      if (results.length > 0) {
         return res.status(200).json({ message: 'Database: ID already exists.' });
       } else {
         // Construct SQL query with parameterized values to insert the record
-        let insertQuery = `INSERT INTO CAT (ID, condition, startTime) VALUES (@id, @condition, @startTime)`;
-      
-        // Bind parameterized values
-        request.input('condition', sql.Int, condition);
-        request.input('startTime', sql.NVarChar, startTime);
+        const insertQuery = `INSERT INTO CAT (ID, condition, startTime) VALUES (?, ?, ?)`;
 
         // Execute the query to insert the record
-        request.query(insertQuery, function (err, recordset) {
+        connection.query(insertQuery, [id, condition, startTime], function (err, results) {
           if (err) {
             console.log(err);
             return res.status(500).json({ error: 'Database: Internal Server Error' });
           }
           res.status(200).json({ message: 'Database: User inserted successfully.' });
-        }); 
+        });
       }
     });
   });
