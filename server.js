@@ -8,6 +8,7 @@ const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
 require('dotenv').config()
 
+console.log(process.env)
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,12 +26,21 @@ app.use(bodyParser.json());
 // });
 
 const config = {
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  database: process.env.RDS_DB_NAME,
-  port: process.env.RDS_PORT
+  host: process.env.DBHOST,
+  user: process.env.DBUSER,
+  password: process.env.DBPASSWORD,
+  database: process.env.DBNAME,
+  port: process.env.DBPORT
 }
+
+console.log(config)
+// Create a connection to the database
+const connection = mysql.createConnection(config);
+
+connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 
 // const config = {
 //     user: process.env.USER,
