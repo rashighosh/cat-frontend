@@ -17,7 +17,7 @@ app.use(favicon(path.join(__dirname,'public','favicon.ico')));
 app.use(bodyParser.json());
 
 const config = {
-    user: 'VergAdmin',
+    user: process.env.USER,
     password: process.env.PASSWORD,
     server: process.env.SERVER,
     port: parseInt(process.env.DBPORT, 10), 
