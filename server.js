@@ -6,7 +6,7 @@ var mysql = require('mysql');
 var favicon = require('serve-favicon');
 const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
-require('dotenv').config()
+// require('dotenv').config()
 
 
 // Parse application/x-www-form-urlencoded
@@ -25,10 +25,10 @@ app.use(bodyParser.json());
 // });
 
 const config = {
-  host: process.env.SERVER,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE
+  host     : process.env.RDS_HOSTNAME,
+  user     : process.env.RDS_USERNAME,
+  password : process.env.RDS_PASSWORD,
+  port     : process.env.RDS_PORT
 }
 
 // const config = {
@@ -131,19 +131,20 @@ app.post('/logUser', (req, res) => {
 app.post('/updateTranscript', (req, res) => {
   const { id, transcriptType, transcript } = req.body;
 
-  sql.connect(config, function (err) {
+  // Create a connection to the database
+  const connection = mysql.createConnection(config);
+
+  connection.connect(function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    var request = new sql.Request();
-    const queryString = `UPDATE CAT SET ${transcriptType} = @transcript WHERE id = @id`;
+    // Construct the query string
+    const queryString = `UPDATE CAT SET ${mysql.escapeId(transcriptType)} = ? WHERE id = ?`;
 
-    request.input('id', sql.NVarChar, id);
-    request.input('transcript', sql.NVarChar, transcript);
-
-    request.query(queryString, function (err, recordset) {
+    // Execute the query
+    connection.query(queryString, [transcript, id], function (err, results) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -157,33 +158,34 @@ app.post('/updateTranscript', (req, res) => {
 app.post('/getUserInfo', (req, res) => {
   const { id } = req.body;
   
-  // Connect to the database
-  sql.connect(config, function (err) {
+  // Create a connection to the database
+  const connection = mysql.createConnection(config);
+
+  connection.connect(function (err) {
+    if (err) {
+      console.error('Error connecting to the database:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    // Check if user exists
+    const checkUserQuery = `SELECT COUNT(*) AS userCount FROM CAT WHERE ID = ?`;
+
+    connection.query(checkUserQuery, [id], function (err, userCheckResult) {
       if (err) {
-          console.error('Error connecting to the database:', err);
-          return res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error checking user existence:', err);
+        return res.status(500).json({ error: 'Error checking user existence' });
       }
 
-      var request = new sql.Request();
+      if (userCheckResult[0].userCount === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-      // Check if user exists
-      const checkUserQuery = `SELECT COUNT(*) AS userCount FROM CAT WHERE ID = @id`;
-      request.input('id', sql.NVarChar, id);
+      // Close the database connection
+      connection.end();
 
-      request.query(checkUserQuery, function (err, userCheckResult) {
-          if (err) {
-              console.error('Error checking user existence:', err);
-              return res.status(500).json({ error: 'Error checking user existence' });
-          }
-
-          if (userCheckResult.recordset[0].userCount === 0) {
-              return res.status(404).json({ error: 'User not found' });
-          }
-          // Close the database connection
-          sql.close();
-          // Send the data back to the client
-          res.json({ message: "user exists!" });
-      });
+      // Send the data back to the client
+      res.json({ message: "User exists!" });
+    });
   });
 });
 
@@ -192,23 +194,27 @@ app.post('/logBrowseTrialsChoice', (req, res) => {
 
   console.log("BrowseTrialsChoice", BrowseTrialsChoice);
 
-  sql.connect(config, function (err) {
+  // Create a connection to the database
+  const connection = mysql.createConnection(config);
+
+  connection.connect(function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    var request = new sql.Request();
-    let queryString = `UPDATE CAT SET BrowseTrialsChoice = @BrowseTrialsChoice WHERE ID = @id`;
+    // Construct the query string
+    const queryString = `UPDATE CAT SET BrowseTrialsChoice = ? WHERE ID = ?`;
 
-    request.input('id', sql.NVarChar, id);
-    request.input('BrowseTrialsChoice', sql.NVarChar, BrowseTrialsChoice);
-
-    request.query(queryString, function (err, recordset) {
+    // Execute the query
+    connection.query(queryString, [BrowseTrialsChoice, id], function (err, results) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
+
+      // Close the database connection
+      connection.end();
 
       res.status(200).json({ message: 'BrowseTrialsChoice updated successfully.' });
     });
