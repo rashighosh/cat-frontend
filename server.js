@@ -6,7 +6,7 @@ var mysql = require('mysql');
 var favicon = require('serve-favicon');
 const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
-// require('dotenv').config()
+require('dotenv').config()
 
 
 // Parse application/x-www-form-urlencoded
@@ -25,10 +25,11 @@ app.use(bodyParser.json());
 // });
 
 const config = {
-  host     : process.env.RDS_HOSTNAME,
-  user     : process.env.RDS_USERNAME,
-  password : process.env.RDS_PASSWORD,
-  port     : process.env.RDS_PORT
+  host: process.env.RDS_HOSTNAME,
+  user: process.env.RDS_USERNAME,
+  password: process.env.RDS_PASSWORD,
+  database: process.env.RDS_DB_NAME,
+  port: process.env.RDS_PORT
 }
 
 // const config = {
