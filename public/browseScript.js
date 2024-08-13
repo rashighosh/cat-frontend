@@ -3,6 +3,16 @@ var CAT_IDS = [
     "ct_accommodation_assistant_id",
 ]
 
+var accommodative_endings = [
+    "\n END INSTRUCTIONS: None.",
+    "\n END INSTRUCTIONS: Check my understanding.",
+    "\n END INSTRUCTIONS: Suggest a relevant next topic.",
+    "\n END INSTRUCTIONS: Ask for my thoughts/opinions.",
+]
+
+let currentEndingIndex = 0;
+
+
 var BRIEFscore = 0
 var commStyle = ''
 var userInfo = ''
@@ -242,6 +252,8 @@ function sendMessage() {
     // Output the local date and time
     browseTranscript.set("USER " + localDateTime, userMessage);
     updateTranscript();
+    userMessage = userMessage + accommodative_endings[currentEndingIndex]
+    currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
 
     fetch(base_url + `/api/cat/browse`, {
         method: 'POST',
