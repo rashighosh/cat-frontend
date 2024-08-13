@@ -3,6 +3,15 @@ var CAT_IDS = [
     "accommodation_assistant_id",
 ]
 
+var accommodative_endings = [
+    "\n END INSTRUCTIONS: None.",
+    "\n END INSTRUCTIONS: Check my understanding.",
+    "\n END INSTRUCTIONS: Suggest a relevant next topic.",
+    "\n END INSTRUCTIONS: Ask for my thoughts/opinions.",
+]
+
+let currentEndingIndex = 0;
+
 // Initialize the array
 let topicsObject = {}
 for (let i = 1; i <= 5; i++) {
@@ -11,7 +20,6 @@ for (let i = 1; i <= 5; i++) {
 
 let counter = 0;
 
-console.log(topicsObject)
 
 function checkTopic(topic) {
     counter = counter + 1;
@@ -31,8 +39,6 @@ function checkTopic(topic) {
     topicsObject[topic] = true
     let allTrue = Object.values(topicsObject).every(value => value === true);
     // To disable the button
-    console.log(allTrue)
-    console.log(counter)
     if (allTrue === true || counter == 7) {
         finishButton.disabled = false;
         finishButton.classList.add('pulse-blue');
@@ -194,7 +200,6 @@ document.getElementById("user-input").addEventListener("keydown", function(event
 
 function sendMessage() {
     disableInput();
-    console.log("returning user is:", returningUser)
     var userMessage
 
     currentDate = new Date();
@@ -217,7 +222,10 @@ function sendMessage() {
         appendUserMessage(userMessage);
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
+        userMessage = userMessage + accommodative_endings[currentEndingIndex]
+        currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
     }
+    console.log("USER MESSAGE:", userMessage)
     
     disableInput()
     
@@ -230,7 +238,6 @@ function sendMessage() {
     .then(data => {
         appendAlexMessage(data.response, data.audio);
         console.log("TOPIC IS:", data.topic)
-        console.log(firstMessage)
         if (firstMessage === false) { checkTopic(data.topic) }
         
         currentDate = new Date();
@@ -245,7 +252,6 @@ function sendMessage() {
     .finally(() => {
         // Remove loading indicator after response received
         const ellipse = document.getElementById('lds-ellipsis');
-        console.log(ellipse)
         ellipse.remove();
     });
     userInput.value = ''; // Clear input field after sending message
@@ -255,19 +261,14 @@ window.onload = function() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     condition = urlParams.get('c')
-    console.log(condition);
     id = urlParams.get('id')
-    console.log(id);
     bhls = urlParams.get('bhls')
-    console.log(bhls)
 
     if (condition === '6') {
         cat_assistant_id = "accommodative_assistant_id"
     } else if (condition === '0') {
         cat_assistant_id = "control_assistant_id"
     }
-
-    console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
 
     firstMessage = true
 
@@ -283,19 +284,16 @@ window.onload = function() {
         return response.json();
     })
     .then(data => {
-        console.log("User exists.", data)
         returningUser = true;
         sendMessage('text')
     })
     .catch(error => {
         if (error.message === 'HTTP status 404') {
-            console.log("User does not exist.");
         } else {
             console.error('Error:', error);
         }
     })
     .finally(() => {
-        console.log("Done checking if user exists.");
     });
   };
 
@@ -313,7 +311,6 @@ helpBtn.onclick = function() {
     helpModal.style.display = "flex";
     currentURLelement = document.getElementById("current-link-help")
     const currentURL = window.location.href;
-    console.log(currentURL);
     currentURLelement.innerHTML = currentURL
 }
 
@@ -343,7 +340,6 @@ function updateTranscript() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Transcript updated successfully");
     })
     .catch(error => console.error('Error logging transcript:', error));
 }
