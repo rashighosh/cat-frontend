@@ -17,7 +17,7 @@ app.use(favicon(path.join(__dirname,'public','favicon.ico')));
 app.use(bodyParser.json());
 
 const config = {
-    user: process.env.USER,
+    user: 'VergAdmin',
     password: process.env.PASSWORD,
     server: process.env.SERVER,
     port: parseInt(process.env.DBPORT, 10), 
@@ -204,6 +204,34 @@ app.post('/logBrowseTrialsChoice', (req, res) => {
       }
 
       res.status(200).json({ message: 'BrowseTrialsChoice updated successfully.' });
+    });
+  });
+});
+
+app.post('/logTopic', (req, res) => {
+  const { id, topic } = req.body;
+
+  topicCol = "Topic" + topic
+
+  sql.connect(config, function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    var request = new sql.Request();
+    let queryString = `UPDATE CAT SET ${topicCol} = @topic WHERE ID = @id`;
+
+    request.input('id', sql.NVarChar, id);
+    request.input('topic', sql.Int, topic);
+
+    request.query(queryString, function (err, recordset) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      res.status(200).json({ message: 'Topic' + topic + ' updated successfully.' });
     });
   });
 });
