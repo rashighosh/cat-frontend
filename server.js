@@ -2,13 +2,11 @@ const express = require('express');
 const app = express();
 const path = require('path');
 var sql = require("mssql");
-var mysql = require('mysql');
 var favicon = require('serve-favicon');
 const bodyParser = require('body-parser'); // Require body-parser module
 const { ok } = require('assert');
 require('dotenv').config()
 
-console.log(process.env)
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,46 +16,22 @@ app.use(favicon(path.join(__dirname,'public','favicon.ico')));
 // Parse application/json
 app.use(bodyParser.json());
 
-// var con = mysql.createConnection({
-//   host: process.env.SERVER,
-//   user: process.env.USER,
-//   password: process.env.PASSWORD,
-//   database: process.env.DATABASE
-// });
-
 const config = {
-  host: process.env.DBHOST,
-  user: process.env.DBUSER,
-  password: process.env.DBPASSWORD,
-  database: process.env.DBNAME,
-  port: process.env.DBPORT
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    server: process.env.SERVER,
+    port: parseInt(process.env.DBPORT, 10), 
+    database: process.env.DATABASE,
+    pool: {
+      max: 10,
+      min: 0,
+      idleTimeoutMillis: 30000
+    },
+    options: {
+      encrypt: true, // for azure
+      trustServerCertificate: true // change to true for local dev / self-signed certs
+    }
 }
-
-console.log(config)
-// Create a connection to the database
-const connection = mysql.createConnection(config);
-
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
-
-// const config = {
-//     user: process.env.USER,
-//     password: process.env.PASSWORD,
-//     server: process.env.SERVER,
-//     port: parseInt(process.env.DBPORT, 10), 
-//     database: process.env.DATABASE,
-//     pool: {
-//       max: 10,
-//       min: 0,
-//       idleTimeoutMillis: 30000
-//     },
-//     options: {
-//       encrypt: true, // for azure
-//       trustServerCertificate: true // change to true for local dev / self-signed certs
-//     }
-// }
 
 
 // Serve static files from the 'public' directory
@@ -100,40 +74,48 @@ app.post('/logUser', (req, res) => {
   // Extracting data from the request body
   const { id, condition, startTime } = req.body;
 
-  // Create a connection to the database
-  const connection = mysql.createConnection(config);
-
-  connection.connect(function (err) {
+  // BEGIN DATABASE STUFF: SENDING VERSION (R24 OR U01) AND ID TO DATABASE
+  sql.connect(config, function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
+    // create Request object
+    var request = new sql.Request();
+
     // Check if ID already exists
-    const checkIfExistsQuery = `SELECT 1 FROM CAT WHERE ID = ? LIMIT 1`;
+    let checkIfExistsQuery = `SELECT TOP 1 ID FROM CAT WHERE ID = @id`;
+
+    // Bind parameterized value for ID
+    request.input('id', sql.NVarChar, id);
 
     // Execute the query to check if the ID already exists
-    connection.query(checkIfExistsQuery, [id], function (err, results) {
+    request.query(checkIfExistsQuery, function (err, recordset) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Database: Internal Server Error' });
       }
 
-      // If the results have rows, then the ID already exists
-      if (results.length > 0) {
+      // If the recordset has rows, then the ID already exists
+      if (recordset && recordset.recordset.length > 0) {
         return res.status(200).json({ message: 'Database: ID already exists.' });
       } else {
         // Construct SQL query with parameterized values to insert the record
-        const insertQuery = `INSERT INTO CAT (ID, condition, startTime) VALUES (?, ?, ?)`;
+        let insertQuery = `INSERT INTO CAT (ID, condition, startTime) VALUES (@id, @condition, @startTime)`;
+      
+        // Bind parameterized values
+        request.input('condition', sql.Int, condition);
+        request.input('startTime', sql.NVarChar, startTime);
 
         // Execute the query to insert the record
-        connection.query(insertQuery, [id, condition, startTime], function (err, results) {
+        request.query(insertQuery, function (err, recordset) {
           if (err) {
             console.log(err);
             return res.status(500).json({ error: 'Database: Internal Server Error' });
           }
           res.status(200).json({ message: 'Database: User inserted successfully.' });
-        });
+        }); 
       }
     });
   });
@@ -142,20 +124,19 @@ app.post('/logUser', (req, res) => {
 app.post('/updateTranscript', (req, res) => {
   const { id, transcriptType, transcript } = req.body;
 
-  // Create a connection to the database
-  const connection = mysql.createConnection(config);
-
-  connection.connect(function (err) {
+  sql.connect(config, function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    // Construct the query string
-    const queryString = `UPDATE CAT SET ${mysql.escapeId(transcriptType)} = ? WHERE id = ?`;
+    var request = new sql.Request();
+    const queryString = `UPDATE CAT SET ${transcriptType} = @transcript WHERE id = @id`;
 
-    // Execute the query
-    connection.query(queryString, [transcript, id], function (err, results) {
+    request.input('id', sql.NVarChar, id);
+    request.input('transcript', sql.NVarChar, transcript);
+
+    request.query(queryString, function (err, recordset) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -169,34 +150,33 @@ app.post('/updateTranscript', (req, res) => {
 app.post('/getUserInfo', (req, res) => {
   const { id } = req.body;
   
-  // Create a connection to the database
-  const connection = mysql.createConnection(config);
-
-  connection.connect(function (err) {
-    if (err) {
-      console.error('Error connecting to the database:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    // Check if user exists
-    const checkUserQuery = `SELECT COUNT(*) AS userCount FROM CAT WHERE ID = ?`;
-
-    connection.query(checkUserQuery, [id], function (err, userCheckResult) {
+  // Connect to the database
+  sql.connect(config, function (err) {
       if (err) {
-        console.error('Error checking user existence:', err);
-        return res.status(500).json({ error: 'Error checking user existence' });
+          console.error('Error connecting to the database:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      if (userCheckResult[0].userCount === 0) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+      var request = new sql.Request();
 
-      // Close the database connection
-      connection.end();
+      // Check if user exists
+      const checkUserQuery = `SELECT COUNT(*) AS userCount FROM CAT WHERE ID = @id`;
+      request.input('id', sql.NVarChar, id);
 
-      // Send the data back to the client
-      res.json({ message: "User exists!" });
-    });
+      request.query(checkUserQuery, function (err, userCheckResult) {
+          if (err) {
+              console.error('Error checking user existence:', err);
+              return res.status(500).json({ error: 'Error checking user existence' });
+          }
+
+          if (userCheckResult.recordset[0].userCount === 0) {
+              return res.status(404).json({ error: 'User not found' });
+          }
+          // Close the database connection
+          sql.close();
+          // Send the data back to the client
+          res.json({ message: "user exists!" });
+      });
   });
 });
 
@@ -205,27 +185,23 @@ app.post('/logBrowseTrialsChoice', (req, res) => {
 
   console.log("BrowseTrialsChoice", BrowseTrialsChoice);
 
-  // Create a connection to the database
-  const connection = mysql.createConnection(config);
-
-  connection.connect(function (err) {
+  sql.connect(config, function (err) {
     if (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    // Construct the query string
-    const queryString = `UPDATE CAT SET BrowseTrialsChoice = ? WHERE ID = ?`;
+    var request = new sql.Request();
+    let queryString = `UPDATE CAT SET BrowseTrialsChoice = @BrowseTrialsChoice WHERE ID = @id`;
 
-    // Execute the query
-    connection.query(queryString, [BrowseTrialsChoice, id], function (err, results) {
+    request.input('id', sql.NVarChar, id);
+    request.input('BrowseTrialsChoice', sql.NVarChar, BrowseTrialsChoice);
+
+    request.query(queryString, function (err, recordset) {
       if (err) {
         console.log(err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-
-      // Close the database connection
-      connection.end();
 
       res.status(200).json({ message: 'BrowseTrialsChoice updated successfully.' });
     });
