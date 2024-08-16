@@ -4,10 +4,11 @@ var CAT_IDS = [
 ]
 
 var accommodative_endings = [
-    "\n END INSTRUCTIONS: None.",
     "\n END INSTRUCTIONS: Check my understanding of what you just shared.",
+    "\n END INSTRUCTIONS: None.",
     "\n END INSTRUCTIONS: Suggest a relevant next topic based on what you just shared.",
     "\n END INSTRUCTIONS: Ask for my thoughts/opinions on what you just shared.",
+    "\n END INSTRUCTIONS: None.",
 ]
 
 let currentEndingIndex = 0;
