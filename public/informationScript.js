@@ -5,10 +5,7 @@ var CAT_IDS = [
 
 var accommodative_endings = [
     "\n END INSTRUCTIONS: Check my understanding of what you just shared.",
-    "\n END INSTRUCTIONS: None.",
-    "\n END INSTRUCTIONS: Suggest a relevant next topic based on what you just shared.",
-    "\n END INSTRUCTIONS: Ask for my thoughts/opinions on what you just shared.",
-    "\n END INSTRUCTIONS: None.",
+    "\n END INSTRUCTIONS: Ask for my thoughts/opinions on what you just shared."
 ]
 
 let currentEndingIndex = 0;
@@ -20,7 +17,8 @@ for (let i = 1; i <= 5; i++) {
 }
 
 let counter = 0;
-
+let messageCounter = 0;
+let prevTopic = null;
 
 function checkTopic(topic) {
     counter = counter + 1;
@@ -47,8 +45,8 @@ function checkTopic(topic) {
     }   
 }
 
-const base_url = "http://44.209.126.3"
-// const base_url = "http://127.0.0.1:8000"
+// const base_url = "http://98.84.121.124"
+const base_url = "http://127.0.0.1:8000"
 
 var cat_assistant_id = ""
 
@@ -77,6 +75,7 @@ var informationTranscript = new Map()
 var id = ''
 var condition = ''
 var bhls = 0
+var userBackground = "BACKGROUND: "
 
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-btn');
@@ -153,6 +152,7 @@ function appendAlexMessage(message, audioDataUrl) {
 }
 
 function appendUserMessage(message) {
+    console.log("IN APPEND USER MESSAGE")
     const chatBox = document.getElementById('chat-box');
     const messageElement = document.createElement('div');
     const labelText = document.createElement('span');
@@ -200,37 +200,10 @@ document.getElementById("user-input").addEventListener("keydown", function(event
     }
   });
 
-function sendMessage() {
-    disableInput();
-    var userMessage
-
-    currentDate = new Date();
-    // Convert the date and time to the user's local time zone
-    localDateTime = currentDate.toLocaleString();
-    // Output the local date and time
-    
-    if (firstMessage === true) {
-        appendLoadingDots()
-        var controlInitialMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
-        var accommodateMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
-
-        if (condition === '0') { userMessage = controlInitialMessage }
-            else { userMessage = accommodateMessage }
-
-        informationTranscript.set("SYSTEM " + localDateTime, userMessage);
-    } else {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + accommodative_endings[currentEndingIndex]
-        currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
-    }
+async function getAgentResponse(userMessage) {
+    console.log("IN GET AGENT RESPONSE")
     console.log("USER MESSAGE:", userMessage)
-    
     disableInput()
-    
     fetch(base_url + `/api/cat/assistant`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -240,7 +213,8 @@ function sendMessage() {
     .then(data => {
         appendAlexMessage(data.response, data.audio);
         console.log("TOPIC IS:", data.topic)
-        if (firstMessage === false) { checkTopic(data.topic) }
+        prevTopic = data.topic
+        // if (firstMessage === false) { checkTopic(data.topic) }
         
         currentDate = new Date();
         // Convert the date and time to the user's local time zone
@@ -259,6 +233,175 @@ function sendMessage() {
     userInput.value = ''; // Clear input field after sending message
 }
 
+function sendMessage() {
+    disableInput();
+    var userMessage
+
+    currentDate = new Date();
+    // Convert the date and time to the user's local time zone
+    localDateTime = currentDate.toLocaleString();
+    // Output the local date and time
+    
+    if (messageCounter === 0) {
+        appendLoadingDots()
+        userMessage = "Greet the user and introduce yourself. Tell them you will first guide them in understanding 5 clinical trials topics, and at the end they can freely ask more questions. Start by asking if they are familiar with randomization."
+        informationTranscript.set("SYSTEM " + localDateTime, userMessage);
+        getAgentResponse(userMessage)
+        messageCounter++
+        return;
+    } else if (messageCounter ===1) {
+        console.log("IN MESSAGE COUNTER = 1")
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        if (condition == 6) {
+            userMessage = userMessage + "\n END INSTRUCTIONS: If the user said something like yes, no, kind of, with no explanation, ask them to expand (do not give more information). Otherwise, use your knowledge base to expand on/add to the user's understanding."
+            getAgentResponse(userMessage)
+            messageCounter++;
+            return;
+        } else {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
+            getAgentResponse(userMessage)
+            messageCounter = 3;
+            return;
+        }
+    } else if (messageCounter ===2) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        userMessage = userMessage + "\n END INSTRUCTIONS: Give more information using your knowledge base, if applicable. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
+        getAgentResponse(userMessage)
+        messageCounter++;
+        return;
+    } else if (messageCounter ===3) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        if (condition == 6) {
+            userMessage = userMessage + "\n END INSTRUCTIONS: If the user did not explain their answer, ask them to expand (do not give more information). Otherwise, use your knowledge base to give more info on how the user's safety concerns are addressed in clinical trials."
+            getAgentResponse(userMessage)
+            messageCounter++;
+            return;
+        } else {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give info on how the user's safety concerns are addressed in clinical trials. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
+            getAgentResponse(userMessage)
+            messageCounter = 5;
+            return;
+        }
+    } else if (messageCounter ===4) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        userMessage = userMessage + "\n END INSTRUCTIONS: Give more information using your knowledge base, if applicable. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
+        getAgentResponse(userMessage)
+        messageCounter++;
+        return;
+    } else if (messageCounter ===5) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        if (condition == 6) {
+            userMessage = userMessage + "\n END INSTRUCTIONS: If the user did not explain their answer, ask them to expand (do not give more information). Otherwise, use your knowledge base to give more info/solutions regarding the user's response."
+            getAgentResponse(userMessage)
+            messageCounter++;
+            return;
+        } else {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info/solutions regarding the user's response. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
+            getAgentResponse(userMessage)
+            messageCounter = 7;
+            return;
+        }
+    } else if (messageCounter ===6) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
+        getAgentResponse(userMessage)
+        messageCounter++;
+        return;
+    } else if (messageCounter ===7) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        if (condition == 6) {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding."
+            getAgentResponse(userMessage)
+            messageCounter++;
+            return;
+        } else {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
+            getAgentResponse(userMessage)
+            messageCounter = 9;
+            return;
+        }
+    } else if (messageCounter ===8) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
+        getAgentResponse(userMessage)
+        messageCounter++;
+        return;
+    } else if (messageCounter ===9) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        if (condition == 6) {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights."
+            getAgentResponse(userMessage)
+            messageCounter++;
+            return;
+        } else {
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
+            getAgentResponse(userMessage)
+            finishButton.disabled = false;
+            finishButton.classList.add('pulse-blue');
+            messageCounter = 11;
+            return;
+        }
+    } else if (messageCounter ===10) {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
+        getAgentResponse(userMessage)
+        finishButton.disabled = false;
+        finishButton.classList.add('pulse-blue');
+        messageCounter++;
+        return;
+    } else {
+        userMessage = userInput.value;
+        if (userMessage.trim() === '') return;
+        appendUserMessage(userMessage);
+        informationTranscript.set("USER " + localDateTime, userMessage);
+        updateTranscript()
+        getAgentResponse(userMessage)
+        return;
+        // userMessage = userMessage + accommodative_endings[currentEndingIndex]
+        // currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
+    }
+}
+
 window.onload = function() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -267,9 +410,9 @@ window.onload = function() {
     bhls = urlParams.get('bhls')
 
     if (condition === '6') {
-        cat_assistant_id = "accommodative_assistant_id"
+        cat_assistant_id = "accommodative_assistantv2_id"
     } else if (condition === '0') {
-        cat_assistant_id = "control_assistant_id"
+        cat_assistant_id = "control_assistantv2_id"
     }
 
     firstMessage = true
