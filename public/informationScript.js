@@ -45,8 +45,8 @@ function checkTopic(topic) {
     }   
 }
 
-// const base_url = "http://98.84.121.124"
-const base_url = "http://127.0.0.1:8000"
+const base_url = "http://98.84.121.124"
+// const base_url = "http://127.0.0.1:8000"
 
 var cat_assistant_id = ""
 
