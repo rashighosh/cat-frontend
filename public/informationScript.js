@@ -257,9 +257,9 @@ function sendMessage() {
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
         if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: If the user said something like yes, no, kind of, with no explanation, ask them to expand (do not give more information). Otherwise, use your knowledge base to expand on/add to the user's understanding."
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on/add to the user's understanding. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
             getAgentResponse(userMessage)
-            messageCounter++;
+            messageCounter = 3;
             return;
         } else {
             userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
@@ -284,9 +284,9 @@ function sendMessage() {
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
         if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: If the user did not explain their answer, ask them to expand (do not give more information). Otherwise, use your knowledge base to give more info on how the user's safety concerns are addressed in clinical trials."
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info on how the user's safety concerns are addressed in clinical trials. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
             getAgentResponse(userMessage)
-            messageCounter++;
+            messageCounter = 5;
             return;
         } else {
             userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give info on how the user's safety concerns are addressed in clinical trials. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
@@ -311,9 +311,9 @@ function sendMessage() {
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
         if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: If the user did not explain their answer, ask them to expand (do not give more information). Otherwise, use your knowledge base to give more info/solutions regarding the user's response."
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info/solutions regarding the user's response. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
             getAgentResponse(userMessage)
-            messageCounter++;
+            messageCounter = 7;
             return;
         } else {
             userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info/solutions regarding the user's response. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
@@ -338,9 +338,9 @@ function sendMessage() {
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
         if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding."
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
             getAgentResponse(userMessage)
-            messageCounter++;
+            messageCounter = 9;
             return;
         } else {
             userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
