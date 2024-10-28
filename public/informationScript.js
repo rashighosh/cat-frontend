@@ -365,8 +365,10 @@ function sendMessage() {
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
         if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights."
+            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
             getAgentResponse(userMessage)
+            finishButton.disabled = false;
+            finishButton.classList.add('pulse-blue');
             messageCounter++;
             return;
         } else {
@@ -374,21 +376,9 @@ function sendMessage() {
             getAgentResponse(userMessage)
             finishButton.disabled = false;
             finishButton.classList.add('pulse-blue');
-            messageCounter = 11;
+            messageCounter++;
             return;
         }
-    } else if (messageCounter ===10) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
-        getAgentResponse(userMessage)
-        finishButton.disabled = false;
-        finishButton.classList.add('pulse-blue');
-        messageCounter++;
-        return;
     } else {
         userMessage = userInput.value;
         if (userMessage.trim() === '') return;
