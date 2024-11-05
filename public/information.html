@@ -9,14 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <title>Alex: Virtual Assistant</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="informationScript.js"></script>
 </head>
 <body>
-    <div class="progress-area" id="progress-area">
+    <!-- <div class="progress-area" id="progress-area">
       <div id="progress-text">Progress: 0%</div>
       <div id="progress-bar">
         <div id="progress"></div>
       </div>
-    </div>
+    </div> -->
     <div id="help-modal" class="help-modal">
       <div class="help-modal-content">
         <div class="help-row">
@@ -36,21 +37,14 @@
         <button id="help-icon">&#63;</button>
       </div>
         <div class="alex-container">
-            <h3>Alex</h3>
-            <h5>Virtual Assistant</h5>
-            <!-- <hr/> -->
-            <div class="topics-container">
-              <h5>Topics to Cover</h5>
-              <p id="topic1">☐ Safety</p>
-              <p id="topic2">☐ Randomization</p>
-              <p id="topic3">☐ Eligibility</p>
-              <p id="topic4">☐ Logistics</p>
-              <p id="topic5">☐ Benefits & Risks</p>
+          <img class="alex-logo" src="DrAlex.png" alt="DrAlex">
+            <div class="alex-info">
+              <h3 id="character-name"></h3>
+              <h5 id="character-description"></h5>
             </div>
-        </div>
+          </div>
         <div class="chat-container">
             <div class="chat-box" id="chat-box"></div>
-
             <div class="input-area" id="input-area">
                 <textarea id="user-input" class="user-input" placeholder="Type a message..."></textarea>
                 <button id="send-btn" onclick="sendMessage(`text`)">
@@ -64,6 +58,6 @@
 
     <button class="finish-button" id="finish-button" onclick="nextPage()">Continue</button>
 
-    <script src="informationScript.js"></script>
+    
 </body>
 </html>

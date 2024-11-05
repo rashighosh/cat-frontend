@@ -45,13 +45,28 @@ function checkTopic(topic) {
     }   
 }
 
-const base_url = "http://98.84.121.124"
-// const base_url = "http://127.0.0.1:8000"
+// const base_url = "http://98.84.121.124"
+const base_url = "http://127.0.0.1:8000"
 
 var cat_assistant_id = ""
 
 let scripted_voice_base_url = "https://rashi-cat-study.s3.amazonaws.com/scripted/"
 // let scripted_voice_base_url = "boop"
+
+var characterName = document.getElementById("character-name")
+var characterDescription = document.getElementById("character-description")
+if (bhls === '0') {
+    characterName.innerHTML = "Dr. Alex"
+    characterDescription.innerHTML = "Virtual Version of an Oncologist"
+}
+if (bhls === '1') {
+    characterName.innerHTML = "Nurse Alex"
+    characterDescription.innerHTML = "Virtual Version of a Nurse"
+}
+if (bhls === '2') {
+    characterName.innerHTML = "Alex"
+    characterDescription.innerHTML = "Virtual Version of Someone Whose Close Friend Survived Cancer"
+}
 
 let surveyAnswersCommStyle = {}
 let surveyAnswersBRIEF = {}
@@ -131,22 +146,23 @@ function appendAlexMessage(message, audioDataUrl) {
 
     // COMMENT OUT AUDIO FOR TESTING
     // Create and append the audio element
-    const audioElement = new Audio(audioDataUrl);
-    audioElement.controls = true;
-    chatBox.appendChild(audioElement);
-    audioElement.style.display = 'none'
+    // const audioElement = new Audio(audioDataUrl);
+    // audioElement.controls = true;
+    // chatBox.appendChild(audioElement);
+    // audioElement.style.display = 'none'
 
-    audioElement.play();
+    // audioElement.play();
 
     // Pause the video when the audio stops playing
-    audioElement.addEventListener('ended', function() {
-        const alexIcons = document.querySelectorAll('.alex-icon');
-        // Select the last element
-        const lastAlexIcon = alexIcons[alexIcons.length - 1];
-        lastAlexIcon.classList.remove('pulse-orange');
-        lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
-        enableInput();
-    });
+    // audioElement.addEventListener('ended', function() {
+    //     const alexIcons = document.querySelectorAll('.alex-icon');
+    //     // Select the last element
+    //     const lastAlexIcon = alexIcons[alexIcons.length - 1];
+    //     lastAlexIcon.classList.remove('pulse-orange');
+    //     lastAlexIcon.setAttribute('src', 'https://rashi-cat-study.s3.amazonaws.com/generic.jpeg');
+    //     enableInput();
+    // });
+    enableInput();
 
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
 }
@@ -204,25 +220,28 @@ async function getAgentResponse(userMessage) {
     console.log("IN GET AGENT RESPONSE")
     console.log("USER MESSAGE:", userMessage)
     disableInput()
-    fetch(base_url + `/api/cat/assistant`, {
+    fetch(base_url + `/api/cat/assistantv2`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({user_id: id, cat_bot_id: cat_assistant_id, user_message: userMessage, health_literacy: bhls})
+        body: JSON.stringify({user_id: id, user_message: userMessage})
     })
     .then(response => response.json())
     .then(data => {
-        appendAlexMessage(data.response, data.audio);
-        console.log("TOPIC IS:", data.topic)
-        prevTopic = data.topic
-        // if (firstMessage === false) { checkTopic(data.topic) }
+        console.log("FROM SERVER")
+        console.log(data)
+        appendAlexMessage(data.response1, "boop");
+        appendAlexMessage(data.response2, "boop");
+        // console.log("TOPIC IS:", data.topic)
+        // prevTopic = data.topic
+        // // if (firstMessage === false) { checkTopic(data.topic) }
         
-        currentDate = new Date();
-        // Convert the date and time to the user's local time zone
-        localDateTime = currentDate.toLocaleString();
-        // Output the local date and time
-        informationTranscript.set("ALEX " + localDateTime, data.response);
-        updateTranscript()
-        firstMessage = false
+        // currentDate = new Date();
+        // // Convert the date and time to the user's local time zone
+        // localDateTime = currentDate.toLocaleString();
+        // // Output the local date and time
+        // informationTranscript.set("ALEX " + localDateTime, data.response);
+        // updateTranscript()
+        // firstMessage = false
     })
     .catch(error => console.error('Error:', error))
     .finally(() => {
@@ -241,156 +260,16 @@ function sendMessage() {
     // Convert the date and time to the user's local time zone
     localDateTime = currentDate.toLocaleString();
     // Output the local date and time
-    
-    if (messageCounter === 0) {
-        appendLoadingDots()
-        userMessage = "Greet the user and introduce yourself. Tell them you will first guide them in understanding 5 clinical trials topics, and at the end they can freely ask more questions. Start by asking if they are familiar with randomization."
-        informationTranscript.set("SYSTEM " + localDateTime, userMessage);
-        getAgentResponse(userMessage)
-        messageCounter++
-        return;
-    } else if (messageCounter ===1) {
-        console.log("IN MESSAGE COUNTER = 1")
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on/add to the user's understanding. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
-            getAgentResponse(userMessage)
-            messageCounter = 3;
-            return;
-        } else {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
-            getAgentResponse(userMessage)
-            messageCounter = 3;
-            return;
-        }
-    } else if (messageCounter ===2) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + "\n END INSTRUCTIONS: Give more information using your knowledge base, if applicable. Move on to the next topic: Ask the user if they'd feel safe joining a clinical trial."
-        getAgentResponse(userMessage)
-        messageCounter++;
-        return;
-    } else if (messageCounter ===3) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info on how the user's safety concerns are addressed in clinical trials. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
-            getAgentResponse(userMessage)
-            messageCounter = 5;
-            return;
-        } else {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give info on how the user's safety concerns are addressed in clinical trials. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
-            getAgentResponse(userMessage)
-            messageCounter = 5;
-            return;
-        }
-    } else if (messageCounter ===4) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + "\n END INSTRUCTIONS: Give more information using your knowledge base, if applicable. Move on to the next topic: Ask the user if they have any time or travel concerns for being in a clinical trial."
-        getAgentResponse(userMessage)
-        messageCounter++;
-        return;
-    } else if (messageCounter ===5) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info/solutions regarding the user's response. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
-            getAgentResponse(userMessage)
-            messageCounter = 7;
-            return;
-        } else {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to give more info/solutions regarding the user's response. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
-            getAgentResponse(userMessage)
-            messageCounter = 7;
-            return;
-        }
-    } else if (messageCounter ===6) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Move on to the next topic: Ask the user how comfortable they feel understanding eligibility criteria."
-        getAgentResponse(userMessage)
-        messageCounter++;
-        return;
-    } else if (messageCounter ===7) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
-            getAgentResponse(userMessage)
-            messageCounter = 9;
-            return;
-        } else {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to expand on the user's understanding. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
-            getAgentResponse(userMessage)
-            messageCounter = 9;
-            return;
-        }
-    } else if (messageCounter ===8) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        userMessage = userMessage + "\n END INSTRUCTIONS: Respond using your knowledge base, if applicable. Move on to the final topic: Ask the user what would make them say yes to being in a trial, and what would make them say no."
-        getAgentResponse(userMessage)
-        messageCounter++;
-        return;
-    } else if (messageCounter ===9) {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        if (condition == 6) {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
-            getAgentResponse(userMessage)
-            finishButton.disabled = false;
-            finishButton.classList.add('pulse-blue');
-            messageCounter++;
-            return;
-        } else {
-            userMessage = userMessage + "\n END INSTRUCTIONS: Use your knowledge base to address the user's response and give more insights. Tell the user you've covered all the topics, and they can now ask you more questions or click continue at the bottom right."
-            getAgentResponse(userMessage)
-            finishButton.disabled = false;
-            finishButton.classList.add('pulse-blue');
-            messageCounter++;
-            return;
-        }
-    } else {
-        userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
-        appendUserMessage(userMessage);
-        informationTranscript.set("USER " + localDateTime, userMessage);
-        updateTranscript()
-        getAgentResponse(userMessage)
-        return;
+    userMessage = userInput.value;
+    if (userMessage.trim() === '') return;
+    appendUserMessage(userMessage);
+    informationTranscript.set("USER " + localDateTime, userMessage);
+    updateTranscript()
+    getAgentResponse(userMessage)
+    // return;
         // userMessage = userMessage + accommodative_endings[currentEndingIndex]
         // currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
     }
-}
 
 window.onload = function() {
     const queryString = window.location.search;
@@ -420,7 +299,7 @@ window.onload = function() {
     })
     .then(data => {
         returningUser = true;
-        sendMessage('text')
+        // sendMessage('text')
     })
     .catch(error => {
         if (error.message === 'HTTP status 404') {

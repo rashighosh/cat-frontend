@@ -11,103 +11,82 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="intro-modal" class="intro-modal">
+      <div class="help-modal-content">
+        <div class="help-row">
+          <div class="help-col">
+            <p class="info-title help"><b>Clinical Trials: Common Concerns</b></p>
+            <p>Scroll for more concerns & questions.</p>
+            <div class="concerns-questions">
+              <ul class="info help">
+                <li>I think clinical trials are best used for people with cancer that can’t be treated any other way.</li>
+                <li>I think that being on a clinical trial is dangerous.</li>
+                <li>I don’t know where to find a clinical trial for me.</li>
+                <li>I’m afraid that my health insurance won’t pay for a clinical trial.</li>
+                <li>I’m afraid of the side effects I’ll have on a clinical trial.</li>
+                <li>I wouldn't be willing to travel extra distance to take part in a clinical trial.</li>
+                <li>I don’t know what clinical trials are.</li>
+                <li>I'm afraid that if I take part in a clinical trial my treatment will be selected at random by a computer rather than by my doctor.</li>
+                <li>I'm afraid I'll get a sugar pill (placebo) instead of real medicine on a clinical trial.</li>
+                <li>I don't trust the medical system.</li>
+                <li>I’m afraid that taking part in a clinical trial would make me sicker than I am now.</li>
+                <li>I'm worried that my medical care won't be as good if I join a clinical trial.</li>
+                <li>I'm worried I'd be treated like a number, not a person, on a clinical trial.</li>
+                <li>I'm afraid I'll be used as a guinea pig if I'm in a clinical trial.</li>
+                <li>It would be too upsetting for me to be on a clinical trial.</li>
+                <li>I wouldn't be able to find transportation to get me to my clinical trial treatment center.</li>
+                <li>I wouldn't be able to keep up with the clinical trial treatment schedule.</li>
+                <li>I'm too upset now to think about taking part in a clinical trial.</li>
+                <li>I don't have time to take part in a clinical trial.</li>
+                <li>I'm worried that I wouldn't be able to afford the costs of treatment on a clinical trial.</li>
+                <li>I don't trust drug companies.</li>
+                <li>I don't trust doctors.</li>
+                <li>I wouldn't ask about clinical trials unless my doctor brought them up first.</li>
+                <li>I'm worried that my family wouldn't want me to go on a clinical trial.</li>
+                <li>I'm worried that going on a clinical trial would burden my family.</li>
+                <li>I'm concerned that people other than my doctor would see my personal information if I was on a clinical trial.</li>
+                <li>I'm worried that the treatment I'd receive on a clinical trial wouldn't work for me.</li>
+                <li>I don't like to try new treatments until they've been around for a while.</li>
+            </ul>            
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <br/>
+        <button class="help-close">Close</button>
+      </div>
+    </div>
     <div id="myModal" class="modal">
           <div class="modal-content">
             <div id="message-fc1">
-              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
+              <h3>Introduction</h3>
               <br/>
-              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
+              <p>In this virtual interaction, you will share your <b>concerns regarding clinical trials</b> with a <b>virtual character</b>, or a <b>digital representation of a person</b>.</p>
+              <br/>
+              <p>Please take a few moments to think of 5 general concerns regarding clinical trials. When you are done, please type <em>"I have thought of 5 concerns I have about clinical trials"</em> below.</p>
+              <p id="intro-help">Need some inspiration? Click here to see some common concerns & questions.</p>
               <hr/><br/>
-              <h4>What is the purpose of the study?</h4>
-              <div class="check-item">
-                <input type="checkbox" id="checkbox1">
-                <label for="checkbox1">The <strong>purpose</strong> of interacting with the virtual assistant is to <strong>learn about clinical trials</strong>.</label>
-              </div>
-              <div class="check-item">
-                <input type="checkbox" id="checkbox2">
-              <label for="checkbox2">The virtual assistant is powered by AI and <strong>may use AI to adjust its communication style </strong> based on <strong>your information from the pre-survey</strong>.</label>
-              </div>
+              <input id="confirm" type="text" name="textInput" placeholder="I have thought of 5 concerns I have about clinical trials.">
+              <p id="errorMessage" style="color: red; display: none; font-size: 15px !important">You must type "I have thought of 5 concerns I have about clinical trials".</p>
               <br/>
-              <p>I have read and acknowledged the information above (select all checkboxes).</p>
               <br/>
-              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox1', 'checkbox2'], `message-fc1`,`message-fc2`)">Continue ►</button>
-            </div>
-            <div id="message-fc2">
-              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
-              <br/>
-              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
-              <hr/><br/>
-              <h4>What will the Virtual Assistant do?</h4>
-              <div class="check-item">
-                <input type="checkbox" id="checkbox3">
-                <label for="checkbox4">The virual assistant may use <strong>the information you provided in the pre-survey</strong> to <strong>tailor the way it answers your questions</strong> about clinical trials.</label>
-              </div>
-              <br/>
-              <p>I have read and acknowledged the information above (select all checkboxes).</p>
-              <br/>
-              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox3'], `message-fc2`,`message-fc3`)">Continue ►</button>
-            </div>
-            <div id="message-fc3">
-              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
-              <br/>
-              <p>To get started, please read the information below and select <strong>all</strong> checkboxes.</p>
-              <hr/><br/>
-              <h4>What do I need to do?</h4>
-              <div class="check-item">
-                <input type="checkbox" id="checkbox5">
-                <label for="checkbox5"><strong>REMEMBER:</strong> The virtual assistant is providing <strong>general information about clinical trials</strong> and will attempt to answer your questions. The virtual assistant <strong>may adjust its communication style</strong> based on <strong>your information from the pre-survey</strong>.</label>
-              </div>
-              <div class="check-item">
-                <input type="checkbox" id="checkbox6">
-                <label for="checkbox6"><strong>SUSPEND DISBELIEF:</strong> Temporarily set aside skepticism about the realism of the virtual interaction to maximize learning.</label>
-              </div>
-              <br/>
-              <p>I have read and acknowledged the information above (select all checkboxes).</p>
-              <br/>
-              <button class="modalNavBtn" onclick="checkCheckboxes(['checkbox5', 'checkbox6'], `message-fc3`,`message-1`)">Continue ►</button>
-            </div>
-            <div id="message-1">
-              <h3>Welcome to Learning about Clinical Trials with Alex!</h3>
-              <br/>
-              <p>On the next few pages, you will see instructions on how to complete the virtual interaction.</p>
-              <br/>
-              <button class="modalNavBtn" onclick="navigateModalInstructions(`message-1`,`message-2`)">Continue ►</button>
-            </div>
-            <div id="message-2">
-              <p class="info-title">⌨️ Type to talk to Alex.</p>
-              <p class="info">At the <b>bottom of the chatbox</b>, you will see an area for you to respond to Alex by <b>typing</b>.</p>
-              <p class="info"><b>Note:</b> Alex is programmed to answer general information about clinical trials, and <b>cannot</b> search for or help with specific clinical trials.</p>
-              <br/>
-              <img src="1.png" alt="Requirements for Conversation" height="315">
-              <br/>
-              <div class="modal-nav-button-area">
-                <button class="modalNavBtn prev" onclick="navigateModalInstructions(`message-2`,`message-1`)">◀ Back</button>
-                <button class="modalNavBtn next" onclick="navigateModalInstructions(`message-2`,`message-3`)">Next ►</button>
-              </div>
-            </div>
-            <div id="message-3">
-              <p class="info-title">🔊 Make sure your audio is on!</p>
-              <p class="info">Alex will respond in the chatbox via text, but also <b>speak to you</b>! You will <b>not be able to respond while Alex is speaking</b>.</p>
-              <br/>
-              <img src="2.png" alt="Requirements for Conversation" height="315">
-              <br/>
-              <div class="modal-nav-button-area">
-                <button class="modalNavBtn prev" onclick="navigateModalInstructions(`message-3`,`message-2`)">◀ Back</button>
-                <button class="modalNavBtn next" onclick="navigateModalInstructions(`message-3`,`message-4`)">Next ►</button>
-              </div>
+              <button class="modalNavBtn" onclick="validateInput()">Continue ►</button>
+              <button class="modalNavBtn" onclick="skip()">Skip ►</button>
             </div>
             <div id="message-4">
-              <p class="info-title">💬 Alex will guide you through 5 topics.</p>
-              <p class="info">After talking through the 5 topics, <b>you may freely ask Alex questions</b>. Then, you will be able to <b>proceed by clicking a button at the bottom right corner of your screen</b></p>
+              <p class="info-title" id="character-name"></p>
+              <p class="info" id="character-description"></p>
               <br/>
-              <img src="3.png" alt="Requirements for Conversation" height="315">
+              <video id="myVideo" controls>
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              
               <br/>
               <div class="modal-nav-button-area">
-                <button class="modalNavBtn prev" onclick="navigateModalInstructions(`message-4`,`message-3`)">◀ Back</button>
-                <button id="start" class="next" onclick="nextPage()">Begin!</button> <!-- Button to close the modal -->
+                <button id="start" disabled onclick="nextPage()">Begin!</button> <!-- Button to close the modal -->
               </div>
             </div>
-            <div id="message-5">
         </div>
     </div>
     <script src="indexScript.js"></script>
