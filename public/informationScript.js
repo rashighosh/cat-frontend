@@ -211,8 +211,8 @@ function sendMessage() {
     
     if (firstMessage === true) {
         appendLoadingDots()
-        var controlInitialMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
-        var accommodateMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base.'
+        var controlInitialMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base. (Do not mention your knowledge base)'
+        var accommodateMessage = 'Introduce yourself and list 2-3 things you can talk about based on your knowledge base. (Do not mention your knowledge base)'
 
         if (condition === '0') { userMessage = controlInitialMessage }
             else { userMessage = accommodateMessage }
