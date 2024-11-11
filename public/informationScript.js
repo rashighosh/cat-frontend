@@ -270,6 +270,8 @@ window.onload = function() {
         cat_assistant_id = "accommodative_assistant_id"
     } else if (condition === '0') {
         cat_assistant_id = "control_assistant_id"
+    } else if (condition === '3') {
+        cat_assistant_id = "divergent_assistant_id"
     }
 
     firstMessage = true

@@ -297,6 +297,8 @@ window.onload = function() {
         cat_assistant_id = "ct_accommodative_assistant_id"
     } else if (condition === '0') {
         cat_assistant_id = "ct_control_assistant_id"
+    } else if (condition === '3') {
+        cat_assistant_id = "ct_divergent_assistant_id"
     }
 
     console.log("CAT ASSISTANT ID IS:", cat_assistant_id)
