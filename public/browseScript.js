@@ -253,8 +253,10 @@ function sendMessage() {
     // Output the local date and time
     browseTranscript.set("USER " + localDateTime, userMessage);
     updateTranscript();
-    userMessage = userMessage + accommodative_endings[currentEndingIndex]
-    currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
+    if (condition === '6') {
+        userMessage = userMessage + accommodative_endings[currentEndingIndex]
+        currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
+    }
 
     fetch(base_url + `/api/cat/browse`, {
         method: 'POST',

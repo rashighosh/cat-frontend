@@ -224,8 +224,11 @@ function sendMessage() {
         appendUserMessage(userMessage);
         informationTranscript.set("USER " + localDateTime, userMessage);
         updateTranscript()
-        userMessage = userMessage + accommodative_endings[currentEndingIndex]
-        currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
+        if (condition === '6') {
+            userMessage = userMessage + accommodative_endings[currentEndingIndex]
+            currentEndingIndex = (currentEndingIndex + 1) % accommodative_endings.length;
+        }
+        
     }
     console.log("USER MESSAGE:", userMessage)
     
