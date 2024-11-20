@@ -118,29 +118,31 @@ function disableInput() {
 }
 
 
-function appendAlexMessage(message, audioDataUrl) {
-    const messageElement = document.createElement('div');
-    const labelText = document.createElement('span');
-    labelText.className = "label-text";
-    const messageText = document.createElement('span');
+function appendAlexMessage(message1, audioDataUrl1, message2, audioDataUrl2) {
+    console.log("IN APPEND ALEX MESSAGE")
+    console.log(message1)
+    console.log(message2)
+    const messageElement1 = document.createElement('div');
+    const messageText1 = document.createElement('span');
 
-    const avatarImg = document.createElement('img');
-    avatarImg.src = 'https://rashi-cat-study.s3.amazonaws.com/generic.gif'; // Replace with your image path
-    avatarImg.alt = 'Alex';
-    avatarImg.className = 'alex-icon pulse-orange';
+    messageText1.innerHTML = `${message1}`;
 
-    labelText.innerText = `Alex`;
-    messageText.innerHTML = `${message}`;
+    messageElement1.className = "chatbot-message"
+    messageElement1.appendChild(messageText1);
 
-    messageElement.className = "chatbot-message"
-    messageElement.appendChild(labelText);
-    messageElement.appendChild(messageText);
+    const messageElement2 = document.createElement('div');
+    const messageText2 = document.createElement('span');
+
+    messageText2.innerHTML = `${message2}`;
+
+    messageElement2.className = "chatbot-message"
+    messageElement2.appendChild(messageText2);
 
     const alexMessage = document.createElement('div');
     alexMessage.className = "alex-message-item"
 
-    alexMessage.appendChild(avatarImg)
-    alexMessage.appendChild(messageElement);
+    alexMessage.appendChild(messageElement1);
+    alexMessage.appendChild(messageElement2);
 
     chatBox.appendChild(alexMessage)
 
@@ -229,8 +231,7 @@ async function getAgentResponse(userMessage) {
     .then(data => {
         console.log("FROM SERVER")
         console.log(data)
-        appendAlexMessage(data.response1, "boop");
-        appendAlexMessage(data.response2, "boop");
+        appendAlexMessage(data.response1, "boop", data.response2, "boop");
         // console.log("TOPIC IS:", data.topic)
         // prevTopic = data.topic
         // // if (firstMessage === false) { checkTopic(data.topic) }
